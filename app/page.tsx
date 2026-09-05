@@ -1,13 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
 import LeadModal from "@/components/LeadModal";
 import Category from "@/components/Category";
 import HeroSlider from "@/components/HeroSlider";
-import ValuePropsSection from "@/components/ValuePropsSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 
 // Mock dữ liệu sản phẩm mẫu tương ứng với các category id
@@ -105,11 +102,7 @@ export default function Home() {
         <HowItWorksSection />
 
       </main>
-      {/* Form đăng ký nhận tư vấn Popup */}
-      <LeadModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
+      
     </div>
   );
 }

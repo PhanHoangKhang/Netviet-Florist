@@ -19,6 +19,7 @@ export default function Navbar() {
         <nav className="hidden md:flex gap-8 font-medium text-gray-700">
           <Link href="#" className="hover:text-[var(--color-primary)] transition">Trang chủ</Link>
           <Link href="#" className="hover:text-[var(--color-primary)] transition">Sản phẩm</Link>
+          <Link href="/lien-he" className="hover:text-[var(--color-primary)] transition">Liên hệ</Link>
         </nav>
 
         <div className="flex items-center gap-4">
