@@ -7,6 +7,8 @@ import ProductCard from "@/components/ProductCard";
 import LeadModal from "@/components/LeadModal";
 import Category from "@/components/Category";
 import HeroSlider from "@/components/HeroSlider";
+import ValuePropsSection from "@/components/ValuePropsSection";
+import HowItWorksSection from "@/components/HowItWorksSection";
 
 // Mock dữ liệu sản phẩm mẫu tương ứng với các category id
 const MOCK_PRODUCTS = [
@@ -101,6 +103,9 @@ export default function Home() {
             </div>
           )}
         </section>
+
+        <HowItWorksSection />
+
       </main>
 
       <Footer />
