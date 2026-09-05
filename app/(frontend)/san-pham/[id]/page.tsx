@@ -112,7 +112,9 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        <ProductOrderForm product={product} />
+        <div id="#dat-hoa">
+            <ProductOrderForm product={product} />
+        </div>
 
         {/* Section Sản Phẩm Liên Quan (Cùng Category, trượt ngang mượt mà) */}
         {relatedProducts.length > 0 && (

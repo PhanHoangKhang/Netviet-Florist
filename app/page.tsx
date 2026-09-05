@@ -35,7 +35,7 @@ export default function Home() {
 
         {/* SECTION 1: Best Seller */}
         <ProductSlider
-          title="Mẫu Hoa Bán Chạy Nhất"
+          title="MẪU HOA BÁN CHẠY NHẤT"
           subtitle="Những mẫu hoa được đông đảo khách hàng tin chọn tại Nét Việt Florist"
           products={bestSellers}
           onSelectProduct={(p) => setSelectedProduct(p)}
@@ -43,15 +43,15 @@ export default function Home() {
 
         {/* SECTION 2: Danh Mục Hoa Bó */}
         <ProductSlider
-          title="Bộ Sưu Tập Hoa Bó"
-          subtitle="Thiết kế hiện đại, bó hoa tinh tế trao gửi cảm xúc"
+          title="BỘ SƯU TẬP HOA BÓ"
+          subtitle="Thiết kế hiện đại, bó hoa trao gửi cảm xúc"
           products={hoaBoProducts}
           onSelectProduct={(p) => setSelectedProduct(p)}
         />
 
         {/* SECTION 3: Danh Mục Hoa Giỏ / Lẵng */}
         <ProductSlider
-          title="Hoa Giỏ & Lẵng Sang Trọng"
+          title="HOA GIỎ"
           subtitle="Phù hợp tặng sinh nhật, kỷ niệm, sự kiện đối tác"
           products={hoaGioProducts}
           onSelectProduct={(p) => setSelectedProduct(p)}
@@ -59,7 +59,7 @@ export default function Home() {
 
         {/* SECTION 4: Lan Hồ Điệp */}
         <ProductSlider
-          title="Lan Hồ Điệp Căn Cấp"
+          title="LAN HỒ ĐIỆP CAO CẤP"
           subtitle="Chậu lan quý phái, quà tặng khai trương & đối tác đẳng cấp"
           products={lanHoDiepProducts}
           onSelectProduct={(p) => setSelectedProduct(p)}
