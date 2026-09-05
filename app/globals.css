@@ -30,9 +30,10 @@ body {
   color: var(--color-text-main);
   font-family: system-ui, -apple-system, sans-serif;
 
+  /* --- THÊM HÌNH NỀN TẠI ĐÂY --- */
   background-image: url('/background.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; 
+  background-attachment: fixed; /* Giữ cố định nền khi cuộn trang */
 }
