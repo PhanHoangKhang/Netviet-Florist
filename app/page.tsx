@@ -6,6 +6,7 @@ import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import LeadModal from '@/components/LeadModal';
 import Category from '@/components/Category';
+import HeroSlider from '@/components/HeroSlider';
 
 // Mock dữ liệu sản phẩm mẫu tương ứng với các category id
 const MOCK_PRODUCTS = [
@@ -33,17 +34,12 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Banner / Hero Section */}
-        <section className="py-12 bg-white border-b border-gray-100 text-center px-4">
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900">
-            Hoa Tươi <span className="text-[var(--color-primary)]">Nét Việt Florist</span>
-          </h1>
-          <p className="mt-2 text-gray-600 text-sm sm:text-base">
-            Đặt hoa tươi trực tuyến - Nhận tư vấn và báo giá qua Zalo nhanh chóng
-          </p>
-        </section>
+        
 
         {/* Thanh Category Tab Bar */}
         <Category  />
+
+        <HeroSlider />
 
         {/* Danh sách sản phẩm */}
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
