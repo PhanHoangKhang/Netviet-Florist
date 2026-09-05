@@ -169,7 +169,7 @@ export default function ContactPage() {
           <div className="lg:col-span-6 h-[400px] lg:h-full min-h-[480px] bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-2">
             <iframe
               title="Địa chỉ Nét Việt Florist"
-              src="https://maps.google.com/maps?q=275%20Tr%E1%BA%A7n%20H%C6%B0ng%20%C4%90%E1%BA%A1o%2C%20Phan%20Thi%E1%BA%BFt&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=N%C3%A9t%20Vi%E1%BB%87t%20Florist%2C%20275%20Tr%E1%BA%A7n%20H%C6%B0ng%20%C4%90%E1%BA%A1o%2C%20Phan%20Thi%E1%BA%BFt&t=&z=17&ie=UTF8&iwloc=&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0, borderRadius: '1rem' }}
