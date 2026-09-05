@@ -92,7 +92,7 @@ export default function Footer() {
         </div>
 
         {/* Dòng Bản quyền dưới cùng */}
-        <div className="mt-12 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-400 gap-2">
+        <div className="mt-12 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400 gap-2">
           <p>© {new Date().getFullYear()} Nét Việt Florist. All rights reserved.</p>
           <p>Thiết kế dành riêng cho Nét Việt Florist</p>
         </div>

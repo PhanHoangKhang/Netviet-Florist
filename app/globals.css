@@ -29,4 +29,10 @@ body {
   background-color: var(--color-bg-light);
   color: var(--color-text-main);
   font-family: system-ui, -apple-system, sans-serif;
+
+  background-image: url('/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
 }

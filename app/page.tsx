@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
 import Category from "@/components/Category";
 import HeroSlider from "@/components/HeroSlider";
 import ValuePropsSection from "@/components/ValuePropsSection";
