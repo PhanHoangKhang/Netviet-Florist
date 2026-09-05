@@ -26,8 +26,8 @@ export default function ContactPage() {
         
         {/* Header Trang */}
         <div className="text-center max-w-2xl mx-auto mb-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider mb-2">
-            Nét Việt Florist
+          <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
+              Nét Việt <span className="text-[var(--color-secondary)] font-semibold uppercase tracking-widest">Florist</span>
           </span>
           <h1 className="text-2xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
             Liên Hệ Với Chúng Tôi
