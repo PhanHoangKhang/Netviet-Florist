@@ -31,6 +31,9 @@ export default function Footer() {
                 <span className="font-medium text-gray-700">Địa chỉ:</span> 275 Trần Hưng Đạo, Phan Thiết, Bình Thuận
               </p>
               <p>
+                <span className="font-medium text-gray-700">Email:</span> khanhuyen222811@gmail.com
+              </p>
+              <p>
                 <span className="font-medium text-gray-700">Hotline 1:</span> 0933 660 399
               </p>
               <p>
@@ -64,20 +67,25 @@ export default function Footer() {
                 <img 
                   src="/fb.png" 
                   alt="Facebook Fanpage" 
-                  className="w-8 h-8 object-contain"
+                  className="w-12 h-12 object-contain"
                 />
               </a>
 
               {/* Icon Zalo */}
-              <a
-                href="https://zalo.me/0933660399"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold text-[10px] flex items-center justify-center transition-transform hover:scale-110"
-                title="Chat Zalo Tư Vấn"
-              >
-                ZALO
-              </a>
+              
+                 <a
+                    href="https://zalo.me/0933660399"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block transition-transform hover:scale-110"
+                    title="Chat Zalo Tư Vấn"
+                  >
+                    <img 
+                      src="/zalo.png" 
+                      alt="Zalo Fanpage" 
+                      className="w-12 h-12 object-contain"
+                    />
+                  </a>
             </div>
           </div>
 

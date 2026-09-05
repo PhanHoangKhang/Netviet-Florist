@@ -74,8 +74,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg-light)]">
-      <Navbar />
-
       <main className="flex-1">
         {/* Thanh Category Tab Bar */}
         <Category />
@@ -107,9 +105,6 @@ export default function Home() {
         <HowItWorksSection />
 
       </main>
-
-      <Footer />
-
       {/* Form đăng ký nhận tư vấn Popup */}
       <LeadModal
         product={selectedProduct}
