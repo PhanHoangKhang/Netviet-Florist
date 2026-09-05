@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { MapPin, Phone, Menu, X } from 'lucide-react';
+import { useState } from "react";
+import Link from "next/link";
+import { MapPin, Phone, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -10,9 +10,8 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 shadow-sm bg-white">
       {/* 1. TOP BAR - Nền màu Teal thương hiệu (--color-primary) */}
-      <div className="bg-[var(--color-primary)] text-white text-xs py-2 px-4">
+      <div className="hidden sm:block bg-[var(--color-primary)] text-white text-xs py-2 px-4">
         <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          
           {/* Địa chỉ & Hotline */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6">
             <span className="flex items-center gap-1.5">
@@ -20,7 +19,10 @@ export default function Navbar() {
               275 Trần Hưng Đạo, Phan Thiết, Bình Thuận
             </span>
             <span className="hidden md:inline text-white/40">|</span>
-            <a href="tel:0933660399" className="flex items-center gap-1.5 hover:text-teal-100 transition-colors font-medium">
+            <a
+              href="tel:0933660399"
+              className="flex items-center gap-1.5 hover:text-teal-100 transition-colors font-medium"
+            >
               <Phone className="w-3.5 h-3.5 shrink-0" />
               0933 660 399 - 0982 31 0982
             </a>
@@ -30,64 +32,74 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             {/* Facebook Icon link */}
             {/* Icon Facebook */}
-              <a
-                href="https://www.facebook.com/nguoilamhoa/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block transition-transform hover:scale-110"
-                title="Fanpage Facebook"
-              >
-                <img 
-                  src="/fb.png" 
-                  alt="Facebook Fanpage" 
-                  className="w-7 h-7 object-contain"
-                />
-              </a>
+            <a
+              href="https://www.facebook.com/nguoilamhoa/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block transition-transform hover:scale-110"
+              title="Fanpage Facebook"
+            >
+              <img
+                src="/fb.png"
+                alt="Facebook Fanpage"
+                className="w-7 h-7 object-contain"
+              />
+            </a>
 
             {/* Zalo Link */}
-                  <a
-                    href="https://zalo.me/0933660399"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-block transition-transform hover:scale-110"
-                    title="Chat Zalo Tư Vấn"
-                  >
-                    <img 
-                      src="/zalo.png" 
-                      alt="Zalo Fanpage" 
-                      className="w-7 h-7 object-contain"
-                    />
-                  </a>
+            <a
+              href="https://zalo.me/0933660399"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block transition-transform hover:scale-110"
+              title="Chat Zalo Tư Vấn"
+            >
+              <img
+                src="/zalo.png"
+                alt="Zalo Fanpage"
+                className="w-7 h-7 object-contain"
+              />
+            </a>
           </div>
-
         </div>
       </div>
 
       {/* 2. MAIN NAVBAR */}
       <div className="border-b border-gray-100 bg-white">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <img 
-              src="/logo.png" 
-              alt="Nét Việt Florist Logo" 
+            <img
+              src="/logo.png"
+              alt="Nét Việt Florist Logo"
               className="w-12 h-12 object-contain rounded-full border border-gray-100"
             />
             <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
-              Nét Việt <span className="text-[var(--color-secondary)] text-xs font-semibold uppercase tracking-widest block">Florist</span>
+              Nét Việt{" "}
+              <span className="text-[var(--color-secondary)] text-xs font-semibold uppercase tracking-widest block">
+                Florist
+              </span>
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-8 font-semibold text-sm text-gray-700">
-            <Link href="/" className="hover:text-[var(--color-primary)] transition-colors py-2">
+            <Link
+              href="/"
+              className="hover:text-[var(--color-primary)] transition-colors py-2"
+            >
               Trang Chủ
             </Link>
-            <Link href="/san-pham" className="hover:text-[var(--color-primary)] transition-colors py-2">
+            <Link
+              href="/san-pham"
+              className="hover:text-[var(--color-primary)] transition-colors py-2"
+            >
               Sản Phẩm
             </Link>
-            <Link href="/lien-he" className="hover:text-[var(--color-primary)] transition-colors py-2">
+            <Link
+              href="/lien-he"
+              className="hover:text-[var(--color-primary)] transition-colors py-2"
+            >
               Liên Hệ
             </Link>
           </nav>
@@ -108,9 +120,12 @@ export default function Navbar() {
             className="md:hidden p-2 text-gray-700 hover:text-[var(--color-primary)] focus:outline-none"
             aria-label="Toggle Navigation Menu"
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
-
         </div>
       </div>
 
