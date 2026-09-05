@@ -1,8 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-
-type Product = { id: string; name: string };
+import { useState } from "react";
+import { type Product } from "@/mock/data";
 
 interface LeadModalProps {
   product: Product | null;
@@ -11,8 +10,8 @@ interface LeadModalProps {
 
 export default function LeadModal({ product, onClose }: LeadModalProps) {
   const [submitted, setSubmitted] = useState(false);
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
+  const [phone, setPhone] = useState("");
+  const [name, setName] = useState("");
 
   if (!product) return null;
 
@@ -34,14 +33,21 @@ export default function LeadModal({ product, onClose }: LeadModalProps) {
 
         {!submitted ? (
           <>
-            <h3 className="text-xl font-bold text-gray-800">Đặt hàng & Báo giá</h3>
+            <h3 className="text-xl font-bold text-gray-800">
+              Đặt hàng & Báo giá
+            </h3>
             <p className="text-sm text-gray-500 mt-1">
-              Sản phẩm: <span className="font-semibold text-[var(--color-primary)]">{product.name}</span>
+              Sản phẩm:{" "}
+              <span className="font-semibold text-[var(--color-primary)]">
+                {product.name}
+              </span>
             </p>
 
             <form onSubmit={handleSubmit} className="mt-4 space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Họ và tên
+                </label>
                 <input
                   type="text"
                   required
@@ -52,7 +58,9 @@ export default function LeadModal({ product, onClose }: LeadModalProps) {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Số điện thoại / Zalo</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Số điện thoại / Zalo
+                </label>
                 <input
                   type="tel"
                   required
@@ -72,9 +80,12 @@ export default function LeadModal({ product, onClose }: LeadModalProps) {
           </>
         ) : (
           <div className="text-center py-4">
-            <h3 className="text-2xl font-bold text-[var(--color-primary)]">Cảm ơn bạn!</h3>
+            <h3 className="text-2xl font-bold text-[var(--color-primary)]">
+              Cảm ơn bạn!
+            </h3>
             <p className="text-sm text-gray-600 mt-2">
-              Nét Việt Florist sẽ liên hệ qua Zalo/SĐT <span className="font-semibold">{phone}</span> trong giây lát.
+              Nét Việt Florist sẽ liên hệ qua Zalo/SĐT{" "}
+              <span className="font-semibold">{phone}</span> trong giây lát.
             </p>
             <a
               href={`https://zalo.me/0933660399`}

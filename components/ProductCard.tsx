@@ -1,9 +1,4 @@
-type Product = {
-  id: string;
-  name: string;
-  category: string;
-  image: string;
-};
+import { type Product } from "@/mock/data";
 
 interface ProductCardProps {
   product: Product;
@@ -26,8 +21,12 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
 
       <div className="p-4 flex flex-col flex-1 justify-between">
         <div>
-          <h3 className="font-semibold text-lg text-gray-800 line-clamp-1">{product.name}</h3>
-          <p className="text-sm font-medium text-[var(--color-secondary)] mt-1">Giá: Liên hệ</p>
+          <h3 className="font-semibold text-lg text-gray-800 line-clamp-1">
+            {product.name}
+          </h3>
+          <p className="text-sm font-medium text-[var(--color-secondary)] mt-1">
+            Giá: Liên hệ
+          </p>
         </div>
 
         <button
