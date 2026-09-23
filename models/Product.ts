@@ -1,11 +1,10 @@
-// models/Product.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, Document } from "mongoose";
 
 export interface IProduct extends Document {
   name: string;
   slug: string;
   description?: string;
-  categoryId: mongoose.Types.ObjectId; // Liên kết tới Category
+  categoryId: mongoose.Types.ObjectId;
   images: string[];
   isFeatured: boolean;
   inStock: boolean;
@@ -15,20 +14,51 @@ export interface IProduct extends Document {
 
 const ProductSchema = new Schema<IProduct>(
   {
-    name: { type: String, required: true, trim: true },
-    slug: { type: String, required: true, unique: true, index: true },
-    description: { type: String },
-    categoryId: { 
-      type: Schema.Types.ObjectId, 
-      ref: 'Category', 
-      required: true, 
-      index: true 
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    images: [{ type: String, required: true }],
-    isFeatured: { type: Boolean, default: false },
-    inStock: { type: Boolean, default: true },
+
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+
+    description: {
+      type: String,
+    },
+
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+      index: true,
+    },
+
+    images: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-export default mongoose.models.Product || mongoose.model<IProduct>('Product', ProductSchema);
+export default mongoose.models.Product ||
+  mongoose.model<IProduct>("Product", ProductSchema);

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
+import Category from "@/models/Category";
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,27 +12,61 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
 
-    const page = Number(searchParams.get("page")) || 1;
-    const limit = Number(searchParams.get("limit")) || 10;
+    const page = Math.max(
+      Number(searchParams.get("page")) || 1,
+      1
+    );
+
+    const limit = Math.min(
+      Math.max(Number(searchParams.get("limit")) || 10, 1),
+      50
+    );
 
     const skip = (page - 1) * limit;
 
-    const filter: Record<string, unknown> = {
+    const filter: Record<string, any> = {
       inStock: true,
     };
 
-    // Filter category
+    /* =========================
+       FILTER BY CATEGORY
+    ========================= */
+
     if (category && category !== "all") {
-      filter.categoryId = category;
+      const categoryDoc = await Category.findOne({
+        slug: category,
+      }).select("_id");
+
+      if (!categoryDoc) {
+        return NextResponse.json({
+          success: true,
+          data: [],
+          pagination: {
+            page,
+            limit,
+            total: 0,
+            totalPages: 0,
+          },
+        });
+      }
+
+      filter.categoryId = categoryDoc._id;
     }
 
-    // Search product name
-    if (search) {
+    /* =========================
+       SEARCH BY PRODUCT NAME
+    ========================= */
+
+    if (search?.trim()) {
       filter.name = {
-        $regex: search,
+        $regex: search.trim(),
         $options: "i",
       };
     }
+
+    /* =========================
+       QUERY PRODUCTS
+    ========================= */
 
     const [products, total] = await Promise.all([
       Product.find(filter)
@@ -62,7 +97,7 @@ export async function GET(request: NextRequest) {
         success: false,
         message: "Không thể lấy sản phẩm",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

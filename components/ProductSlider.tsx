@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "./ProductCard";
-import { type Product } from "@/mock/data";
+import type { Product } from "@/types/product";
 
 interface ProductSliderSectionProps {
   title: string;
@@ -74,7 +74,7 @@ export default function ProductSlider({
         >
           {products.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="w-[220px] sm:w-[260px] lg:w-[280px] shrink-0"
             >
               <ProductCard
