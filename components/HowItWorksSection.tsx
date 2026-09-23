@@ -4,7 +4,7 @@ export default function HowItWorksSection() {
   const STEPS = [
     {
       step: "01",
-      title: "Chọn Mẫu Hoa Ứng Ý",
+      title: "CHỌN MẪU HOA ƯNG Ý",
       desc: "Bạn chọn mẫu trên web hoặc gửi ảnh mẫu hoa bạn thích qua Zalo cho shop.",
       icon: Flower2,
       accentColor: "group-hover:border-[var(--color-primary)]",
@@ -12,7 +12,7 @@ export default function HowItWorksSection() {
     },
     {
       step: "02",
-      title: "Tư Vấn & Báo Giá",
+      title: "TƯ VẤN & BÁO GIÁ",
       desc: "Shop tư vấn chọn loại hoa, màu sắc phù hợp ngân sách và chốt thời gian giao.",
       icon: MessageSquare,
       accentColor: "group-hover:border-[var(--color-secondary)]",
@@ -20,7 +20,7 @@ export default function HowItWorksSection() {
     },
     {
       step: "03",
-      title: "Xem Ảnh Trước Khi Giao",
+      title: "XEM ẢNH TRƯỚC KHI GIAO",
       desc: "Thợ làm xong sẽ chụp hình sản phẩm thực tế gửi bạn duyệt trước khi mang đi.",
       icon: Camera,
       accentColor: "group-hover:border-[var(--color-accent)]",
@@ -28,7 +28,7 @@ export default function HowItWorksSection() {
     },
     {
       step: "04",
-      title: "Giao Hoa Tận Tay",
+      title: "GIAO HOA TẬN TAY",
       desc: "Hoa được giao đúng hẹn, đúng người nhận và báo ngay cho bạn khi hoàn tất.",
       icon: Truck,
       accentColor: "group-hover:border-[var(--color-primary)]",

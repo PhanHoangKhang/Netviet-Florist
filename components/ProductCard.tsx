@@ -39,18 +39,11 @@ export default function ProductCard({ product, onSelect }: ProductCardProps) {
 
         <div className="mt-4 space-y-2">
           <Link
-            href={`/san-pham/${product.id}`}
+            href={`/san-pham/${product.id}#dat-hoa`}
             className="block w-full py-2.5 rounded-xl border border-[var(--color-primary)] text-[var(--color-primary)] text-center font-medium hover:bg-[var(--color-primary)] hover:text-white transition"
           >
-            Xem chi tiết
-          </Link>
-
-          <button
-            onClick={() => onSelect(product)}
-            className="w-full py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-medium hover:bg-[var(--color-primary-hover)] transition"
-          >
             Nhận tư vấn / Báo giá
-          </button>
+          </Link>
         </div>
       </div>
     </div>
