@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
 import LeadModal from "@/components/LeadModal";
+import ProductPagination from "@/components/ProductPagination";
 import { MOCK_PRODUCTS, type Product } from "@/mock/data";
 import { Search, Filter } from "lucide-react";
 
@@ -23,7 +24,11 @@ function ProductListContent() {
 
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const ITEMS_PER_PAGE = 10;
+  const MOBILE_ITEMS_PER_PAGE = 4;
 
   // Lắng nghe thay đổi URL parameter để chọn đúng danh mục
   useEffect(() => {
@@ -44,14 +49,39 @@ function ProductListContent() {
     return matchesCategory && matchesSearch;
   });
 
+  const pageSize =
+    typeof window !== "undefined" && window.innerWidth < 640
+      ? MOBILE_ITEMS_PER_PAGE
+      : ITEMS_PER_PAGE;
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * pageSize;
+  const paginatedProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + pageSize,
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
   return (
     <div className="bg-[var(--color-bg-light)] min-h-screen py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Trang */}
         <div className="text-center max-w-xl mx-auto mb-8">
-            <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
-                Nét Việt <span className="text-[var(--color-secondary)] font-semibold uppercase tracking-widest">Florist</span>
+          <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
+            Nét Việt{" "}
+            <span className="text-[var(--color-secondary)] font-semibold uppercase tracking-widest">
+              Florist
             </span>
+          </span>
           <h1 className="text-2xl pt-2 sm:text-4xl font-extrabold text-gray-900 tracking-tight">
             Bộ Sưu Tập Hoa Tươi
           </h1>
@@ -102,9 +132,9 @@ function ProductListContent() {
         </div>
 
         {/* Grid Danh Sách Sản Phẩm */}
-        {filteredProducts.length > 0 ? (
+        {paginatedProducts.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-            {filteredProducts.map((product: Product) => (
+            {paginatedProducts.map((product: Product) => (
               <ProductCard
                 key={product.id}
                 product={product}
@@ -131,6 +161,12 @@ function ProductListContent() {
             </button>
           </div>
         )}
+
+        <ProductPagination
+          currentPage={safeCurrentPage}
+          totalPages={totalPages}
+          onPageChange={(page) => setCurrentPage(page)}
+        />
       </div>
 
       {/* Modal Nhận Tư Vấn Zalo */}
