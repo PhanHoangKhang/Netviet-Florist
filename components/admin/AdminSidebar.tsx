@@ -49,9 +49,11 @@ export default function AdminSidebar() {
       {/* Logo */}
       <div className="flex h-20 items-center border-b border-gray-100 px-6">
         <Link href="/admin" className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--color-primary)] text-white">
-            <Flower2 className="h-5 w-5" />
-          </div>
+            <img
+              src="/logo.png"
+              alt="Nét Việt Florist Logo"
+              className="w-12 h-12 object-contain rounded-full border border-gray-100"
+            />
 
           <div>
             <p className="text-sm font-bold tracking-wide text-[var(--color-primary)]">
