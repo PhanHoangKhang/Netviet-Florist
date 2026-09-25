@@ -8,7 +8,7 @@ import ProductPagination from "@/components/ProductPagination";
 import { Search, Filter } from "lucide-react";
 import type {
   Product,
-  ProductPagination,
+  Pagination,
 } from "@/types/product";
 
 const CATEGORIES = [
