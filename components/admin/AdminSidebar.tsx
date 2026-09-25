@@ -16,7 +16,7 @@ import {
 const menuItems = [
   {
     label: "Dashboard",
-    href: "/admin",
+    href: "/admin/dashboard",
     icon: LayoutDashboard,
   },
   {
