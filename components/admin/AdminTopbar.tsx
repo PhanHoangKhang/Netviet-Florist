@@ -1,6 +1,7 @@
 "use client";
 
 import { Bell, Menu, Search } from "lucide-react";
+import NotificationBell from "./NotificationBell";
 
 interface AdminTopbarProps {
   onMenuClick?: () => void;
@@ -41,16 +42,7 @@ export default function AdminTopbar({
         <div className="flex items-center gap-3">
 
           {/* Notification */}
-          <button
-            type="button"
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl text-gray-500 transition hover:bg-gray-50 hover:text-[var(--color-primary)]"
-            aria-label="Notifications"
-          >
-            <Bell className="h-[18px] w-[18px]" />
-
-            {/* Notification dot */}
-            <span className="absolute right-2.5 top-2.5 h-1.5 w-1.5 rounded-full bg-[var(--color-secondary)]" />
-          </button>
+          <NotificationBell />
 
           {/* Divider */}
           <div className="hidden h-8 w-px bg-gray-200 sm:block" />

@@ -129,12 +129,6 @@ export default function AdminLoginPage() {
             </button>
           </form>
 
-          {/* Security Note */}
-          <div className="mt-8 border-t border-gray-100 pt-6">
-            <p className="text-center text-xs leading-relaxed text-gray-400">
-              Khu vực này chỉ dành cho quản trị viên của Nét Việt Florist.
-            </p>
-          </div>
         </div>
 
         {/* Back to Website */}
