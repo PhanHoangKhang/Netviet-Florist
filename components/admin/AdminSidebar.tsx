@@ -16,27 +16,27 @@ import {
 const menuItems = [
   {
     label: "Dashboard",
-    href: "/admin/dashboard",
+    href: "/netviet-admin/dashboard",
     icon: LayoutDashboard,
   },
   {
     label: "Sản phẩm",
-    href: "/admin/products",
+    href: "/netviet-admin/products",
     icon: Package,
   },
   {
     label: "Danh mục",
-    href: "/admin/categories",
+    href: "/netviet-admin/categories",
     icon: FolderTree,
   },
   {
     label: "Đơn đặt hoa",
-    href: "/admin/orders",
+    href: "/netviet-admin/orders",
     icon: ClipboardList,
   },
   {
     label: "Khách hàng",
-    href: "/admin/customers",
+    href: "/netviet-admin/customers",
     icon: Users,
   },
 ];
@@ -48,7 +48,7 @@ export default function AdminSidebar() {
     <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-gray-200 bg-white lg:flex lg:flex-col">
       {/* Logo */}
       <div className="flex h-20 items-center border-b border-gray-100 px-6">
-        <Link href="/admin" className="flex items-center gap-3">
+        <Link href="/netviet-admin" className="flex items-center gap-3">
             <img
               src="/logo.png"
               alt="Nét Việt Florist Logo"
@@ -78,8 +78,8 @@ export default function AdminSidebar() {
             const Icon = item.icon;
 
             const isActive =
-              item.href === "/admin"
-                ? pathname === "/admin"
+              item.href === "/netviet-admin"
+                ? pathname === "/netviet-admin"
                 : pathname.startsWith(item.href);
 
             return (
@@ -106,7 +106,7 @@ export default function AdminSidebar() {
           </p>
 
           <Link
-            href="/admin/settings"
+            href="/netviet-admin/settings"
             className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
               pathname.startsWith("/admin/settings")
                 ? "bg-[var(--color-primary)] text-white"

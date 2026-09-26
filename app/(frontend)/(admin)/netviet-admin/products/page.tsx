@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ProductPagination from "@/components/ProductPagination";
+import {
+  fetchAdminCategories,
+  fetchAdminProducts,
+  formatAdminDate,
+} from "@/lib/admin-catalog";
 import type { Category } from "@/types/category";
 import type { Product, Pagination } from "@/types/product";
 
@@ -23,41 +29,18 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // =========================
-  // FETCH PRODUCTS
-  // =========================
-
   const fetchProducts = async () => {
     try {
       setLoading(true);
       setError("");
 
-      const params = new URLSearchParams();
-
-      params.set("page", String(pagination.page));
-      params.set("limit", String(pagination.limit));
-
-      if (search.trim()) {
-        params.set("search", search.trim());
-      }
-
-      if (category !== "all") {
-        params.set("category", category);
-      }
-
-      // Nếu API admin hỗ trợ status
-      if (status !== "all") {
-        params.set("status", status);
-      }
-
-      const response = await fetch(`/api/admin/products?${params.toString()}`);
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Không thể lấy sản phẩm");
-      }
-
+      const result = await fetchAdminProducts({
+        page: pagination.page,
+        limit: pagination.limit,
+        search,
+        category,
+        status,
+      });
       setProducts(result.data);
       setPagination(result.pagination);
     } catch (error) {
@@ -68,29 +51,13 @@ export default function ProductsPage() {
     }
   };
 
-  // =========================
-  // FETCH CATEGORIES
-  // =========================
-
   const fetchCategories = async () => {
     try {
-      const response = await fetch("/api/admin/categories");
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.message || "Không thể lấy danh mục");
-      }
-
-      setCategories(result.data);
+      setCategories(await fetchAdminCategories());
     } catch (error) {
       console.error("FETCH CATEGORIES ERROR:", error);
     }
   };
-
-  // =========================
-  // INITIAL LOAD
-  // =========================
 
   useEffect(() => {
     fetchCategories();
@@ -100,10 +67,6 @@ export default function ProductsPage() {
     fetchProducts();
   }, [pagination.page, pagination.limit, category, status]);
 
-  // =========================
-  // SEARCH
-  // =========================
-
   const handleSearch = () => {
     setPagination((prev) => ({
       ...prev,
@@ -112,22 +75,6 @@ export default function ProductsPage() {
 
     fetchProducts();
   };
-
-  // =========================
-  // FORMAT DATE
-  // =========================
-
-  const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat("vi-VN", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(new Date(date));
-  };
-
-  // =========================
-  // LOADING
-  // =========================
 
   if (loading) {
     return (
@@ -148,10 +95,6 @@ export default function ProductsPage() {
       </div>
     );
   }
-
-  // =========================
-  // ERROR
-  // =========================
 
   if (error) {
     return (
@@ -180,10 +123,6 @@ export default function ProductsPage() {
 
   return (
     <div>
-      {/* =========================
-          HEADER
-      ========================= */}
-
       <div className="mb-8 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Sản phẩm</h1>
@@ -200,10 +139,6 @@ export default function ProductsPage() {
           + Thêm sản phẩm
         </Link>
       </div>
-
-      {/* =========================
-          FILTER
-      ========================= */}
 
       <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4">
         <div className="flex flex-col gap-3 md:flex-row">
@@ -276,10 +211,6 @@ export default function ProductsPage() {
           </select>
         </div>
       </div>
-
-      {/* =========================
-          PRODUCT TABLE
-      ========================= */}
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
         <div className="overflow-x-auto">
@@ -400,7 +331,7 @@ export default function ProductsPage() {
 
                     <td className="px-6 py-4">
                       <span className="text-sm text-gray-500">
-                        {formatDate(product.createdAt)}
+                        {formatAdminDate(product.createdAt)}
                       </span>
                     </td>
 
@@ -442,10 +373,6 @@ export default function ProductsPage() {
           </table>
         </div>
 
-        {/* =========================
-            FOOTER / PAGINATION
-        ========================= */}
-
         <div className="flex items-center justify-between border-t border-gray-200 px-6 py-4">
           <p className="text-sm text-gray-500">
             Tổng cộng{" "}
@@ -455,37 +382,14 @@ export default function ProductsPage() {
             sản phẩm
           </p>
 
-          <div className="flex items-center gap-2">
-            <button
-              disabled={pagination.page <= 1}
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  page: prev.page - 1,
-                }))
-              }
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              ←
-            </button>
-
-            <span className="px-2 text-sm text-gray-600">
-              Trang {pagination.page} / {Math.max(pagination.totalPages, 1)}
-            </span>
-
-            <button
-              disabled={pagination.page >= pagination.totalPages}
-              onClick={() =>
-                setPagination((prev) => ({
-                  ...prev,
-                  page: prev.page + 1,
-                }))
-              }
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              →
-            </button>
-          </div>
+          <ProductPagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            variant="compact"
+            onPageChange={(page) =>
+              setPagination((prev) => ({ ...prev, page }))
+            }
+          />
         </div>
       </div>
     </div>
