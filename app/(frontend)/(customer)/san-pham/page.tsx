@@ -3,7 +3,6 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ProductCard";
-import LeadModal from "@/components/LeadModal";
 import ProductPagination from "@/components/ProductPagination";
 import { Search, Filter } from "lucide-react";
 import type {
@@ -300,14 +299,6 @@ function ProductListContent() {
           </div>
         )}
       </div>
-
-      {/* Lead Modal */}
-      <LeadModal
-        product={selectedProduct}
-        onClose={() =>
-          setSelectedProduct(null)
-        }
-      />
     </div>
   );
 }

@@ -1,14 +1,22 @@
-export type OrderStatus =
-  | "pending"
-  | "confirmed"
-  | "completed"
-  | "cancelled";
+export type OrderStatus = "pending" | "confirmed" | "completed" | "cancelled";
 
 export interface OrderProduct {
   _id: string;
   name: string;
   slug: string;
   images: string[];
+}
+
+export interface CreateOrderInput {
+  productId: string;
+  customerName: string;
+  email: string;
+  phoneNumber: string;
+  deliveryAddress: string;
+  deliveryDate?: string;
+  occasion: string;
+  quantity: number;
+  note?: string;
 }
 
 export interface Order {

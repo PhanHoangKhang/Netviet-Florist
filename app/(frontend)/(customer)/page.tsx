@@ -7,7 +7,6 @@ import HeroSlider from "@/components/HeroSlider";
 import ValuePropsSection from "@/components/ValuePropsSection";
 import HowItWorksSection from "@/components/HowItWorksSection";
 import ProductSlider from "@/components/ProductSlider";
-import LeadModal from "@/components/LeadModal";
 
 import type { Product } from "@/types/product";
 
@@ -131,11 +130,6 @@ export default function Home() {
 
         <HowItWorksSection />
       </main>
-
-      <LeadModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
     </div>
   );
 }
