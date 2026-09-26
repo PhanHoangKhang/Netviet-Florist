@@ -108,7 +108,7 @@ export default function Navbar() {
           <div className="hidden sm:flex items-center gap-3">
             <a
               href="tel:0933660399"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-full border border-[var(--color-primary)] text-[var(--color-primary)] font-bold text-xs hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200 shadow-2xs"
+              className="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] font-bold text-xs hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200 shadow-2xs"
             >
               Hotline: 0933 660 399
             </a>

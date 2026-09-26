@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { MessageCircle, CheckCircle2 } from "lucide-react";
-import type { Product } from "@/mock/data";
+import type { Product } from "@/types/product";
+import { createOrder } from "@/lib/order-api";
 
 interface ProductOrderFormProps {
   product: Product;
@@ -10,6 +11,8 @@ interface ProductOrderFormProps {
 
 export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -19,9 +22,39 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   const [quantity, setQuantity] = useState("1");
   const [note, setNote] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
-    setSubmitted(true);
+
+    try {
+      setSubmitting(true);
+      setError("");
+
+      await createOrder({
+        productId: product._id,
+        customerName,
+        email,
+        phoneNumber,
+        deliveryAddress,
+        deliveryDate: deliveryDate || undefined,
+        occasion,
+        quantity: Number(quantity),
+        note,
+      });
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error("ORDER ERROR:", error);
+
+      setError(
+        error instanceof Error
+          ? error.message
+          : "Không thể gửi yêu cầu đặt hoa."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -34,20 +67,18 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
       </div>
 
       {submitted ? (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
-          <div className="flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 mt-0.5 shrink-0" />
-            <div>
-              <p className="font-bold">
-                Yêu cầu của bạn đã được gửi thành công.
-              </p>
-              <p className="mt-1 text-emerald-600">
-                Nét Việt Florist sẽ liên hệ lại qua số{" "}
-                <strong>{phoneNumber}</strong> để xác nhận mẫu hoa và thời gian
-                giao hàng.
-              </p>
-            </div>
-          </div>
+        <div className="border-t border-gray-200 pt-5">
+          <p className="font-medium text-green-600">
+            Yêu cầu đặt hoa đã được gửi.
+          </p>
+
+          <p className="mt-1 text-sm leading-6 text-gray-500">
+            Nét Việt Florist sẽ liên hệ với bạn qua số{" "}
+            <span className="font-medium text-gray-700">
+              {phoneNumber}
+            </span>{" "}
+            để xác nhận mẫu hoa và thời gian giao hàng.
+          </p>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -179,11 +210,20 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
             <p>{product.name}</p>
           </div>
 
+          {error && (
+            <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-600">
+              {error}
+            </div>
+          )}
+
           <button
             type="submit"
-            className="w-full py-3 rounded-xl bg-[var(--color-primary)] text-white font-bold text-sm hover:opacity-90 transition-opacity shadow-sm"
+            disabled={submitting}
+            className="w-full rounded-xl bg-[var(--color-primary)] py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Gửi yêu cầu đặt hoa
+            {submitting
+              ? "Đang gửi yêu cầu..."
+              : "Gửi yêu cầu đặt hoa"}
           </button>
         </form>
       )}

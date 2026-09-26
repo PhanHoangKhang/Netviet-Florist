@@ -93,7 +93,7 @@ export default function Footer() {
                 href="https://zalo.me/0933660399"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 w-full max-w-[340px] py-2 px-4 bg-[#0088FF]/10 hover:bg-[#0088FF]/20 text-[#0088FF] rounded-lg transition-colors font-medium text-sm border border-[#0088FF]/30"
+                className="flex items-center justify-center gap-2 w-full max-w-[340px] py-2 px-4 bg-[#0088FF]/10 hover:bg-[#0088FF]/20 text-[#0088FF] rounded-lg transition-colors font-medium text-sm"
                 title="Chat Zalo Tư Vấn"
               >
                 <img src="/zalo.png" alt="Zalo Logo" className="w-5 h-5 object-contain" />

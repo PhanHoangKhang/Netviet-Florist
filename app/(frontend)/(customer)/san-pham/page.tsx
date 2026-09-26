@@ -52,10 +52,6 @@ function ProductListContent() {
 
   const ITEMS_PER_PAGE = 10;
 
-  /* =========================
-     SYNC CATEGORY WITH URL
-  ========================= */
-
   useEffect(() => {
     if (categoryParam) {
       setSelectedCategory(categoryParam);
@@ -65,10 +61,6 @@ function ProductListContent() {
 
     setCurrentPage(1);
   }, [categoryParam]);
-
-  /* =========================
-     FETCH PRODUCTS
-  ========================= */
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -144,20 +136,12 @@ function ProductListContent() {
     fetchProducts();
   }, [selectedCategory, searchQuery, currentPage]);
 
-  /* =========================
-     CHANGE CATEGORY
-  ========================= */
-
   const handleCategoryChange = (
     category: string
   ) => {
     setSelectedCategory(category);
     setCurrentPage(1);
   };
-
-  /* =========================
-     SEARCH
-  ========================= */
 
   const handleSearchChange = (
     value: string
@@ -185,7 +169,7 @@ function ProductListContent() {
         </div>
 
         {/* Search & Filter */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-gray-100 shadow-sm mb-8 space-y-4">
+        <div className="bg-white p-4 sm:p-5 rounded-lg border border-gray-100 shadow-sm mb-8 space-y-4">
 
           {/* Search */}
           <div className="relative max-w-md mx-auto">
@@ -220,7 +204,7 @@ function ProductListContent() {
                     cat.id
                   )
                 }
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+                className={`px-4 py-2 rounded-sm text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
                   selectedCategory === cat.id
                     ? "bg-[var(--color-primary)] text-white shadow-xs"
                     : "bg-gray-50 text-gray-600 hover:bg-teal-50 hover:text-[var(--color-primary)]"
@@ -309,7 +293,7 @@ function ProductListContent() {
                 setSearchQuery("");
                 setCurrentPage(1);
               }}
-              className="mt-4 px-4 py-2 rounded-xl bg-[var(--color-primary)] text-white text-xs font-bold shadow-xs hover:opacity-90 transition-opacity"
+              className="mt-4 px-4 py-2 rounded-sm bg-[var(--color-primary)] text-white text-xs font-bold shadow-xs hover:opacity-90 transition-opacity"
             >
               Xem Tất Cả Sản Phẩm
             </button>

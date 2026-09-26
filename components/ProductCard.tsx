@@ -14,7 +14,7 @@ export default function ProductCard({
     product.images?.[0] || "/images/placeholder.jpg";
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition group border border-gray-100 flex flex-col">
+    <div className="bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition group border border-gray-100 flex flex-col">
       {/* Product Image */}
       <Link
         href={`/san-pham/${product.slug}`}
@@ -62,7 +62,7 @@ export default function ProductCard({
         <div className="mt-4 space-y-2">
           <Link
             href={`/san-pham/${product.slug}#dat-hoa`}
-            className="block w-full py-2.5 rounded-xl border border-[var(--color-primary)] text-[var(--color-primary)] text-center font-medium hover:bg-[var(--color-primary)] hover:text-white transition"
+            className="block w-full py-2.5 rounded-sm border border-[var(--color-primary)] text-[var(--color-primary)] text-center font-medium hover:bg-[var(--color-primary)] hover:text-white transition"
           >
             Nhận tư vấn / Báo giá
           </Link>

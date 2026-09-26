@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
 import Category from "@/models/Category";
 import Product from "@/models/Product";
 
@@ -12,10 +11,6 @@ if (!MONGODB_URI) {
   throw new Error("MONGODB_URI is not defined");
 }
 
-/* =========================
-   SLUG GENERATOR
-========================= */
-
 function createSlug(text: string) {
   return text
     .toLowerCase()
@@ -25,10 +20,6 @@ function createSlug(text: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
-
-/* =========================
-   CATEGORY DATA
-========================= */
 
 const categories = [
   {
@@ -68,10 +59,6 @@ const categories = [
     order: 6,
   },
 ];
-
-/* =========================
-   PRODUCT DATA
-========================= */
 
 const products = [
   // Best Sellers
@@ -197,10 +184,6 @@ const products = [
   },
 ];
 
-/* =========================
-   SEED
-========================= */
-
 async function seed() {
   try {
     console.log("Connecting to MongoDB...");
@@ -209,20 +192,12 @@ async function seed() {
 
     console.log("MongoDB connected!");
 
-    /* =========================
-       CLEAR OLD DATA
-    ========================= */
-
     console.log("Clearing old data...");
 
     await Product.deleteMany({});
     await Category.deleteMany({});
 
     console.log("Old data cleared!");
-
-    /* =========================
-       CREATE CATEGORIES
-    ========================= */
 
     console.log("Creating categories...");
 
@@ -234,10 +209,6 @@ async function seed() {
       `Created ${createdCategories.length} categories.`
     );
 
-    /* =========================
-       CREATE CATEGORY MAP
-    ========================= */
-
     const categoryMap = new Map<
       string,
       mongoose.Types.ObjectId
@@ -246,10 +217,6 @@ async function seed() {
     createdCategories.forEach((category) => {
       categoryMap.set(category.slug, category._id);
     });
-
-    /* =========================
-       PREPARE PRODUCTS
-    ========================= */
 
     const productData = products.map((product) => {
       const categoryObjectId = categoryMap.get(
@@ -278,10 +245,6 @@ async function seed() {
       };
     });
 
-    /* =========================
-       CREATE PRODUCTS
-    ========================= */
-
     console.log("Creating products...");
 
     const createdProducts = await Product.insertMany(
@@ -291,10 +254,6 @@ async function seed() {
     console.log(
       `Created ${createdProducts.length} products.`
     );
-
-    /* =========================
-       DONE
-    ========================= */
 
     console.log("");
     console.log("=================================");

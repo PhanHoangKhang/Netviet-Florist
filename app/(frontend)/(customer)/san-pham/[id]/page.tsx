@@ -142,10 +142,10 @@ export default function ProductDetailPage() {
         </button>
 
         {/* Product Detail */}
-        <div className="bg-white rounded-3xl border border-gray-100 p-6 sm:p-8 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+        <div className="bg-white rounded-sm border border-gray-100 p-6 sm:p-8 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
 
           {/* Ảnh */}
-          <div className="lg:col-span-5 flex justify-center items-center bg-gray-50 rounded-2xl overflow-hidden border border-gray-100 group">
+          <div className="lg:col-span-5 flex justify-center items-center bg-gray-50 rounded-sm overflow-hidden border border-gray-100 group">
             <img
               src={productImage}
               alt={product.name}

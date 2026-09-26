@@ -134,13 +134,13 @@ export default function ProductsPage() {
 
         <Link
           href="/admin/products/new"
-          className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+          className="rounded-sm bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
         >
           + Thêm sản phẩm
         </Link>
       </div>
 
-      <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4">
+      <div className="mb-5 rounded-sm border border-gray-200 bg-white p-4">
         <div className="flex flex-col gap-3 md:flex-row">
           {/* Search */}
 
@@ -155,12 +155,12 @@ export default function ProductsPage() {
                   handleSearch();
                 }
               }}
-              className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+              className="w-full rounded-sm border border-gray-200 px-4 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
             />
 
             <button
               onClick={handleSearch}
-              className="rounded-lg bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+              className="rounded-sm bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
             >
               Tìm
             </button>
@@ -212,36 +212,36 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div className="overflow-hidden rounded-sm border border-gray-200 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
-            <thead className="border-b border-gray-200 bg-gray-50">
+            <thead className="border-b border-gray-200 bg-[var(--color-primary)]">
               <tr>
-                <th className="w-16 px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="w-16 px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   #
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   Sản phẩm
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   Danh mục
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   Hình ảnh
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   Trạng thái
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
                   Ngày tạo
                 </th>
 
-                <th className="w-24 px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
+                <th className="w-24 px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-white">
                   Thao tác
                 </th>
               </tr>
@@ -269,9 +269,11 @@ export default function ProductsPage() {
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <div className="flex h-full w-full items-center justify-center text-gray-400">
-                              🌸
-                            </div>
+                            <img
+                                src="/logo.png"
+                                alt="Nét Việt Florist Logo"
+                                className="mx-auto mb-4 w-12 h-12 object-contain rounded-full border border-gray-100"
+                            />
                           )}
                         </div>
 

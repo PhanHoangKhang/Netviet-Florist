@@ -62,7 +62,7 @@ export default function HowItWorksSection() {
             return (
               <div
                 key={item.step}
-                className={`relative bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between overflow-hidden ${item.accentColor}`}
+                className={`relative bg-white p-6 rounded-sm border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group flex flex-col justify-between overflow-hidden ${item.accentColor}`}
               >
                 {/* Con số chìm khổ lớn tạo chiều sâu nghệ thuật ở góc dưới */}
                 <span className="absolute -bottom-5 -right-2 text-7xl font-black text-gray-100/70 group-hover:text-[var(--color-primary)]/10 transition-colors select-none pointer-events-none">

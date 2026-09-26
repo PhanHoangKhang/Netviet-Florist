@@ -1,14 +1,27 @@
-import mongoose, { Schema, Document } from "mongoose";
+import mongoose, {
+  Schema,
+  Document,
+} from "mongoose";
 
 export interface IOrder extends Document {
+  productId: mongoose.Types.ObjectId;
+
   customerName: string;
-  phone: string;
-  address?: string;
+  email: string;
+  phoneNumber: string;
+
+  deliveryAddress: string;
+  deliveryDate?: Date;
+
+  occasion: string;
+  quantity: number;
   note?: string;
 
-  productId?: mongoose.Types.ObjectId;
-
-  status: "pending" | "contacted" | "confirmed" | "completed" | "cancelled";
+  status:
+    | "pending"
+    | "confirmed"
+    | "completed"
+    | "cancelled";
 
   createdAt: Date;
   updatedAt: Date;
@@ -16,21 +29,52 @@ export interface IOrder extends Document {
 
 const OrderSchema = new Schema<IOrder>(
   {
+    productId: {
+      type: Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+      index: true,
+    },
+
     customerName: {
       type: String,
       required: true,
       trim: true,
     },
 
-    phone: {
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
+
+    phoneNumber: {
       type: String,
       required: true,
       trim: true,
     },
 
-    address: {
+    deliveryAddress: {
       type: String,
+      required: true,
       trim: true,
+    },
+
+    deliveryDate: {
+      type: Date,
+    },
+
+    occasion: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    quantity: {
+      type: Number,
+      required: true,
+      min: 1,
     },
 
     note: {
@@ -38,26 +82,21 @@ const OrderSchema = new Schema<IOrder>(
       trim: true,
     },
 
-    productId: {
-      type: Schema.Types.ObjectId,
-      ref: "Product",
-    },
-
     status: {
       type: String,
       enum: [
         "pending",
-        "contacted",
         "confirmed",
         "completed",
         "cancelled",
       ],
       default: "pending",
+      index: true,
     },
   },
   {
     timestamps: true,
-  },
+  }
 );
 
 export default mongoose.models.Order ||
