@@ -59,6 +59,16 @@
   animation: blink 0.8s infinite;
 }
 
+@keyframes border-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-border-spin {
+  animation: border-spin 4s linear infinite;
+}
+
 body {
   background-color: var(--color-bg-light);
   color: var(--color-text-main);
