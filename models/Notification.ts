@@ -7,6 +7,7 @@ export type NotificationType =
   | "system";
 
 export interface INotification extends Document {
+  orderId: mongoose.Types.ObjectId;
   title: string;
   message: string;
   type: NotificationType;
@@ -23,6 +24,10 @@ export interface INotification extends Document {
 
 const NotificationSchema = new Schema<INotification>(
   {
+    orderId: {
+      type: Schema.Types.ObjectId,
+      ref: "Order",
+    },
     title: {
       type: String,
       required: true,

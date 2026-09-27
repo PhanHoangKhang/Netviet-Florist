@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import Order from "@/models/Order";
+import { createNotification } from "@/lib/createNotification";
 
 export async function GET(request: NextRequest) {
   try {
@@ -212,14 +213,19 @@ export async function POST(request: NextRequest) {
       status: "pending",
     });
 
+    await createNotification({
+      title: "Đơn hàng mới",
+      message: `${customerName} vừa gửi yêu cầu đặt hoa.`,
+      type: "order",
+      orderId: order._id,
+    });
+
     return NextResponse.json(
       {
         success: true,
         message:
           "Yêu cầu đặt hoa đã được gửi thành công.",
-        data: {
-          orderId: order._id.toString(),
-        },
+        data: order,
       },
       { status: 201 }
     );
