@@ -99,28 +99,35 @@ export default function ValuePropsSection() {
   ];
 
   return (
-    <section className="border-y border-gray-100 bg-white py-5">
-      <div className="max-w-350 mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+    <section className="border-y border-[#e8dfdc] bg-white">
+      <div className="mx-auto max-w-350 px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 divide-y divide-[#eee7e4] sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
           {PROPS.map((item) => (
             <div
               key={item.id}
-              className="group flex items-center gap-3 px-2 py-4 sm:px-5 sm:py-2"
+              className="group relative flex min-h-[110px] items-center gap-4 px-4 py-6 sm:px-6 lg:px-7"
             >
-              <div className="shrink-0 w-10 h-10 rounded-full bg-[var(--color-bg-light)] text-[var(--color-primary)] flex items-center justify-center">
+              {/* Decorative accent */}
+              <span className="absolute left-0 top-1/2 h-8 w-px -translate-y-1/2 bg-[var(--color-primary)]/20 transition-colors duration-300 group-hover:bg-[var(--color-primary)]" />
+
+              {/* Icon */}
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center text-[var(--color-primary)]">
                 {item.icon}
               </div>
 
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-semibold text-gray-900">
+              {/* Content */}
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-semibold tracking-tight text-[var(--color-text-main)]">
                   {item.title}
                 </h4>
-                <p className="text-xs text-gray-500 mt-1 leading-relaxed">
+
+                <p className="mt-1.5 text-xs leading-5 text-gray-500">
                   {item.desc}
                 </p>
               </div>
 
-              <span className="hidden xl:block text-[10px] font-medium text-[var(--color-primary)] whitespace-nowrap">
+              {/* Badge */}
+              <span className="hidden text-[10px] font-medium uppercase tracking-wider text-[var(--color-primary)]/70 xl:block">
                 {item.badge}
               </span>
             </div>

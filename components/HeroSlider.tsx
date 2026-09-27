@@ -18,7 +18,7 @@ export default function HeroSlider() {
   }, []);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl shadow-sm bg-gray-100 group aspect-[2.2/1] sm:aspect-3.5/1">
+    <div className="relative w-full overflow-hidden rounded-lg shadow-sm bg-gray-100 group aspect-[2.2/1] sm:aspect-3.5/1">
       <div
         className="flex w-full h-full transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}

@@ -96,7 +96,7 @@ export default function Home() {
         {/* POSTER */}
         <div
           id="products"
-          className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8"
+          className="w-full"
         >
           <HeroSlider />
 

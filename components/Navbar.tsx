@@ -121,9 +121,9 @@ export default function Navbar() {
             aria-label="Toggle Navigation Menu"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
+              <X className="w-8 h-8" />
             ) : (
-              <Menu className="w-6 h-6" />
+              <Menu className="w-8 h-8" />
             )}
           </button>
         </div>
@@ -131,38 +131,141 @@ export default function Navbar() {
 
       {/* 3. MOBILE MENU DROPDOWN */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white border-b border-gray-100 px-4 pt-2 pb-6 space-y-3 shadow-md">
-          <Link
-            href="/"
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-40 bg-black/20 md:hidden"
             onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-gray-800 hover:text-[var(--color-primary)] border-b border-gray-50"
-          >
-            Trang Chủ
-          </Link>
-          <Link
-            href="/san-pham"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-gray-800 hover:text-[var(--color-primary)] border-b border-gray-50"
-          >
-            Sản Phẩm
-          </Link>
-          <Link
-            href="/lien-he"
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="block py-2 text-sm font-semibold text-gray-800 hover:text-[var(--color-primary)] border-b border-gray-50"
-          >
-            Liên Hệ
-          </Link>
+          />
 
-          <div className="pt-2">
-            <a
-              href="tel:0933660399"
-              className="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs shadow-xs"
-            >
-              Gọi Đặt Hoa: 0933 660 399
-            </a>
+          {/* Side Menu */}
+          <div className="fixed right-0 top-0 z-50 h-full w-[82%] max-w-sm bg-white shadow-xl md:hidden animate-slide-in-right">
+            {/* Header */}
+            <div className="flex h-20 text-right items-center justify-end border-b border-[#eee7e4] px-5">
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="p-2 text-gray-500 transition-colors hover:text-[var(--color-primary)]"
+                aria-label="Đóng menu"
+              >
+                <X className="h-8 w-8" />
+              </button>
+            </div>
+
+            {/* Navigation */}
+            <nav className="px-5 py-6">
+              <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+                Menu
+              </p>
+
+              <div className="divide-y divide-[#eee7e4]">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-4 text-sm font-semibold text-[var(--color-text-main)] transition-colors hover:text-[var(--color-primary)]"
+                >
+                  Trang Chủ
+                  <span className="text-gray-300">→</span>
+                </Link>
+
+                <Link
+                  href="/san-pham"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-4 text-sm font-semibold text-[var(--color-text-main)] transition-colors hover:text-[var(--color-primary)]"
+                >
+                  Sản Phẩm
+                  <span className="text-gray-300">→</span>
+                </Link>
+
+                <Link
+                  href="/lien-he"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-between py-4 text-sm font-semibold text-[var(--color-text-main)] transition-colors hover:text-[var(--color-primary)]"
+                >
+                  Liên Hệ
+                  <span className="text-gray-300">→</span>
+                </Link>
+              </div>
+
+              {/* Hotline */}
+              <div className="mt-8 border-t border-[#eee7e4] pt-6">
+                <p className="mb-3 text-xs text-gray-400">
+                  Cần tư vấn hoặc đặt hoa?
+                </p>
+
+                <a
+                  href="tel:0933660399"
+                  className="inline-flex w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-hover)]"
+                >
+                  <Phone className="h-4 w-4" />
+                  Gọi 0933 660 399
+                </a>
+              </div>
+
+              {/* Contact Info */}
+              <div className=" border-[#eee7e4] px-5 py-5">
+                <div className="space-y-3 text-xs text-gray-500">
+                  {/* Địa chỉ */}
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+
+                    <span className="leading-5">
+                      275 Trần Hưng Đạo,
+                      <br />
+                      Phan Thiết, Bình Thuận
+                    </span>
+                  </div>
+
+                  {/* Hotline */}
+                  <a
+                    href="tel:0933660399"
+                    className="flex items-center gap-3 transition-colors hover:text-[var(--color-primary)]"
+                  >
+                    <Phone className="h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+
+                    <span className="leading-5">
+                      0933 660 399 - 0982 31 0982
+                    </span>
+                  </a>
+                </div>
+              </div>
+
+              {/* Social */}
+              <div className="mt-8 border-t border-[#eee7e4] pt-6">
+                <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  Kết nối
+                </p>
+
+                <div className="flex items-center gap-4">
+                  <a
+                    href="https://www.facebook.com/nguoilamhoa/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Facebook"
+                  >
+                    <img
+                      src="/fb.png"
+                      alt="Facebook"
+                      className="h-7 w-7 object-contain"
+                    />
+                  </a>
+
+                  <a
+                    href="https://zalo.me/0933660399"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Zalo"
+                  >
+                    <img
+                      src="/zalo.png"
+                      alt="Zalo"
+                      className="h-7 w-7 object-contain"
+                    />
+                  </a>
+                </div>
+              </div>
+            </nav>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
