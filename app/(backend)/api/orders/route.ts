@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import Order from "@/models/Order";
 import { createNotification } from "@/lib/createNotification";
+import { sendOrderNotificationEmail } from "@/lib/sendEmailNotification";
 
 export async function GET(request: NextRequest) {
   try {
@@ -218,6 +219,21 @@ export async function POST(request: NextRequest) {
       message: `${customerName} vừa gửi yêu cầu đặt hoa.`,
       type: "order",
       orderId: order._id,
+    });
+
+    await sendOrderNotificationEmail({
+      customerName: order.customerName,
+      email: order.email,
+      phoneNumber: order.phoneNumber,
+      deliveryAddress: order.deliveryAddress,
+      deliveryDate: order.deliveryDate
+        ? order.deliveryDate.toISOString().split("T")[0]
+        : null,
+      occasion: order.occasion,
+      quantity: order.quantity,
+      note: order.note,
+      status: order.status,
+      productName: product.name,
     });
 
     return NextResponse.json(

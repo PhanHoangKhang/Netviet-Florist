@@ -40,7 +40,7 @@ export default function IntroSection() {
           ))}
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-5 lg:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-5 lg:grid-cols-2 lg:px-8 mb-10">
         {/* LEFT */}
         <div className="order-2 lg:order-1">
           <Reveal direction="left">
