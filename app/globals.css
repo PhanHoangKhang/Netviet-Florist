@@ -43,6 +43,22 @@
   animation-play-state: paused;
 }
 
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-blink {
+  animation: blink 0.8s infinite;
+}
+
 body {
   background-color: var(--color-bg-light);
   color: var(--color-text-main);

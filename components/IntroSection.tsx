@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Reveal from "@/components/animations/Reveal";
+import TypingText from "@/components/animations/TypingText";
 
 export default function IntroSection() {
   return (
@@ -39,7 +40,7 @@ export default function IntroSection() {
           ))}
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:px-8">
+      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-15 lg:grid-cols-2 lg:px-8">
         {/* LEFT */}
         <Reveal direction="left">
           <div className="max-w-2xl">
@@ -48,13 +49,15 @@ export default function IntroSection() {
             </div>
 
             <h1 className="max-w-xl text-4xl font-semibold leading-[1.08] tracking-tight text-[var(--color-text-main)] sm:text-5xl lg:text-6xl">
-              Những đóa hoa
-              <br />
-              thay bạn
-              <span className="text-[var(--color-primary)]">
-                {" "}
-                nói điều muốn nói.
-              </span>
+                Những đóa hoa
+                <br />
+                thay bạn{" "}
+                <TypingText
+                    text="nói điều muốn nói."
+                    speed={65}
+                    delay={700}
+                    className="text-[var(--color-primary)]"
+            />
             </h1>
 
             <p className="mt-6 max-w-lg text-base leading-7 text-gray-500 sm:text-lg">
@@ -83,7 +86,7 @@ export default function IntroSection() {
         {/* RIGHT */}
         <Reveal direction="right" delay={0.15}>
           <div className="relative">
-            <div className="aspect-[4/3] overflow-hidden bg-[#eee9e4]">
+            <div className="aspect-[4/3] overflow-hidden">
               <img
                 src="/netviet-intro.png"
                 alt="Hoa tươi tại Nét Việt Florist"
