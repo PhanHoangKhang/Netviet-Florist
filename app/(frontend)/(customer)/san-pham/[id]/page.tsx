@@ -7,13 +7,7 @@ import Link from "next/link";
 import ProductSlider from "@/components/ProductSlider";
 import ProductOrderForm from "@/components/ProductOrderForm";
 
-import {
-  ArrowLeft,
-  Phone,
-  ShieldCheck,
-  Truck,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowLeft, Phone, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 
 import type { Product } from "@/types/product";
 
@@ -59,7 +53,7 @@ export default function ProductDetailPage() {
 
         if (categorySlug) {
           const relatedResponse = await fetch(
-            `/api/products?category=${categorySlug}&limit=20`
+            `/api/products?category=${categorySlug}&limit=20`,
           );
 
           if (relatedResponse.ok) {
@@ -67,7 +61,7 @@ export default function ProductDetailPage() {
 
             if (relatedResult.success) {
               const related = relatedResult.data.filter(
-                (item: Product) => item._id !== currentProduct._id
+                (item: Product) => item._id !== currentProduct._id,
               );
 
               setRelatedProducts(related);
@@ -78,9 +72,7 @@ export default function ProductDetailPage() {
         console.error("FETCH PRODUCT DETAIL ERROR:", error);
 
         setError(
-          error instanceof Error
-            ? error.message
-            : "Không thể tải sản phẩm"
+          error instanceof Error ? error.message : "Không thể tải sản phẩm",
         );
       } finally {
         setLoading(false);
@@ -94,9 +86,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[var(--color-bg-light)] py-20 text-center">
-        <p className="text-sm text-gray-500">
-          Đang tải thông tin sản phẩm...
-        </p>
+        <p className="text-sm text-gray-500">Đang tải thông tin sản phẩm...</p>
       </div>
     );
   }
@@ -110,8 +100,7 @@ export default function ProductDetailPage() {
         </h2>
 
         <p className="text-xs text-gray-500 mt-2">
-          {error ||
-            "Mẫu hoa này có thể đã dừng cung cấp hoặc sai đường dẫn."}
+          {error || "Mẫu hoa này có thể đã dừng cung cấp hoặc sai đường dẫn."}
         </p>
 
         <Link
@@ -125,13 +114,11 @@ export default function ProductDetailPage() {
     );
   }
 
-  const productImage =
-    product.images?.[0] || "/images/placeholder.jpg";
+  const productImage = product.images?.[0] || "/images/placeholder.jpg";
 
   return (
     <div className="bg-[var(--color-bg-light)] min-h-screen py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-
         {/* Nút quay lại */}
         <button
           onClick={() => router.back()}
@@ -142,70 +129,78 @@ export default function ProductDetailPage() {
         </button>
 
         {/* Product Detail */}
-        <div className="bg-white rounded-sm border border-gray-100 p-6 sm:p-8 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
-
+        <div className="mb-16 grid grid-cols-1 gap-8 border border-[#e8dfdc] bg-white p-5 sm:p-7 lg:grid-cols-12 lg:p-8">
           {/* Ảnh */}
-          <div className="lg:col-span-5 flex justify-center items-center bg-gray-50 rounded-sm overflow-hidden border border-gray-100 group">
+          <div className="group lg:col-span-5 overflow-hidden bg-[var(--color-bg-light)]">
             <img
               src={productImage}
               alt={product.name}
-              className="w-full h-[380px] sm:h-[480px] object-cover group-hover:scale-105 transition-transform duration-500"
+              className="h-[380px] w-full object-cover transition-transform duration-700 group-hover:scale-[1.03] sm:h-[480px]"
             />
           </div>
 
           {/* Nội dung */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-6">
+          <div className="flex flex-col justify-between lg:col-span-7">
             <div>
-
               {/* Category */}
-              <span className="inline-block px-3 py-1 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] text-xs font-bold uppercase tracking-wider mb-3">
-                {product.categoryId?.name || "Hoa Tươi"}
-              </span>
+              <div className="mb-5 flex items-center gap-3">
+                <span className="h-px w-7 bg-[var(--color-primary)]" />
+
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-primary)]">
+                  {product.categoryId?.name || "Hoa Tươi"}
+                </span>
+              </div>
 
               {/* Name */}
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mb-3">
+              <h1 className="max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-[var(--color-text-main)] sm:text-4xl">
                 {product.name}
               </h1>
 
               {/* Price */}
-              <div className="text-xl sm:text-2xl font-bold text-[var(--color-primary)] mb-6">
+              <p className="mt-5 text-lg font-semibold text-[var(--color-primary)]">
                 Liên hệ báo giá
-              </div>
-
-              {/* Description */}
-              <p className="text-xs sm:text-sm text-gray-600 leading-relaxed mb-6 border-y border-gray-100 py-4">
-                {product.description ||
-                  "Sản phẩm được thiết kế tỉ mỉ từ những cành hoa tươi tuyển chọn trong ngày bởi thợ cắm hoa Nét Việt Florist. Phù hợp làm quà tặng sinh nhật, sự kiện và những dịp đặc biệt."}
               </p>
 
+              {/* Description */}
+              <div className="my-7 border-y border-[#eee7e4] py-5">
+                <p className="max-w-2xl text-sm leading-7 text-gray-500">
+                  {product.description ||
+                    "Sản phẩm được thiết kế tỉ mỉ từ những cành hoa tươi tuyển chọn trong ngày bởi thợ cắm hoa Nét Việt Florist. Phù hợp làm quà tặng sinh nhật, sự kiện và những dịp đặc biệt."}
+                </p>
+              </div>
+
               {/* Cam kết */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
-
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-teal-50/50 border border-teal-100 text-xs text-gray-700">
-                  <ShieldCheck className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
-                  <span>100% Hoa tươi chọn lọc</span>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div className="flex items-start gap-3 border-l border-[var(--color-primary)]/30 pl-3">
+                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                  <span className="text-xs leading-5 text-gray-600">
+                    Hoa tươi chọn lọc
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-teal-50/50 border border-teal-100 text-xs text-gray-700">
-                  <Truck className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
-                  <span>Giao nhanh Phan Thiết</span>
+                <div className="flex items-start gap-3 border-l border-[var(--color-primary)]/30 pl-3">
+                  <Truck className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                  <span className="text-xs leading-5 text-gray-600">
+                    Giao nhanh Phan Thiết
+                  </span>
                 </div>
 
-                <div className="flex items-center gap-2.5 p-3 rounded-xl bg-teal-50/50 border border-teal-100 text-xs text-gray-700">
-                  <RefreshCw className="w-5 h-5 text-[var(--color-primary)] shrink-0" />
-                  <span>Chụp ảnh xem trước</span>
+                <div className="flex items-start gap-3 border-l border-[var(--color-primary)]/30 pl-3">
+                  <RefreshCw className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                  <span className="text-xs leading-5 text-gray-600">
+                    Chụp ảnh xem trước
+                  </span>
                 </div>
-
               </div>
             </div>
 
-            {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100">
+            {/* Button */}
+            <div className="mt-8 border-t border-[#eee7e4] pt-6">
               <a
                 href="tel:0933660399"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl border border-[var(--color-primary)] text-[var(--color-primary)] font-bold text-xs sm:text-sm hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] px-6 py-3.5 text-sm font-medium text-white transition-colors duration-200 hover:bg-[var(--color-primary-hover)]"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="h-4 w-4" />
                 Gọi 0933 660 399
               </a>
             </div>
