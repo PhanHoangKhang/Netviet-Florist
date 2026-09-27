@@ -89,7 +89,7 @@ export default function IntroSection() {
         <div className="order-1 lg:order-2">
           <Reveal direction="right" delay={0.15}>
             <div className="relative aspect-[4/3] overflow-hidden">
-              <div className="absolute inset-[-100%] animate-border-spin bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,var(--color-primary)_320deg,var(--color-secondary)_345deg,transparent_360deg)] motion-reduce:animate-none" />
+              <div className="absolute inset-[-100%] animate-border-spin bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,var(--color-primary)_315deg,var(--color-primary-hover)_335deg,transparent_360deg)] motion-reduce:animate-none" />
 
               <div className="absolute inset-[3px] z-10 flex items-center justify-center overflow-hidden bg-[var(--color-bg-light)]">
                 <img

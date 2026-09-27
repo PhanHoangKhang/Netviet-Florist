@@ -11,6 +11,7 @@ import IntroSection from "@/components/IntroSection";
 import FAQSection from "@/components/FAQSection";
 
 import type { Product } from "@/types/product";
+import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -160,6 +161,7 @@ export default function Home() {
 
         {/* FAQ - NEW */}
         <FAQSection />
+        <ContactSection />
       </main>
     </div>
   );
