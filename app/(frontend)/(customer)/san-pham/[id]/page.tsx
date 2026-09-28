@@ -118,7 +118,7 @@ export default function ProductDetailPage() {
   const productImage = product.images?.[0] || "/images/placeholder.jpg";
 
   return (
-    <div className="min-h-screen py-8 sm:py-12">
+    <div className="min-h-screen pt-8 sm:pt-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Nút quay lại */}
         <button
