@@ -10,6 +10,7 @@ import ProductOrderForm from "@/components/ProductOrderForm";
 import { ArrowLeft, Phone, ShieldCheck, Truck, RefreshCw } from "lucide-react";
 
 import type { Product } from "@/types/product";
+import ContactSection from "@/components/ContactSection";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -85,7 +86,7 @@ export default function ProductDetailPage() {
   // Loading
   if (loading) {
     return (
-      <div className="min-h-screen bg-[var(--color-bg-light)] py-20 text-center">
+      <div className="min-h-screen py-20 text-center">
         <p className="text-sm text-gray-500">Đang tải thông tin sản phẩm...</p>
       </div>
     );
@@ -94,7 +95,7 @@ export default function ProductDetailPage() {
   // Error / không tìm thấy
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-[var(--color-bg-light)] py-20 text-center">
+      <div className="min-h-screen py-20 text-center">
         <h2 className="text-xl font-bold text-gray-800">
           Không tìm thấy sản phẩm
         </h2>
@@ -117,7 +118,7 @@ export default function ProductDetailPage() {
   const productImage = product.images?.[0] || "/images/placeholder.jpg";
 
   return (
-    <div className="bg-[var(--color-bg-light)] min-h-screen py-8 sm:py-12">
+    <div className="min-h-screen py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Nút quay lại */}
         <button
@@ -223,6 +224,7 @@ export default function ProductDetailPage() {
           </div>
         )}
       </div>
+      <ContactSection />
     </div>
   );
 }

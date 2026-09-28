@@ -2,7 +2,9 @@ import { Clock, MapPin, MessageCircle, Phone } from "lucide-react";
 
 export default function ContactSection() {
   return (
-    <section className="relative overflow-hidden border-t border-[#eadfdc] bg-[var(--color-bg-light)]">
+    <section className="relative overflow-hidden border-t border-[#eadfdc]" style={{
+        backgroundImage: "url('/contact-bg.png')",
+    }}>
       {/* Decorative elements */}
       <div className="pointer-events-none absolute -left-24 -top-24 h-50 w-56 rounded-full bg-[var(--color-primary)]/5" />
       <div className="pointer-events-none absolute -bottom-32 -right-20 h-64 w-64 rounded-full border border-[var(--color-primary)]/10" />

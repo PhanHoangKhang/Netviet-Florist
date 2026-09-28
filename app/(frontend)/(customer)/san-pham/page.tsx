@@ -9,6 +9,7 @@ import type {
   Product,
   Pagination,
 } from "@/types/product";
+import ContactSection from "@/components/ContactSection";
 
 const CATEGORIES = [
   { id: "all", name: "Tất Cả" },
@@ -150,7 +151,7 @@ function ProductListContent() {
   };
 
   return (
-    <div className="bg-[var(--color-bg-light)] min-h-screen py-8 sm:py-12">
+    <div className="min-h-screen py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
 
         {/* Header */}
@@ -311,12 +312,13 @@ export default function ProductsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[var(--color-bg-light)] py-20 text-center text-xs text-gray-400">
+        <div className="min-h-screen py-20 text-center text-xs text-gray-400">
           Đang tải sản phẩm...
         </div>
       }
     >
       <ProductListContent />
+      <ContactSection />
     </Suspense>
   );
 }

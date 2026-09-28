@@ -73,7 +73,7 @@ export default function HowItWorksSection() {
                   {/* Top Header Card */}
                   <div className="flex items-center justify-between mb-5 relative z-10">
                     {/* Icon với hiệu ứng nền gradient bắt mắt khi hover */}
-                    <div className="w-12 h-12 rounded-xl bg-[var(--color-bg-light)] text-[var(--color-primary)] border border-teal-100 flex items-center justify-center shadow-xs group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:scale-110 transition-all duration-300">
+                    <div className="w-12 h-12 rounded-sm text-[var(--color-primary)] flex items-center justify-center shadow-xs group-hover:bg-[var(--color-primary)] group-hover:text-white group-hover:scale-110 transition-all duration-300">
                       <Icon className="w-6 h-6 stroke-[1.8]" />
                     </div>
                     {/* Badge Bước mang màu riêng */}

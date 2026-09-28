@@ -58,7 +58,7 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   };
 
   return (
-    <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 sm:p-5">
+    <div className="rounded-sm border border-gray-100 bg-gray-50 p-4 sm:p-5">
       <div className="flex items-center gap-2 mb-4">
         <MessageCircle className="w-5 h-5 text-[var(--color-primary)]" />
         <h2 className="text-base sm:text-lg font-extrabold text-gray-900">
@@ -219,7 +219,7 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
           <button
             type="submit"
             disabled={submitting}
-            className="w-full rounded-xl bg-[var(--color-primary)] py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full rounded-sm bg-[var(--color-primary)] py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting
               ? "Đang gửi yêu cầu..."

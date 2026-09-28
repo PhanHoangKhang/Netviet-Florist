@@ -4,7 +4,7 @@ import TypingText from "@/components/animations/TypingText";
 
 export default function IntroSection() {
   return (
-    <section className="border-b border-gray-200 bg-[var(--color-bg-light)]">
+    <section className="border-b border-gray-200">
       <div className="overflow-hidden bg-[#F1E6DC] py-3">
         <div className="flex w-max animate-marquee">
           {[...Array(2)].map((_, index) => (
@@ -88,15 +88,22 @@ export default function IntroSection() {
         {/* RIGHT */}
         <div className="order-1 lg:order-2">
           <Reveal direction="right" delay={0.15}>
-            <div className="relative aspect-[4/3] overflow-hidden">
+            <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-full drop-shadow-[0_12px_35px_rgba(77,13,1,0.18)]">
+              {/* Animated rotating border */}
               <div className="absolute inset-[-100%] animate-border-spin bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,var(--color-primary)_315deg,var(--color-primary-hover)_335deg,transparent_360deg)] motion-reduce:animate-none" />
 
-              <div className="absolute inset-[3px] z-10 flex items-center justify-center overflow-hidden bg-[var(--color-bg-light)]">
+              {/* Image */}
+              <div className="absolute inset-[3px] z-10 overflow-hidden rounded-full bg-[var(--color-bg-light)]">
                 <img
                   src="/netviet-intro.png"
                   alt="Nét Việt Florist"
                   className="h-full w-full object-contain"
                 />
+
+                {/* Light sweep */}
+                <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-full">
+                  <div className="absolute -left-[80%] top-[-20%] h-[140%] w-[35%] rotate-[25deg] bg-gradient-to-r from-transparent via-white/50 to-transparent blur-md animate-shine motion-reduce:animate-none" />
+                </div>
               </div>
             </div>
           </Reveal>

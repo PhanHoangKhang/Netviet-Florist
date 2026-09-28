@@ -32,17 +32,14 @@ const faqs = [
 ];
 
 export default function FAQSection() {
-  const [openIndex, setOpenIndex] =
-    useState<number | null>(0);
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleFAQ = (index: number) => {
-    setOpenIndex((current) =>
-      current === index ? null : index
-    );
+    setOpenIndex((current) => (current === index ? null : index));
   };
 
   return (
-    <section className="border-t border-gray-200 bg-[var(--color-bg-light)]">
+    <section className="border-t border-gray-200">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-6 lg:py-20">
         {/* Header */}
         <div className="grid gap-8 lg:grid-cols-[280px_1fr] lg:gap-20">
@@ -58,41 +55,42 @@ export default function FAQSection() {
             </h2>
 
             <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
-              Một vài thông tin giúp bạn dễ dàng
-              hơn trong quá trình lựa chọn và đặt
-              hoa tại Nét Việt.
+              Một vài thông tin giúp bạn dễ dàng hơn trong quá trình lựa chọn và
+              đặt hoa tại Nét Việt.
             </p>
           </div>
 
           {/* FAQ list */}
-          <div className="border-t border-gray-200">
+          <div className="space-y-3">
             {faqs.map((faq, index) => {
-              const isOpen =
-                openIndex === index;
+              const isOpen = openIndex === index;
 
               return (
                 <div
                   key={faq.question}
-                  className="border-b border-gray-200"
+                  className={`overflow-hidden border bg-white transition-all duration-200 ${
+                    isOpen
+                      ? "border-[var(--color-primary)]/20 shadow-sm"
+                      : "border-gray-200 shadow-sm hover:border-[var(--color-primary)]/20 hover:shadow-md"
+                  }`}
                 >
                   <button
                     type="button"
-                    onClick={() =>
-                      toggleFAQ(index)
-                    }
-                    className="group flex w-full items-start gap-4 py-5 text-left"
+                    onClick={() => toggleFAQ(index)}
+                    className="group flex w-full items-start gap-4 px-5 py-5 text-left"
                   >
                     {/* Number */}
-
-                    <span className="pt-0.5 font-mono text-[11px] text-gray-400 transition-colors group-hover:text-[var(--color-primary)]">
-                      {String(index + 1).padStart(
-                        2,
-                        "0"
-                      )}
+                    <span
+                      className={`pt-0.5 font-mono text-[11px] transition-colors ${
+                        isOpen
+                          ? "text-[var(--color-primary)]"
+                          : "text-gray-400 group-hover:text-[var(--color-primary)]"
+                      }`}
+                    >
+                      {String(index + 1).padStart(2, "0")}
                     </span>
 
                     {/* Question */}
-
                     <span
                       className={`flex-1 text-sm font-medium transition-colors sm:text-base ${
                         isOpen
@@ -104,12 +102,9 @@ export default function FAQSection() {
                     </span>
 
                     {/* Icon */}
-
                     <span
                       className={`flex h-5 w-5 shrink-0 items-center justify-center transition-transform duration-200 ${
-                        isOpen
-                          ? "rotate-45"
-                          : ""
+                        isOpen ? "rotate-45" : ""
                       }`}
                     >
                       <Plus
@@ -120,16 +115,13 @@ export default function FAQSection() {
                   </button>
 
                   {/* Answer */}
-
                   <div
                     className={`grid transition-[grid-template-rows] duration-200 ${
-                      isOpen
-                        ? "grid-rows-[1fr]"
-                        : "grid-rows-[0fr]"
+                      isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
                     }`}
                   >
                     <div className="overflow-hidden">
-                      <p className="pb-5 pl-8 pr-8 text-sm leading-7 text-gray-500 sm:pl-9 sm:pr-12">
+                      <p className="px-5 pb-5 pl-14 pr-8 text-sm leading-7 text-gray-500 sm:pl-14 sm:pr-12">
                         {faq.answer}
                       </p>
                     </div>

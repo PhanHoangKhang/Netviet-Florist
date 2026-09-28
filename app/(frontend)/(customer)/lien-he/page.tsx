@@ -21,7 +21,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="bg-[var(--color-bg-light)] min-h-screen py-10 sm:py-14">
+    <div className="min-h-screen py-10 sm:py-14">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header Trang */}
@@ -44,14 +44,14 @@ export default function ContactPage() {
           <div className="lg:col-span-6 space-y-6">
             
             {/* Thẻ Thông Tin Cửa Hàng */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-4">
+            <div className="bg-white p-6 rounded-sm border border-gray-100 shadow-sm space-y-4">
               <h2 className="text-lg font-bold text-gray-900 border-b border-gray-100 pb-3">
                 Thông Tin Shop Hoa
               </h2>
 
               <ul className="space-y-3.5 text-xs sm:text-sm text-gray-600">
                 <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-teal-50 text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-sm text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
@@ -61,7 +61,7 @@ export default function ContactPage() {
                 </li>
 
                 <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-teal-50 text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-sm text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div>
@@ -75,7 +75,7 @@ export default function ContactPage() {
                 </li>
 
                 <li className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-teal-50 text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-sm text-[var(--color-primary)] flex items-center justify-center shrink-0 mt-0.5">
                     <Clock className="w-4 h-4" />
                   </div>
                   <div>
@@ -91,7 +91,7 @@ export default function ContactPage() {
                   href="https://zalo.me/0933660399"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--color-primary)] text-white font-semibold text-xs hover:opacity-90 transition-opacity shadow-xs"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-sm bg-[var(--color-primary)] text-white font-semibold text-xs hover:opacity-90 transition-opacity shadow-xs"
                 >
                   <MessageCircle className="w-4 h-4" />
                   Chat Zalo Ngay
@@ -101,7 +101,7 @@ export default function ContactPage() {
                   href="https://www.facebook.com/nguoilamhoa/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-xs hover:bg-gray-50 transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-sm border border-gray-200 text-gray-700 font-semibold text-xs hover:bg-gray-50 transition-colors"
                 >
                   <img src="/fb.png" alt="Facebook" className="w-4 h-4 object-contain" />
                   Fanpage Facebook
@@ -110,7 +110,7 @@ export default function ContactPage() {
             </div>
 
             {/* Thẻ Form Gửi Yêu Cầu Tư Vấn */}
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+            <div className="bg-white p-6 rounded-sm border border-gray-100 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900 mb-1">
                 Gửi Yêu Cầu Tư Vấn Mẫu Hoa
               </h2>
@@ -126,7 +126,7 @@ export default function ContactPage() {
                     placeholder="Nguyễn Văn A"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
                   />
                 </div>
 
@@ -138,7 +138,7 @@ export default function ContactPage() {
                     placeholder="0933 xxx xxx"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
                   />
                 </div>
 
@@ -149,13 +149,13 @@ export default function ContactPage() {
                     placeholder="Ví dụ: Tư vấn giỏ hoa sinh nhật mẹ khoảng 500k - 700k..."
                     value={formData.note}
                     onChange={(e) => setFormData({ ...formData, note: e.target.value })}
-                    className="w-full px-3.5 py-2.5 text-xs rounded-xl border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all resize-none"
+                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all resize-none"
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[var(--color-primary)] text-white font-bold text-xs hover:bg-[var(--color-primary)]/90 transition-colors shadow-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-sm bg-[var(--color-primary)] text-white font-bold text-xs hover:bg-[var(--color-primary)]/90 transition-colors shadow-sm"
                 >
                   <Send className="w-4 h-4" />
                   Gửi Yêu Cầu Cho Shop
@@ -166,7 +166,7 @@ export default function ContactPage() {
           </div>
 
           {/* Cột phải (6 cột): Bản đồ Google Maps */}
-          <div className="lg:col-span-6 h-[400px] lg:h-full min-h-[480px] bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden p-2">
+          <div className="lg:col-span-6 h-[400px] lg:h-full min-h-[480px] bg-white rounded-sm border border-gray-100 shadow-sm overflow-hidden p-2">
             <iframe
               title="Địa chỉ Nét Việt Florist"
               src="https://maps.google.com/maps?q=N%C3%A9t%20Vi%E1%BB%87t%20Florist%2C%20275%20Tr%E1%BA%A7n%20H%C6%B0ng%20%C4%90%E1%BA%A1o%2C%20Phan%20Thi%E1%BA%BFt&t=&z=17&ie=UTF8&iwloc=&output=embed"
