@@ -1,13 +1,4 @@
-export interface Product {
-  id: string;
-  name: string;
-  categoryId: string;
-  category: string;
-  image: string;
-  isBestSeller?: boolean;
-}
-
-export const MOCK_PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS = [
   // Best Sellers
   {
     id: "bs-1",

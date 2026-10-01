@@ -5,7 +5,7 @@ import TypingText from "@/components/animations/TypingText";
 export default function IntroSection() {
   return (
     <section className="border-b border-gray-200">
-      <div className="overflow-hidden bg-[#F1E6DC] py-3">
+      <div className="overflow-hidden bg-[#F1E6DC] py-3 mb-15">
         <div className="flex w-max animate-marquee">
           {[...Array(2)].map((_, index) => (
             <div key={index} className="flex items-center">
@@ -40,7 +40,7 @@ export default function IntroSection() {
           ))}
         </div>
       </div>
-      <div className="mx-auto grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-5 lg:grid-cols-2 lg:px-8 mb-10">
+      <div className="mx-auto mb-25 grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-5 lg:grid-cols-2 lg:px-8 mb-10">
         {/* LEFT */}
         <div className="order-2 lg:order-1">
           <Reveal direction="left">
