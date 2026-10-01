@@ -4,6 +4,67 @@ import Product from "@/models/Product";
 import Order from "@/models/Order";
 import { createNotification } from "@/lib/createNotification";
 import { sendOrderNotificationEmail } from "@/lib/sendEmailNotification";
+import mongoose from "mongoose";
+import { z } from "zod";
+import { rateLimit } from "@/lib/rate-limit";
+
+const orderSchema = z.object({
+  productId: z.string().refine(
+    (value) => mongoose.isValidObjectId(value),
+    {
+      message: "Product ID không hợp lệ.",
+    }
+  ),
+
+  customerName: z
+    .string()
+    .trim()
+    .min(2, "Họ tên phải có ít nhất 2 ký tự.")
+    .max(100, "Họ tên quá dài."),
+
+  email: z
+    .string()
+    .trim()
+    .email("Email không hợp lệ.")
+    .max(254, "Email quá dài."),
+
+  phoneNumber: z
+    .string()
+    .trim()
+    .min(8, "Số điện thoại không hợp lệ.")
+    .max(20, "Số điện thoại quá dài."),
+
+  deliveryAddress: z
+    .string()
+    .trim()
+    .min(5, "Địa chỉ quá ngắn.")
+    .max(300, "Địa chỉ quá dài."),
+
+  deliveryDate: z
+    .string()
+    .trim()
+    .optional()
+    .nullable(),
+
+  occasion: z
+    .string()
+    .trim()
+    .min(1, "Vui lòng chọn dịp tặng.")
+    .max(100, "Dịp tặng quá dài."),
+
+  quantity: z.coerce
+    .number()
+    .int("Số lượng phải là số nguyên.")
+    .min(1, "Số lượng phải lớn hơn 0.")
+    .max(100, "Số lượng quá lớn."),
+
+  note: z
+    .string()
+    .trim()
+    .max(1000, "Ghi chú quá dài.")
+    .optional()
+    .default(""),
+});
 
 export async function GET(request: NextRequest) {
   try {
@@ -133,9 +194,76 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
+    // ========================================
+    // RATE LIMIT
+    // ========================================
+
+    const forwardedFor = request.headers.get("x-forwarded-for");
+
+    const ip =
+      forwardedFor?.split(",")[0]?.trim() ||
+      request.headers.get("x-real-ip") ||
+      "unknown";
+
+    const rate = rateLimit(`orders:${ip}`, {
+      limit: 5,
+      windowMs: 60 * 1000,
+    });
+
+    if (!rate.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "Bạn gửi yêu cầu quá nhanh. Vui lòng thử lại sau.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rate.retryAfter),
+          },
+        }
+      );
+    }
+
+    // ========================================
+    // BODY SIZE CHECK
+    // ========================================
+
+    const contentLength = request.headers.get("content-length");
+
+    if (contentLength && Number(contentLength) > 50_000) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Dữ liệu gửi lên quá lớn.",
+        },
+        { status: 413 }
+      );
+    }
+
+    // ========================================
+    // PARSE BODY
+    // ========================================
 
     const body = await request.json();
+
+    // ========================================
+    // VALIDATION
+    // ========================================
+
+    const result = orderSchema.safeParse(body);
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Thông tin đặt hoa không hợp lệ.",
+          errors: result.error.flatten().fieldErrors,
+        },
+        { status: 400 }
+      );
+    }
 
     const {
       productId,
@@ -147,33 +275,17 @@ export async function POST(request: NextRequest) {
       occasion,
       quantity,
       note,
-    } = body;
+    } = result.data;
 
-    // =========================
-    // VALIDATION
-    // =========================
+    // ========================================
+    // DATABASE
+    // ========================================
 
-    if (
-      !productId ||
-      !customerName ||
-      !email ||
-      !phoneNumber ||
-      !deliveryAddress ||
-      !occasion ||
-      !quantity
-    ) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Vui lòng điền đầy đủ thông tin.",
-        },
-        { status: 400 }
-      );
-    }
+    await connectDB();
 
-    // =========================
+    // ========================================
     // CHECK PRODUCT
-    // =========================
+    // ========================================
 
     const product = await Product.findById(productId);
 
@@ -197,9 +309,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // =========================
+    // ========================================
     // CREATE ORDER
-    // =========================
+    // ========================================
 
     const order = await Order.create({
       productId: product._id,
@@ -209,10 +321,14 @@ export async function POST(request: NextRequest) {
       deliveryAddress,
       deliveryDate: deliveryDate || null,
       occasion,
-      quantity: Number(quantity),
-      note: note || "",
+      quantity,
+      note,
       status: "pending",
     });
+
+    // ========================================
+    // CREATE NOTIFICATION
+    // ========================================
 
     await createNotification({
       title: "Đơn hàng mới",
@@ -220,6 +336,10 @@ export async function POST(request: NextRequest) {
       type: "order",
       orderId: order._id,
     });
+
+    // ========================================
+    // SEND EMAIL
+    // ========================================
 
     await sendOrderNotificationEmail({
       customerName: order.customerName,
@@ -236,14 +356,22 @@ export async function POST(request: NextRequest) {
       productName: product.name,
     });
 
+    // ========================================
+    // RESPONSE
+    // ========================================
+
     return NextResponse.json(
       {
         success: true,
-        message:
-          "Yêu cầu đặt hoa đã được gửi thành công.",
+        message: "Yêu cầu đặt hoa đã được gửi thành công.",
         data: order,
       },
-      { status: 201 }
+      {
+        status: 201,
+        headers: {
+          "X-RateLimit-Remaining": String(rate.remaining),
+        },
+      }
     );
   } catch (error) {
     console.error("CREATE ORDER ERROR:", error);

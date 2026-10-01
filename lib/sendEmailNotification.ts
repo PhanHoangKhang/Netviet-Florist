@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { escapeHtml } from "./escapeHtml";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -16,6 +17,16 @@ interface OrderEmailData {
 }
 
 export async function sendOrderNotificationEmail(order: OrderEmailData) {
+  const customerName = escapeHtml(order.customerName);
+  const email = escapeHtml(order.email);
+  const phoneNumber = escapeHtml(order.phoneNumber);
+  const deliveryAddress = escapeHtml(order.deliveryAddress);
+  const deliveryDate = escapeHtml(order.deliveryDate || "Chưa xác định");
+  const occasion = escapeHtml(order.occasion);
+  const quantity = escapeHtml(order.quantity);
+  const note = escapeHtml(order.note || "Không có");
+  const productName = escapeHtml(order.productName);
+
   try {
     const { data, error } = await resend.emails.send({
       from: "Nét Việt Florist <onboarding@resend.dev>",
@@ -24,25 +35,28 @@ export async function sendOrderNotificationEmail(order: OrderEmailData) {
 
       html: `
         <div style="font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-            <h2>Đơn hàng mới - ${order.productName}</h2>
+            <h2>Đơn hàng mới - ${productName}</h2>
+
             <p><strong>Thông tin khách hàng</strong></p>
+
             <p>
-            Họ tên: ${order.customerName}<br>
-            Email: ${order.email}<br>
-            Số điện thoại: ${order.phoneNumber}
+            Họ tên: ${customerName}<br>
+            Email: ${email}<br>
+            Số điện thoại: ${phoneNumber}<br>
             </p>
 
             <p><strong>Thông tin đơn hàng</strong></p>
+
             <p>
-            Sản phẩm: ${order.productName}<br>
-            Số lượng: ${order.quantity}<br>
-            Dịp tặng: ${order.occasion}<br>
-            Ngày giao: ${order.deliveryDate || "Chưa xác định"}<br>
-            Địa chỉ giao: ${order.deliveryAddress}<br>
-            Ghi chú: ${order.note || "Không có"}<br>
+            Sản phẩm: ${productName}<br>
+            Số lượng: ${quantity}<br>
+            Dịp tặng: ${occasion}<br>
+            Ngày giao: ${deliveryDate}<br>
+            Địa chỉ giao: ${deliveryAddress}<br>
+            Ghi chú: ${note}<br>
             </p>
         </div>
-      `,
+    `,
     });
 
     if (error) {
