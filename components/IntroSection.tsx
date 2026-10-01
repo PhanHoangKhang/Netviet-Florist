@@ -95,7 +95,7 @@ export default function IntroSection() {
               {/* Image */}
               <div className="absolute inset-[3px] z-10 overflow-hidden rounded-full bg-[var(--color-bg-light)]">
                 <img
-                  src="/netviet.jpg"
+                  src="/netviet.svg"
                   alt="Nét Việt Florist"
                   className="h-full w-full object-contain"
                 />

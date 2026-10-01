@@ -3,14 +3,29 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MapPin, Phone, Menu, X } from "lucide-react";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollY } = useScroll();
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsScrolled(latest > 16);
+  });
 
   return (
     <header className="sticky top-0 z-50 shadow-sm bg-white">
       {/* 1. TOP BAR - Nền màu Teal thương hiệu (--color-primary) */}
-      <div className="hidden sm:block bg-[var(--color-primary)] text-white text-xs py-2 px-4">
+      <motion.div
+        initial={false}
+        animate={{
+          height: isScrolled ? 0 : "auto",
+          opacity: isScrolled ? 0 : 1,
+        }}
+        transition={{ duration: 0.22, ease: "easeInOut" }}
+        className="hidden overflow-hidden bg-[var(--color-primary)] px-4 py-2 text-xs text-white sm:block"
+      >
         <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           {/* Địa chỉ & Hotline */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6">
@@ -62,17 +77,22 @@ export default function Navbar() {
             </a>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* 2. MAIN NAVBAR */}
       <div className="border-b border-gray-100 bg-white">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+        <motion.div
+          initial={false}
+          animate={{ height: isScrolled ? 64 : 80 }}
+          transition={{ duration: 0.22, ease: "easeInOut" }}
+          className="mx-auto flex max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-8"
+        >
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <img
               src="/logo.png"
               alt="Nét Việt Florist Logo"
-              className="w-12 h-12 object-contain rounded-full border border-gray-100"
+              className={`object-contain rounded-full border border-gray-100 transition-[width,height] duration-200 ${isScrolled ? "h-10 w-10" : "h-12 w-12"}`}
             />
             <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
               Nét Việt{" "}
@@ -126,7 +146,7 @@ export default function Navbar() {
               <Menu className="w-8 h-8" />
             )}
           </button>
-        </div>
+        </motion.div>
       </div>
 
       {/* 3. MOBILE MENU DROPDOWN */}
