@@ -5,14 +5,11 @@ export interface Product {
   name: string;
   slug: string;
   description?: string;
-
-  categoryId: Category
-
+  categoryId: Category;
   images: string[];
-
+  imagePublicIds: string[];
   isFeatured: boolean;
   inStock: boolean;
-
   createdAt: string;
   updatedAt: string;
 }
@@ -22,4 +19,9 @@ export interface Pagination {
   limit: number;
   total: number;
   totalPages: number;
+}
+
+export interface ImageItem {
+  url: string;
+  publicId: string;
 }

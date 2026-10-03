@@ -10,6 +10,7 @@ export interface IProduct extends Document {
   inStock: boolean;
   createdAt: Date;
   updatedAt: Date;
+  imagePublicIds?: string[];
 }
 
 const ProductSchema = new Schema<IProduct>(
@@ -44,6 +45,12 @@ const ProductSchema = new Schema<IProduct>(
         required: true,
       },
     ],
+
+    // Xóa ảnh khỏi cloudinary
+    imagePublicIds: {
+      type: [String],
+      default: [],
+    },
 
     isFeatured: {
       type: Boolean,

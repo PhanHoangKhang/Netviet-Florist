@@ -29,6 +29,31 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const handleDelete = async (id: string) => {
+    const confirmed = window.confirm(
+      "Bạn có chắc muốn xóa sản phẩm này không?",
+    );
+
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/admin/products/${id}`, {
+        method: "DELETE",
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Không thể xóa sản phẩm.");
+      }
+
+      await fetchProducts();
+    } catch (error) {
+      console.error("DELETE PRODUCT ERROR:", error);
+      alert("Không thể xóa sản phẩm.");
+    }
+  };
+
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -123,28 +148,32 @@ export default function ProductsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-start justify-between">
+      <div className="mb-8 flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Sản phẩm</h1>
+          <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-primary)]">
+            Catalog
+          </p>
+
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-[var(--color-text-main)]">
+            Sản phẩm
+          </h1>
 
           <p className="mt-1 text-sm text-gray-500">
-            Quản lý các sản phẩm của Nét Việt Florist.
+            Quản lý các mẫu hoa của Nét Việt Florist.
           </p>
         </div>
 
         <Link
-          href="/admin/products/new"
-          className="rounded-sm bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+          href="/netviet-admin/products/new"
+          className="bg-[var(--color-primary)] px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-hover)]"
         >
           + Thêm sản phẩm
         </Link>
       </div>
 
-      <div className="mb-5 rounded-sm border border-gray-200 bg-white p-4">
-        <div className="flex flex-col gap-3 md:flex-row">
-          {/* Search */}
-
-          <div className="flex flex-1 gap-2">
+      <div className="mb-5 border-y border-gray-200 bg-white">
+        <div className="flex flex-col gap-3 p-4 md:flex-row">
+          <div className="flex flex-1">
             <input
               type="text"
               placeholder="Tìm kiếm sản phẩm..."
@@ -155,30 +184,27 @@ export default function ProductsPage() {
                   handleSearch();
                 }
               }}
-              className="w-full rounded-sm border border-gray-200 px-4 py-2.5 text-sm outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-100"
+              className="min-w-0 flex-1 border border-gray-200 px-4 py-2.5 text-sm outline-none transition focus:border-[var(--color-primary)]"
             />
 
             <button
               onClick={handleSearch}
-              className="rounded-sm bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800"
+              className="border border-l-0 border-[var(--color-primary)] bg-[var(--color-primary)] px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-hover)]"
             >
               Tìm
             </button>
           </div>
 
-          {/* Category */}
-
           <select
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
-
               setPagination((prev) => ({
                 ...prev,
                 page: 1,
               }));
             }}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-gray-400"
+            className="border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-[var(--color-primary)]"
           >
             <option value="all">Tất cả danh mục</option>
 
@@ -189,24 +215,19 @@ export default function ProductsPage() {
             ))}
           </select>
 
-          {/* Status */}
-
           <select
             value={status}
             onChange={(e) => {
               setStatus(e.target.value);
-
               setPagination((prev) => ({
                 ...prev,
                 page: 1,
               }));
             }}
-            className="rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-gray-400"
+            className="border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-700 outline-none focus:border-[var(--color-primary)]"
           >
             <option value="all">Tất cả trạng thái</option>
-
             <option value="inStock">Còn hàng</option>
-
             <option value="outOfStock">Hết hàng</option>
           </select>
         </div>
@@ -215,33 +236,33 @@ export default function ProductsPage() {
       <div className="overflow-hidden rounded-sm border border-gray-200 bg-white">
         <div className="overflow-x-auto">
           <table className="w-full min-w-[900px]">
-            <thead className="border-b border-gray-200 bg-[var(--color-primary)]">
+            <thead className="border-b border-gray-200">
               <tr>
-                <th className="w-16 px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="w-16 px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   #
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   Sản phẩm
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   Danh mục
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
-                  Hình ảnh
+                <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
+                  Ảnh
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   Trạng thái
                 </th>
 
-                <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="px-6 py-4 text-left text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   Ngày tạo
                 </th>
 
-                <th className="w-24 px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-white">
+                <th className="w-32 px-6 py-4 text-right text-[11px] font-medium uppercase tracking-wider text-gray-400">
                   Thao tác
                 </th>
               </tr>
@@ -260,26 +281,29 @@ export default function ProductsPage() {
                     {/* Product */}
 
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
+                      <Link
+                        href={`/netviet-admin/products/${product._id}/edit`}
+                        className="group flex items-center gap-4"
+                      >
                         <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                           {product.images?.[0] ? (
                             <img
                               src={product.images[0]}
                               alt={product.name}
-                              className="h-full w-full object-cover"
+                              className="h-full w-full object-cover transition group-hover:opacity-90"
                             />
                           ) : (
                             <img
-                                src="/logo.png"
-                                alt="Nét Việt Florist Logo"
-                                className="mx-auto mb-4 w-12 h-12 object-contain rounded-full border border-gray-100"
+                              src="/logo.png"
+                              alt="Nét Việt Florist Logo"
+                              className="mx-auto h-12 w-12 rounded-full border border-gray-100 object-contain"
                             />
                           )}
                         </div>
 
                         <div>
                           <div className="flex items-center gap-2">
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-gray-900 transition group-hover:text-[var(--color-primary)]">
                               {product.name}
                             </p>
 
@@ -294,7 +318,7 @@ export default function ProductsPage() {
                             {product.slug}
                           </p>
                         </div>
-                      </div>
+                      </Link>
                     </td>
 
                     {/* Category */}
@@ -316,17 +340,21 @@ export default function ProductsPage() {
                     {/* Status */}
 
                     <td className="px-6 py-4">
-                      {product.inStock ? (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-green-50 px-3 py-1 text-xs font-medium text-green-700">
-                          <span className="h-1.5 w-1.5 rounded-full bg-green-500" />
-                          Còn hàng
+                      <div className="flex items-center gap-2 text-sm">
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${
+                            product.inStock ? "bg-emerald-500" : "bg-gray-400"
+                          }`}
+                        />
+
+                        <span
+                          className={
+                            product.inStock ? "text-gray-700" : "text-gray-400"
+                          }
+                        >
+                          {product.inStock ? "Còn hàng" : "Hết hàng"}
                         </span>
-                      ) : (
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-500">
-                          <span className="h-1.5 w-1.5 rounded-full bg-gray-400" />
-                          Hết hàng
-                        </span>
-                      )}
+                      </div>
                     </td>
 
                     {/* Created At */}
@@ -340,20 +368,28 @@ export default function ProductsPage() {
                     {/* Actions */}
 
                     <td className="px-6 py-4 text-right">
-                      <Link
-                        href={`/admin/products/${product._id}/edit`}
-                        className="text-sm font-medium text-gray-500 transition hover:text-gray-900"
-                      >
-                        Sửa
-                      </Link>
+                      <div className="flex justify-end gap-4">
+                        <Link
+                          href={`/netviet-admin/products/${product._id}/edit`}
+                          className="text-sm font-medium text-gray-500 transition-colors hover:text-[var(--color-primary)]"
+                        >
+                          Sửa
+                        </Link>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(product._id)}
+                          className="text-sm font-medium text-gray-400 transition-colors hover:text-red-600"
+                        >
+                          Xóa
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-16 text-center">
-                    <div className="text-3xl">🌸</div>
-
                     <p className="mt-3 text-sm font-medium text-gray-900">
                       Chưa có sản phẩm
                     </p>
@@ -363,7 +399,7 @@ export default function ProductsPage() {
                     </p>
 
                     <Link
-                      href="/admin/products/new"
+                      href="/netviet-admin/products/new"
                       className="mt-4 inline-block text-sm font-medium text-gray-900 underline"
                     >
                       + Thêm sản phẩm

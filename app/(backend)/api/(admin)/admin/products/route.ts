@@ -74,3 +74,96 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function POST(request: NextRequest) {
+  try {
+    await connectDB();
+
+    const body = await request.json();
+
+    const {
+      name,
+      slug,
+      description,
+      categoryId,
+      images,
+      imagePublicIds,
+      isFeatured,
+      inStock,
+    } = body;
+
+    if (!name || !slug || !categoryId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Vui lòng nhập đầy đủ thông tin sản phẩm.",
+        },
+        { status: 400 }
+      );
+    }
+
+    if (!Array.isArray(images) || images.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Vui lòng thêm ít nhất một hình ảnh.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const existingProduct = await Product.findOne({ slug });
+
+    if (existingProduct) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Slug sản phẩm đã tồn tại.",
+        },
+        { status: 409 }
+      );
+    }
+
+    const category = await Category.findById(categoryId);
+
+    if (!category) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Danh mục không tồn tại.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const product = await Product.create({
+      name: name.trim(),
+      slug: slug.trim(),
+      description: description?.trim() || "",
+      categoryId,
+      images,
+      imagePublicIds: imagePublicIds || [],
+      isFeatured: Boolean(isFeatured),
+      inStock: inStock !== false,
+    });
+
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Thêm sản phẩm thành công.",
+        data: product,
+      },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("CREATE PRODUCT ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Không thể tạo sản phẩm.",
+      },
+      { status: 500 }
+    );
+  }
+}
