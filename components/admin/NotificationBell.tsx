@@ -26,9 +26,7 @@ export default function NotificationBell() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch(
-        "/api/admin/notifications?limit=10",
-      );
+      const response = await fetch("/api/admin/notifications?limit=10");
 
       const result = await response.json();
 
@@ -38,6 +36,35 @@ export default function NotificationBell() {
       }
     } catch (error) {
       console.error("FETCH NOTIFICATIONS ERROR:", error);
+    }
+  };
+
+  const deleteNotification = async (id: string) => {
+    try {
+      const notification = notifications.find(
+        (item) => item._id === id,
+      );
+
+      const response = await fetch(`/api/admin/notifications/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Không thể xóa thông báo");
+      }
+
+      setNotifications((prev) =>
+        prev.filter((item) => item._id !== id),
+      );
+
+      // Chỉ giảm unread count nếu notification chưa đọc
+      if (notification && !notification.isRead) {
+        setUnreadCount((prev) => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error("DELETE NOTIFICATION ERROR:", error);
     }
   };
 
@@ -114,10 +141,7 @@ export default function NotificationBell() {
     const createdAt = new Date(date);
     const now = new Date();
 
-    const diff =
-      Math.floor(
-        (now.getTime() - createdAt.getTime()) / 1000,
-      );
+    const diff = Math.floor((now.getTime() - createdAt.getTime()) / 1000);
 
     if (diff < 60) {
       return "Vừa xong";
@@ -165,9 +189,7 @@ export default function NotificationBell() {
             {/* Header */}
             <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
               <div>
-                <h3 className="font-semibold text-gray-900">
-                  Thông báo
-                </h3>
+                <h3 className="font-semibold text-gray-900">Thông báo</h3>
 
                 {unreadCount > 0 && (
                   <p className="mt-0.5 text-xs text-gray-500">
@@ -223,7 +245,7 @@ export default function NotificationBell() {
                         markAsRead(notification._id);
                       }
                     }}
-                    className={`flex w-full gap-3 border-b border-gray-50 px-5 py-4 text-left transition hover:bg-gray-50 ${
+                    className={`group flex w-full gap-3 border-b border-gray-50 px-5 py-4 text-left transition hover:bg-gray-50 ${
                       !notification.isRead
                         ? "bg-[var(--color-primary)]/[0.03]"
                         : "bg-white"
@@ -257,9 +279,32 @@ export default function NotificationBell() {
                           {notification.title}
                         </p>
 
-                        {!notification.isRead && (
-                          <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-[var(--color-secondary)]" />
-                        )}
+                        <div className="flex shrink-0 items-center gap-2">
+                          {!notification.isRead && (
+                            <span className="mt-1 h-2 w-2 rounded-full bg-[var(--color-secondary)]" />
+                          )}
+
+                          {/* Delete button */}
+                          <span
+                            role="button"
+                            tabIndex={0}
+                            onClick={(event) => {
+                              event.stopPropagation();
+                              deleteNotification(notification._id);
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key === "Enter" || event.key === " ") {
+                                event.preventDefault();
+                                event.stopPropagation();
+                                deleteNotification(notification._id);
+                              }
+                            }}
+                            className="flex h-6 w-6 items-center justify-center rounded-md text-gray-300 opacity-0 transition hover:bg-gray-100 hover:text-gray-600 group-hover:opacity-100"
+                            aria-label="Xóa thông báo"
+                          >
+                            <X size={14} strokeWidth={1.8} />
+                          </span>
+                        </div>
                       </div>
 
                       <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-gray-500">
