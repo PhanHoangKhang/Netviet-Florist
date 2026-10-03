@@ -15,7 +15,7 @@
 
 ## Giới thiệu
 
-**Nét Việt Florist** là website đặt hoa trực tuyến được xây dựng cho một cửa hàng hoa tại Phan Thiết.
+**Nét Việt Florist** là website đặt hoa trực tuyến được xây dựng cho Nét Việt Florist - Shop Hoa Tươi tại Phan Thiết.
 
 Website cho phép khách hàng xem sản phẩm, tìm kiếm theo danh mục và gửi yêu cầu đặt hoa trực tuyến. Hệ thống cũng cung cấp **Admin Dashboard** để quản lý sản phẩm, danh mục, đơn đặt hoa và thông báo.
 
