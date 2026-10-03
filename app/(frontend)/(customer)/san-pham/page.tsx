@@ -251,11 +251,6 @@ function ProductListContent() {
                 <ProductCard
                   key={product._id}
                   product={product}
-                  onSelect={(product) =>
-                    setSelectedProduct(
-                      product
-                    )
-                  }
                 />
               ))}
             </div>

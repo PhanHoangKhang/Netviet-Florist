@@ -3,12 +3,10 @@ import type { Product } from "@/types/product";
 
 interface ProductCardProps {
   product: Product;
-  onSelect: (product: Product) => void;
 }
 
 export default function ProductCard({
   product,
-  onSelect,
 }: ProductCardProps) {
   const productImage =
     product.images?.[0] || "/images/placeholder.jpg";
