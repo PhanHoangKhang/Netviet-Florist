@@ -102,14 +102,16 @@ export async function PATCH(
         );
       }
 
-      updates.name = body.name.trim();
+      const name = body.name.trim();
 
-      if (updates.name.length > 100) {
+      if (name.length > 100) {
         return NextResponse.json(
           { success: false, message: "Tên tối đa 100 ký tự." },
           { status: 400 }
         );
       }
+
+      updates.name = name;
     }
 
     if (body.slug !== undefined) {
@@ -123,14 +125,16 @@ export async function PATCH(
         );
       }
 
-      updates.slug = body.slug.trim();
+      const slug = body.slug.trim();
 
-      if (updates.slug.length > 120) {
+      if (slug.length > 120) {
         return NextResponse.json(
           { success: false, message: "Slug tối đa 120 ký tự." },
           { status: 400 }
         );
       }
+
+      updates.slug = slug
     }
 
     if (body.description !== undefined) {
@@ -141,14 +145,16 @@ export async function PATCH(
         );
       }
 
-      updates.description = body.description.trim();
+      const description = body.description.trim();
 
-      if (updates.description.length > 1000) {
+      if (description.length > 1000) {
         return NextResponse.json(
           { success: false, message: "Mô tả tối đa 1000 ký tự." },
           { status: 400 }
         );
       }
+
+      updates.description = description
     }
 
     if (updates.slug) {
