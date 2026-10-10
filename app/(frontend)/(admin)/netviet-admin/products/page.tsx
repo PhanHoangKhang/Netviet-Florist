@@ -10,6 +10,7 @@ import {
 } from "@/lib/admin-catalog";
 import type { Category } from "@/types/category";
 import type { Product, Pagination } from "@/types/product";
+import { toast } from "sonner";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -36,6 +37,8 @@ export default function ProductsPage() {
 
     if (!confirmed) return;
 
+    const product = products.find((item) => item._id === id);
+
     try {
       const response = await fetch(`/api/admin/products/${id}`, {
         method: "DELETE",
@@ -47,10 +50,17 @@ export default function ProductsPage() {
         throw new Error(result.message || "Không thể xóa sản phẩm.");
       }
 
+      toast.success(
+        product
+          ? `Đã xóa sản phẩm "${product.name}".`
+          : "Đã xóa sản phẩm.",
+      );
       await fetchProducts();
     } catch (error) {
       console.error("DELETE PRODUCT ERROR:", error);
-      alert("Không thể xóa sản phẩm.");
+      toast.error(
+        error instanceof Error ? error.message : "Không thể xóa sản phẩm.",
+      );
     }
   };
 

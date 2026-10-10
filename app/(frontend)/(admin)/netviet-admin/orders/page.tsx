@@ -14,6 +14,7 @@ import {
 
 import { getAdminOrders, updateOrderStatus } from "@/lib/order-api";
 import ProductPagination from "@/components/ProductPagination";
+import { toast } from "sonner";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -111,10 +112,19 @@ export default function OrdersPage() {
             : order,
         ),
       );
+      const statusLabels: Record<OrderStatus, string> = {
+        pending: "Chờ xác nhận",
+        confirmed: "Đã xác nhận",
+        completed: "Hoàn thành",
+        cancelled: "Đã hủy",
+      };
+      toast.success(
+        `Đã cập nhật đơn hàng #${orderId.slice(-8)}: ${statusLabels[newStatus]}.`,
+      );
     } catch (error) {
       console.error(error);
 
-      alert(
+      toast.error(
         error instanceof Error ? error.message : "Không thể cập nhật đơn hàng.",
       );
     }

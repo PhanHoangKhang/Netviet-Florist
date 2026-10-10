@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 
 import {
   getAdminOrder,
@@ -86,10 +87,13 @@ export default function OrderDetailPage({
             }
           : prev
       );
+      toast.success(
+        `Đã cập nhật đơn hàng #${order._id.slice(-8)}: ${statusLabels[status]}.`
+      );
     } catch (error) {
       console.error(error);
 
-      alert(
+      toast.error(
         error instanceof Error
           ? error.message
           : "Không thể cập nhật trạng thái."

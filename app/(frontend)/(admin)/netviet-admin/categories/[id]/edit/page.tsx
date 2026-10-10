@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Save,
@@ -139,17 +140,17 @@ export default function EditCategoryPage() {
         );
       }
 
-      setSuccess("Cập nhật danh mục thành công.");
-
+      toast.success(`Đã cập nhật danh mục "${name}".`);
       // Quay lại danh sách sau khi cập nhật thành công
       router.push("/netviet-admin/categories");
       router.refresh();
     } catch (err) {
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Đã xảy ra lỗi khi cập nhật."
-      );
+          : "Đã xảy ra lỗi khi cập nhật.";
+      setError(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

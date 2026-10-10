@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Save,
@@ -114,16 +115,16 @@ export default function NewCategoryPage() {
         );
       }
 
-      setSuccess("Thêm danh mục thành công.");
-
+      toast.success(`Đã tạo danh mục "${name}".`);
       router.push("/netviet-admin/categories");
       router.refresh();
     } catch (err) {
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Đã xảy ra lỗi khi tạo danh mục."
-      );
+          : "Đã xảy ra lỗi khi tạo danh mục.";
+      setError(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

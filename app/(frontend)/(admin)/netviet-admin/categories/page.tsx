@@ -12,6 +12,7 @@ import {
   LoaderCircle,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface CategoryItem {
   _id: string;
@@ -27,7 +28,6 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [notice, setNotice] = useState("");
   const [confirmCategory, setConfirmCategory] =
     useState<CategoryItem | null>(null);
 
@@ -64,7 +64,6 @@ export default function CategoriesPage() {
 
     setDeletingId(confirmCategory._id);
     setError("");
-    setNotice("");
 
     try {
       const response = await fetch(
@@ -82,12 +81,13 @@ export default function CategoriesPage() {
         prev.filter((item) => item._id !== confirmCategory._id),
       );
 
-      setNotice("Đã xóa danh mục.");
+      toast.success(`Đã xóa danh mục "${confirmCategory.name}".`);
       setConfirmCategory(null);
     } catch (err) {
-      setError(
-        err instanceof Error ? err.message : "Không thể xóa danh mục.",
-      );
+      const message =
+        err instanceof Error ? err.message : "Không thể xóa danh mục.";
+      setError(message);
+      toast.error(message);
       setConfirmCategory(null);
     } finally {
       setDeletingId(null);
@@ -162,15 +162,6 @@ export default function CategoriesPage() {
         <div className="mb-5 flex items-center justify-between border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           <span>{error}</span>
           <button onClick={() => setError("")} aria-label="Đóng">
-            <X size={16} />
-          </button>
-        </div>
-      )}
-
-      {notice && (
-        <div className="mb-5 flex items-center justify-between border border-green-200 bg-green-50 p-4 text-sm text-green-700">
-          <span>{notice}</span>
-          <button onClick={() => setNotice("")} aria-label="Đóng">
             <X size={16} />
           </button>
         </div>

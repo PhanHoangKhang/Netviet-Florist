@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   ImagePlus,
@@ -136,12 +137,14 @@ export default function NewProductPage() {
 
       setImages((prev) => [...prev, ...uploaded]);
       setSuccess(`Đã upload ${uploaded.length} ảnh.`);
+      toast.success(`Đã tải lên ${uploaded.length} ảnh sản phẩm.`);
     } catch (err) {
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Không thể upload hình ảnh.",
-      );
+          : "Không thể upload hình ảnh.";
+      setError(message);
+      toast.error(message);
     } finally {
       setUploading(false);
     }
@@ -149,6 +152,7 @@ export default function NewProductPage() {
 
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
+    toast.info("Đã xóa ảnh khỏi danh sách sản phẩm.");
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -205,14 +209,16 @@ export default function NewProductPage() {
         );
       }
 
+      toast.success(`Đã tạo sản phẩm "${name.trim()}".`);
       router.push("/netviet-admin/products");
       router.refresh();
     } catch (err) {
-      setError(
+      const message =
         err instanceof Error
           ? err.message
-          : "Đã xảy ra lỗi khi tạo sản phẩm.",
-      );
+          : "Đã xảy ra lỗi khi tạo sản phẩm.";
+      setError(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

@@ -4,6 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ImagePlus, Loader2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import type { Category } from "@/types/category";
 import type { Product, ImageItem } from "@/types/product";
@@ -210,17 +211,21 @@ export default function EditProductPage() {
         ...prev,
         ...uploadedImages,
       ]);
+      toast.success(
+        `Đã tải lên ${uploadedImages.length} ảnh sản phẩm.`,
+      );
     } catch (error) {
       console.error(
         "UPLOAD IMAGE ERROR:",
         error
       );
 
-      setError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Không thể upload hình ảnh."
-      );
+          : "Không thể upload hình ảnh.";
+      setError(message);
+      toast.error(message);
     } finally {
       setUploading(false);
 
@@ -238,6 +243,7 @@ export default function EditProductPage() {
     setImages((prev) =>
       prev.filter((_, i) => i !== index)
     );
+    toast.info("Đã xóa ảnh khỏi danh sách. Hãy lưu sản phẩm để áp dụng thay đổi.");
   };
 
   // ========================================
@@ -315,17 +321,19 @@ export default function EditProductPage() {
       );
 
       setProduct(result.data);
+      toast.success(`Đã cập nhật sản phẩm "${name.trim()}".`);
     } catch (error) {
       console.error(
         "SAVE PRODUCT ERROR:",
         error
       );
 
-      setError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Không thể cập nhật sản phẩm."
-      );
+          : "Không thể cập nhật sản phẩm.";
+      setError(message);
+      toast.error(message);
     } finally {
       setSaving(false);
     }

@@ -9,6 +9,7 @@ import {
   Package,
   X,
 } from "lucide-react";
+import { toast } from "sonner";
 
 interface Notification {
   _id: string;
@@ -58,6 +59,7 @@ export default function NotificationBell() {
       setNotifications((prev) =>
         prev.filter((item) => item._id !== id),
       );
+      toast.success("Đã xóa thông báo.");
 
       // Chỉ giảm unread count nếu notification chưa đọc
       if (notification && !notification.isRead) {
@@ -65,6 +67,9 @@ export default function NotificationBell() {
       }
     } catch (error) {
       console.error("DELETE NOTIFICATION ERROR:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Không thể xóa thông báo.",
+      );
     }
   };
 
@@ -81,9 +86,14 @@ export default function NotificationBell() {
 
   const markAsRead = async (id: string) => {
     try {
-      await fetch(`/api/admin/notifications/${id}`, {
+      const response = await fetch(`/api/admin/notifications/${id}`, {
         method: "PATCH",
       });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Không thể đánh dấu đã đọc.");
+      }
 
       setNotifications((prev) =>
         prev.map((notification) =>
@@ -97,16 +107,27 @@ export default function NotificationBell() {
       );
 
       setUnreadCount((prev) => Math.max(0, prev - 1));
+      toast.success("Đã đánh dấu thông báo là đã đọc.");
     } catch (error) {
       console.error("MARK NOTIFICATION ERROR:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Không thể đánh dấu thông báo đã đọc.",
+      );
     }
   };
 
   const markAllAsRead = async () => {
     try {
-      await fetch("/api/admin/notifications/read-all", {
+      const response = await fetch("/api/admin/notifications", {
         method: "PATCH",
       });
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.message || "Không thể đánh dấu đã đọc.");
+      }
 
       setNotifications((prev) =>
         prev.map((notification) => ({
@@ -116,8 +137,14 @@ export default function NotificationBell() {
       );
 
       setUnreadCount(0);
+      toast.success("Đã đánh dấu tất cả thông báo là đã đọc.");
     } catch (error) {
       console.error("MARK ALL ERROR:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Không thể đánh dấu tất cả thông báo đã đọc.",
+      );
     }
   };
 

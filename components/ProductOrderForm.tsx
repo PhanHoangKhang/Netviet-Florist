@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MessageCircle, CheckCircle2 } from "lucide-react";
+import { toast } from "sonner";
 import type { Product } from "@/types/product";
 import { createOrder } from "@/lib/order-api";
 
@@ -22,10 +23,10 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
   const [quantity, setQuantity] = useState("1");
   const [note, setNote] = useState("");
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const toastId = toast.loading("Đang gửi yêu cầu đặt hoa...");
 
     try {
       setSubmitting(true);
@@ -44,14 +45,27 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
       });
 
       setSubmitted(true);
+
+      toast.success("Đặt hoa thành công!", {
+        id: toastId,
+        description: `Yêu cầu đặt hoa "${product.name}" đã được gửi.`,
+        duration: 4000,
+      });
     } catch (error) {
       console.error("ORDER ERROR:", error);
 
-      setError(
+      const message =
         error instanceof Error
           ? error.message
-          : "Không thể gửi yêu cầu đặt hoa."
-      );
+          : "Không thể gửi yêu cầu đặt hoa.";
+
+      setError(message);
+
+      toast.error("Đặt hoa thất bại!", {
+        id: toastId,
+        description: message,
+        duration: 4000,
+      });
     } finally {
       setSubmitting(false);
     }
@@ -74,10 +88,8 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
 
           <p className="mt-1 text-sm leading-6 text-gray-500">
             Nét Việt Florist sẽ liên hệ với bạn qua số{" "}
-            <span className="font-medium text-gray-700">
-              {phoneNumber}
-            </span>{" "}
-            để xác nhận mẫu hoa và thời gian giao hàng.
+            <span className="font-medium text-gray-700">{phoneNumber}</span> để
+            xác nhận mẫu hoa và thời gian giao hàng.
           </p>
         </div>
       ) : (
@@ -221,9 +233,7 @@ export default function ProductOrderForm({ product }: ProductOrderFormProps) {
             disabled={submitting}
             className="w-full rounded-sm bg-[var(--color-primary)] py-3 text-sm font-bold text-white shadow-sm transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting
-              ? "Đang gửi yêu cầu..."
-              : "Gửi yêu cầu đặt hoa"}
+            {submitting ? "Đang gửi yêu cầu..." : "Gửi yêu cầu đặt hoa"}
           </button>
         </form>
       )}

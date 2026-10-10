@@ -41,3 +41,31 @@ export async function GET(request: NextRequest) {
     );
   }
 }
+
+export async function PATCH() {
+  try {
+    await connectDB();
+
+    await Notification.updateMany(
+      { isRead: false },
+      { isRead: true },
+    );
+
+    return NextResponse.json({
+      success: true,
+      message: "Đã đánh dấu tất cả thông báo là đã đọc",
+    });
+  } catch (error) {
+    console.error("MARK ALL NOTIFICATIONS ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Không thể đánh dấu tất cả thông báo đã đọc",
+      },
+      {
+        status: 500,
+      },
+    );
+  }
+}
