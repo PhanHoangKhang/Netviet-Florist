@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
+import mongoose from "mongoose";
 
 export async function GET(request: NextRequest) {
   try {
@@ -75,6 +76,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
+
 export async function POST(request: NextRequest) {
   try {
     await connectDB();
@@ -92,78 +94,143 @@ export async function POST(request: NextRequest) {
       inStock,
     } = body;
 
-    if (!name || !slug || !categoryId) {
+    if (
+      typeof name !== "string" ||
+      !name.trim() ||
+      name.trim().length > 150 ||
+      typeof slug !== "string" ||
+      !slug.trim() ||
+      slug.trim().length > 180
+    ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Vui lòng nhập đầy đủ thông tin sản phẩm.",
+          message: "Tên sản phẩm hoặc slug không hợp lệ.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    if (!Array.isArray(images) || images.length === 0) {
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
       return NextResponse.json(
         {
           success: false,
-          message: "Vui lòng thêm ít nhất một hình ảnh.",
+          message: "Danh mục không hợp lệ.",
         },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const existingProduct = await Product.findOne({ slug });
-
-    if (existingProduct) {
+    if (
+      !Array.isArray(images) ||
+      images.length < 1 ||
+      images.length > 5 ||
+      !images.every(
+        (image: unknown) =>
+          typeof image === "string" &&
+          image.startsWith("https://"),
+      )
+    ) {
       return NextResponse.json(
         {
           success: false,
-          message: "Slug sản phẩm đã tồn tại.",
+          message: "Sản phẩm cần từ 1 đến 5 URL ảnh hợp lệ.",
         },
-        { status: 409 }
+        { status: 400 },
       );
     }
 
-    const category = await Category.findById(categoryId);
+    if (
+      !Array.isArray(imagePublicIds) ||
+      imagePublicIds.length !== images.length ||
+      !imagePublicIds.every(
+        (publicId: unknown) =>
+          typeof publicId === "string" &&
+          publicId.startsWith("netviet-florist/products/"),
+      )
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Thông tin ảnh Cloudinary không hợp lệ.",
+        },
+        { status: 400 },
+      );
+    }
+
+    const category = await Category.findById(categoryId).select("_id");
 
     if (!category) {
       return NextResponse.json(
         {
           success: false,
-          message: "Danh mục không tồn tại.",
+          message: "Không tìm thấy danh mục.",
         },
-        { status: 400 }
+        { status: 404 },
+      );
+    }
+
+    const normalizedSlug = slug.trim();
+
+    const existingProduct = await Product.findOne({
+      slug: normalizedSlug,
+    }).select("_id");
+
+    if (existingProduct) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Slug này đã được sử dụng.",
+        },
+        { status: 409 },
       );
     }
 
     const product = await Product.create({
       name: name.trim(),
-      slug: slug.trim(),
-      description: description?.trim() || "",
+      slug: normalizedSlug,
+      description:
+        typeof description === "string"
+          ? description.trim().slice(0, 5000)
+          : "",
       categoryId,
       images,
-      imagePublicIds: imagePublicIds || [],
-      isFeatured: Boolean(isFeatured),
+      imagePublicIds,
+      isFeatured: isFeatured === true,
       inStock: inStock !== false,
     });
 
     return NextResponse.json(
       {
         success: true,
-        message: "Thêm sản phẩm thành công.",
+        message: "Tạo sản phẩm thành công.",
         data: product,
       },
-      { status: 201 }
+      { status: 201 },
     );
   } catch (error) {
-    console.error("CREATE PRODUCT ERROR:", error);
+    console.error("CREATE ADMIN PRODUCT ERROR:", error);
+
+    if (
+      error instanceof mongoose.mongo.MongoServerError &&
+      error.code === 11000
+    ) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Slug này đã được sử dụng.",
+        },
+        { status: 409 },
+      );
+    }
 
     return NextResponse.json(
       {
         success: false,
         message: "Không thể tạo sản phẩm.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
+
