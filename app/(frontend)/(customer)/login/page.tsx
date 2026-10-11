@@ -1,79 +1,137 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Eye,
   EyeOff,
-  Flower2,
   LockKeyhole,
   Mail,
+  LoaderCircle,
+  AlertCircle,
+  ArrowLeft,
 } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // TODO: Connect admin login API
-    console.log({
-      email,
-      password,
-    });
+    if (isLoading) return;
+
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/admin/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      });
+
+      const data: unknown = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        const message =
+          typeof data === "object" &&
+          data !== null &&
+          "message" in data &&
+          typeof data.message === "string"
+            ? data.message
+            : "Đăng nhập thất bại. Vui lòng thử lại.";
+
+        setError(message);
+        return;
+      }
+
+      setPassword("");
+      router.replace("/netviet-admin");
+      router.refresh();
+    } catch {
+      setError("Không thể kết nối đến máy chủ. Vui lòng thử lại sau.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-light)] flex items-center justify-center px-4">
-      <div className="w-full max-w-[520px]">
+    <main className="flex min-h-screen items-center justify-center bg-[#FAF9F6] px-5 py-6">
+      <div className="w-full max-w-[380px]">
+        {/* Brand */}
+        <header className="mb-7 text-center">
+          <img
+            src="/logo.png"
+            alt="Nét Việt Florist"
+            className="mx-auto mb-3 h-[68px] w-[68px] object-contain"
+          />
 
-        {/* Logo */}
-        <div className="text-center mb-8">
-            <img
-                src="/logo.png"
-                alt="Nét Việt Florist Logo"
-                className="mx-auto mb-4 w-20 h-20 object-contain rounded-full border border-gray-100"
-            />
+          <h1 className="text-[27px] font-semibold tracking-[-0.04em] text-[var(--color-primary)]">
+            Nét Việt Florist
+          </h1>
 
-            <h1 className="text-3xl font-bold tracking-tight text-[var(--color-primary)]">
-                Nét Việt Florist
-            </h1>
-        </div>
+          <p className="mt-2 text-[10px] font-medium uppercase tracking-[0.24em] text-[#968C81]">
+            Administration Portal
+          </p>
+        </header>
 
-        {/* Login Card */}
-        <div className="rounded-3xl border border-gray-200 bg-white sm:p-10 shadow-sm">
+        {/* Login form */}
+        <section>
           <div className="mb-8">
-            <h2 className="text-3xl text-center font-bold text-gray-900">
+            <h2 className="text-[25px] font-medium tracking-tight text-[#292522]">
               Đăng nhập
             </h2>
 
+            <p className="mt-2 text-sm leading-6 text-[#827970]">
+              Đăng nhập để tiếp tục quản lý cửa hàng của bạn.
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-
             {/* Email */}
             <div>
               <label
                 htmlFor="email"
-                className="mb-2.5 block text-sm font-semibold text-gray-700"
+                className="mb-2.5 block text-[13px] font-medium text-[#403A34]"
               >
                 Email
               </label>
 
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <Mail
+                  size={17}
+                  strokeWidth={1.6}
+                  aria-hidden="true"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 text-[#A49A90]"
+                />
 
                 <input
                   id="email"
+                  name="email"
                   type="email"
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
                   placeholder="admin@example.com"
+                  autoComplete="username"
+                  maxLength={254}
                   required
-                  autoComplete="email"
-                  className="h-13 w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[var(--color-primary)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primary)]/10"
+                  disabled={isLoading}
+                  className="h-12 w-full border-0 border-b border-[#DCD5CC] bg-transparent pl-8 pr-2 text-sm text-[#292522] outline-none transition placeholder:text-[#B3AAA1] focus:border-[var(--color-primary)] focus:ring-0 disabled:opacity-60"
                 />
               </div>
             </div>
@@ -82,65 +140,92 @@ export default function AdminLoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="mb-2.5 block text-sm font-semibold text-gray-700"
+                className="mb-2.5 block text-[13px] font-medium text-[#403A34]"
               >
                 Mật khẩu
               </label>
 
               <div className="relative">
-                <LockKeyhole className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+                <LockKeyhole
+                  size={17}
+                  strokeWidth={1.6}
+                  aria-hidden="true"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 text-[#A49A90]"
+                />
 
                 <input
                   id="password"
+                  name="password"
                   type={showPassword ? "text" : "password"}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setError("");
+                  }}
                   placeholder="Nhập mật khẩu"
-                  required
                   autoComplete="current-password"
-                  className="h-13 w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-12 text-sm text-gray-800 outline-none transition placeholder:text-gray-400 focus:border-[var(--color-primary)] focus:bg-white focus:ring-2 focus:ring-[var(--color-primary)]/10"
+                  maxLength={1024}
+                  required
+                  disabled={isLoading}
+                  className="h-12 w-full border-0 border-b border-[#DCD5CC] bg-transparent pl-8 pr-10 text-sm text-[#292522] outline-none transition placeholder:text-[#B3AAA1] focus:border-[var(--color-primary)] focus:ring-0 disabled:opacity-60"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-[var(--color-primary)]"
-                  aria-label={
-                    showPassword
-                      ? "Ẩn mật khẩu"
-                      : "Hiển thị mật khẩu"
-                  }
+                  disabled={isLoading}
+                  aria-label={showPassword ? "Ẩn mật khẩu" : "Hiện mật khẩu"}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 p-1 text-[#A49A90] transition hover:text-[var(--color-primary)]"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
+                    <EyeOff size={17} strokeWidth={1.6} />
                   ) : (
-                    <Eye className="h-5 w-5" />
+                    <Eye size={17} strokeWidth={1.6} />
                   )}
                 </button>
               </div>
             </div>
 
-            {/* Login Button */}
+            {/* Error message */}
+            {error && (
+              <div
+                role="alert"
+                aria-live="polite"
+                className="flex items-start gap-2 border-l-2 border-red-400 bg-red-50/70 px-3 py-2.5 text-sm text-red-700"
+              >
+                <AlertCircle size={17} className="mt-0.5 shrink-0" />
+                <p>{error}</p>
+              </div>
+            )}
+
+            {/* Submit button */}
             <button
               type="submit"
-              className="mt-2 flex h-13 w-full items-center justify-center rounded-xl bg-[var(--color-primary)] text-sm font-semibold text-white shadow-sm transition hover:bg-[var(--color-primary-hover)] active:scale-[0.99]"
+              disabled={isLoading}
+              className="mt-3 flex h-12 w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 text-sm font-medium text-white transition hover:bg-[var(--color-primary-hover)] active:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-65"
             >
-              Đăng nhập
+              {isLoading ? (
+                <>
+                  <LoaderCircle size={17} className="animate-spin" />
+                  Đang đăng nhập...
+                </>
+              ) : (
+                "Đăng nhập"
+              )}
             </button>
           </form>
+        </section>
 
-        </div>
-
-        {/* Back to Website */}
-        <div className="mt-6 text-center">
+        {/* Footer */}
+        <footer className="mt-6 text-center">
           <a
             href="/"
-            className="text-sm font-medium text-gray-500 transition hover:text-[var(--color-primary)]"
+            className="inline-flex items-center gap-2 text-xs text-[#827970] transition hover:text-[var(--color-primary)]"
           >
-            ← Quay lại website
+            <ArrowLeft size={14} />
+            Quay lại website
           </a>
-        </div>
-
+        </footer>
       </div>
     </main>
   );

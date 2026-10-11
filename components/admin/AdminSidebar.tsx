@@ -12,6 +12,9 @@ import {
   LogOut,
   Flower2,
 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/ConfirmModal";
 
 const menuItems = [
   {
@@ -43,17 +46,51 @@ const menuItems = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState("");
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+    setLogoutError("");
+
+    try {
+      const response = await fetch("/api/admin/auth/logout", {
+        method: "POST",
+        credentials: "same-origin",
+      });
+
+      if (!response.ok) {
+        throw new Error("Không thể đăng xuất. Vui lòng thử lại.");
+      }
+
+      setShowLogoutModal(false);
+
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      setLogoutError(
+        error instanceof Error ? error.message : "Đã xảy ra lỗi khi đăng xuất.",
+      );
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
 
   return (
     <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-gray-200 bg-white lg:flex lg:flex-col">
       {/* Logo */}
       <div className="flex h-20 items-center border-b border-gray-100 px-6">
         <Link href="/netviet-admin" className="flex items-center gap-3">
-            <img
-              src="/logo.png"
-              alt="Nét Việt Florist Logo"
-              className="w-12 h-12 object-contain rounded-full border border-gray-100"
-            />
+          <img
+            src="/logo.png"
+            alt="Nét Việt Florist Logo"
+            className="w-12 h-12 object-contain rounded-full border border-gray-100"
+          />
 
           <div>
             <p className="text-sm font-bold tracking-wide text-[var(--color-primary)]">
@@ -123,11 +160,32 @@ export default function AdminSidebar() {
       <div className="border-t border-gray-100 p-4">
         <button
           type="button"
+          onClick={() => {
+            setLogoutError("");
+            setShowLogoutModal(true);
+          }}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-gray-500 transition-colors hover:bg-gray-50 hover:text-red-600"
         >
           <LogOut className="h-[18px] w-[18px]" />
           <span>Đăng xuất</span>
         </button>
+
+        <ConfirmModal
+          isOpen={showLogoutModal}
+          title="Xác nhận đăng xuất"
+          description="Bạn có chắc chắn muốn đăng xuất khỏi trang quản trị Nét Việt Florist không?"
+          confirmText="Đăng xuất"
+          cancelText="Ở lại"
+          isLoading={isLoggingOut}
+          error={logoutError}
+          onConfirm={handleLogout}
+          onCancel={() => {
+            if (!isLoggingOut) {
+              setShowLogoutModal(false);
+              setLogoutError("");
+            }
+          }}
+        />
       </div>
     </aside>
   );
