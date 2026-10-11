@@ -1,10 +1,6 @@
 import "server-only";
 
-import {
-  NextRequest,
-  NextResponse,
-} from "next/server";
-
+import { NextRequest, NextResponse } from "next/server";
 import { getAdminFromRequest } from "@/lib/auth/session";
 import {
   hasPermission,
@@ -22,52 +18,70 @@ type AdminContext = {
   admin: AuthenticatedAdmin;
 };
 
+type RouteContext = {
+  params: Promise<Record<string, string>>;
+};
+
 type AdminHandler = (
   request: NextRequest,
-  context: AdminContext,
+  context: RouteContext & AdminContext,
 ) => Promise<NextResponse> | NextResponse;
 
 export function withRBAC(
   permission: AdminPermission,
   handler: AdminHandler,
 ) {
-  return async (request: NextRequest): Promise<NextResponse> => {
+  return async (
+    request: NextRequest,
+    routeContext: RouteContext,
+  ): Promise<NextResponse> => {
+    // 1. Xác thực session
+    let sessionAdmin;
+
     try {
-      // 1. Xác thực session.
-      const admin = await getAdminFromRequest(request);
-
-      if (!admin) {
-        return NextResponse.json(
-          { message: "Vui lòng đăng nhập." },
-          { status: 401 },
-        );
-      }
-
-      // 2. Kiểm tra role.
-      if (!hasPermission(admin.role, permission)) {
-        return NextResponse.json(
-          {
-            message: "Bạn không có quyền thực hiện thao tác này.",
-          },
-          { status: 403 },
-        );
-      }
-
-      // 3. Chỉ thực thi nghiệp vụ khi đã được cấp quyền.
-      return await handler(request, {
-        admin: {
-          id: admin.id,
-          email: admin.email,
-          role: admin.role as AdminRole,
-        },
-      });
+      sessionAdmin = await getAdminFromRequest(request);
     } catch (error) {
-      console.error("RBAC authorization failed:", error);
+      console.error("ADMIN AUTHENTICATION ERROR:", error);
 
       return NextResponse.json(
-        { message: "Đã xảy ra lỗi khi xử lý yêu cầu." },
+        {
+          success: false,
+          message: "Không thể xác thực phiên đăng nhập.",
+        },
         { status: 500 },
       );
     }
+
+    // 2. Chưa đăng nhập hoặc session không hợp lệ
+    if (!sessionAdmin) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Vui lòng đăng nhập.",
+        },
+        { status: 401 },
+      );
+    }
+
+    // 3. Kiểm tra quyền
+    if (!hasPermission(sessionAdmin.role, permission)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Bạn không có quyền thực hiện thao tác này.",
+        },
+        { status: 403 },
+      );
+    }
+
+    // 4. Chạy handler nghiệp vụ
+    return handler(request, {
+      ...routeContext,
+      admin: {
+        id: sessionAdmin.id,
+        email: sessionAdmin.email,
+        role: sessionAdmin.role as AdminRole,
+      },
+    });
   };
 }

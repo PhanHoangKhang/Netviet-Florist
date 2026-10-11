@@ -1,11 +1,11 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Consultation from "@/models/Consultation";
+import { withRBAC } from "@/lib/auth/withRBAC";
 
 export const runtime = "nodejs";
 
-export async function GET(request: NextRequest) {
+export const GET = withRBAC("consultations:read", async (request) => {
   try {
     await connectDB();
 
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get("status") ?? "";
     const page = Math.max(
       1,
-      Number.parseInt(searchParams.get("page") ?? "1", 10) || 1
+      Number.parseInt(searchParams.get("page") ?? "1", 10) || 1,
     );
 
     const limit = 20;
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
         success: false,
         message: "Không thể lấy danh sách yêu cầu tư vấn.",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
-}
+});

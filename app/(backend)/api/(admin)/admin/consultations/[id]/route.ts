@@ -1,19 +1,14 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/mongodb";
 import Consultation from "@/models/Consultation";
+import { withRBAC } from "@/lib/auth/withRBAC";
 
-type RouteContext = {
-  params: Promise<{ id: string }>;
-};
-
-export async function PATCH(
-  request: NextRequest,
-  { params }: RouteContext
-) {
-  try {
-    const { id } = await params;
+export const PATCH = withRBAC(
+  "consultations:read",
+  async (request, context) => {
+    try {
+    const { id } = await context.params;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json(
@@ -74,4 +69,5 @@ export async function PATCH(
       { status: 500 }
     );
   }
-}
+  },
+);

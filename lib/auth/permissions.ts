@@ -16,7 +16,9 @@ export type AdminPermission =
   | "orders:manage"
   | "notifications:read"
   | "upload:create"
-  | "users:manage";
+  | "users:manage"
+  | "notifications:update"
+  | "notifications:delete"
 
 const ALL_PERMISSIONS: readonly AdminPermission[] = [
   "products:read",
@@ -33,6 +35,8 @@ const ALL_PERMISSIONS: readonly AdminPermission[] = [
   "notifications:read",
   "upload:create",
   "users:manage",
+  "notifications:update",
+  "notifications:delete",
 ];
 
 const ROLE_PERMISSIONS: Record<
@@ -52,6 +56,8 @@ const ROLE_PERMISSIONS: Record<
     "orders:update",
     "notifications:read",
     "upload:create",
+    "notifications:update",
+    "notifications:delete",
   ],
 };
 
