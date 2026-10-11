@@ -1,23 +1,62 @@
-// models/AdminUser.ts
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema, type InferSchemaType } from "mongoose";
 
-export interface IAdminUser extends Document {
-  username: string;
-  passwordHash: string;
-  role: 'superadmin' | 'editor';
-  lastLoginAt?: Date;
-  lastLoginIp?: string;
-}
-
-const AdminUserSchema = new Schema<IAdminUser>(
+const adminUserSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true, trim: true },
-    passwordHash: { type: String, required: true },
-    role: { type: String, enum: ['superadmin', 'editor'], default: 'editor' },
-    lastLoginAt: { type: Date },
-    lastLoginIp: { type: String },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+      maxlength: 254,
+    },
+
+    passwordHash: {
+      type: String,
+      required: true,
+      select: false,
+    },
+
+    role: {
+      type: String,
+      enum: ["admin", "staff"],
+      required: true,
+      default: "staff",
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "disabled"],
+      required: true,
+      default: "active",
+    },
+
+    passwordChangedAt: {
+      type: Date,
+      default: null,
+    },
+
+    lastLoginAt: {
+      type: Date,
+      default: null,
+    },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    versionKey: false,
+  },
 );
 
-export default mongoose.models.AdminUser || mongoose.model<IAdminUser>('AdminUser', AdminUserSchema);
+// Email phải duy nhất ở database, kể cả khi hai request
+// tạo tài khoản xảy ra đồng thời.
+adminUserSchema.index({ email: 1 }, { unique: true });
+
+export type AdminUserType = InferSchemaType<
+  typeof adminUserSchema
+>;
+
+const AdminUser =
+  mongoose.models.AdminUser ??
+  mongoose.model("AdminUser", adminUserSchema);
+
+export default AdminUser;
