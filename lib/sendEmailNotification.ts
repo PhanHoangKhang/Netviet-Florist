@@ -83,3 +83,76 @@ export async function sendOrderNotificationEmail(order: OrderEmailData) {
     };
   }
 }
+
+interface ConsultationEmailData {
+  name: string;
+  phone: string;
+  note: string;
+  createdAt: Date;
+}
+
+export async function sendConsultationNotificationEmail(
+  consultation: ConsultationEmailData
+) {
+  const name = escapeHtml(consultation.name);
+  const phone = escapeHtml(consultation.phone);
+  const note = escapeHtml(
+    consultation.note || "Khách chưa cung cấp ghi chú."
+  );
+  const createdAt = escapeHtml(
+    consultation.createdAt.toLocaleString("vi-VN", {
+      timeZone: "Asia/Ho_Chi_Minh",
+    })
+  );
+
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL;
+
+    if (!adminEmail || !process.env.RESEND_API_KEY) {
+      console.error("Missing RESEND_API_KEY or ADMIN_EMAIL");
+
+      return { success: false };
+    }
+
+    const { data, error } = await resend.emails.send({
+      from: "Nét Việt Florist <onboarding@resend.dev>",
+      to: adminEmail,
+      subject: "Nét Việt Florist - Yêu cầu tư vấn mẫu hoa mới",
+      html: `
+        <div style="font-family:Arial,sans-serif;color:#333;line-height:1.7;max-width:600px">
+          <h2 style="color:#4d0d01">
+            Yêu cầu tư vấn mẫu hoa mới
+          </h2>
+
+          <p>Shop vừa nhận được một yêu cầu tư vấn từ khách hàng.</p>
+
+          <div style="padding:16px;border:1px solid #eee">
+            <p><strong>Tên khách hàng:</strong> ${name}</p>
+            <p><strong>Số điện thoại / Zalo:</strong> ${phone}</p>
+            <p><strong>Yêu cầu tư vấn:</strong><br />
+              ${note.replace(/\n/g, "<br />")}
+            </p>
+            <p><strong>Thời gian gửi:</strong> ${createdAt}</p>
+          </div>
+
+          <p>
+            Vui lòng liên hệ khách hàng để tư vấn mẫu hoa phù hợp.
+          </p>
+        </div>
+      `,
+    });
+
+    if (error) {
+      console.error("RESEND CONSULTATION ERROR:", error);
+      return { success: false };
+    }
+
+    return {
+      success: true,
+      data,
+    };
+  } catch (error) {
+    console.error("SEND CONSULTATION EMAIL ERROR:", error);
+    return { success: false };
+  }
+}
