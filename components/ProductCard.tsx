@@ -12,27 +12,30 @@ export default function ProductCard({
     product.images?.[0] || "/images/placeholder.jpg";
 
   return (
-    <div className="bg-white rounded-sm overflow-hidden shadow-sm hover:shadow-md transition group border border-gray-100 flex flex-col">
+    <div className="group flex flex-col overflow-hidden border border-[#EAE5DE] bg-white transition-shadow duration-300 hover:shadow-[0_5px_18px_rgba(50,35,20,0.07)]">
       {/* Product Image */}
       <Link
         href={`/san-pham/${product.slug}`}
         className="block"
       >
-        <div className="relative aspect-square overflow-hidden bg-gray-100">
+        <div className="relative aspect-square overflow-hidden bg-[#F5F2EE]">
           <img
             src={productImage}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            loading="lazy"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           />
 
           {/* Category */}
-          <span className="absolute top-3 left-3 bg-white/90 backdrop-blur-md text-[var(--color-primary)] text-xs font-semibold px-2.5 py-1 rounded-full">
-            {product.categoryId?.name}
-          </span>
+          {product.categoryId?.name && (
+            <span className="absolute left-3 top-3 border border-[#EAE5DE] bg-white/95 px-2.5 py-1 text-xs font-medium text-[#655448]">
+              {product.categoryId.name}
+            </span>
+          )}
 
           {/* Featured */}
           {product.isFeatured && (
-            <span className="absolute top-3 right-3 bg-[var(--color-secondary)] text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+            <span className="absolute right-3 top-3 border border-white/70 bg-[#4D0D01]/90 px-2.5 py-1 text-xs font-medium text-white">
               Nổi bật
             </span>
           )}
@@ -40,27 +43,28 @@ export default function ProductCard({
       </Link>
 
       {/* Product Information */}
-      <div className="p-4 flex flex-col flex-1 justify-between">
+      <div className="flex flex-1 flex-col justify-between p-4">
         <div>
           <Link
             href={`/san-pham/${product.slug}`}
-            className="block hover:text-[var(--color-primary)] transition-colors"
+            className="block transition-colors hover:text-[var(--color-primary)]"
           >
-            <h3 className="font-semibold text-lg text-gray-800 line-clamp-1">
+            <h3 className="line-clamp-1 text-base font-semibold text-[#332D28]">
               {product.name}
             </h3>
           </Link>
 
-          <p className="text-sm font-medium text-[var(--color-secondary)] mt-1">
-            Giá: Liên hệ
+          {/* Price */}
+          <p className="mt-2 inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)]">
+            Liên hệ báo giá
           </p>
         </div>
 
         {/* Action */}
-        <div className="mt-4 space-y-2">
+        <div className="mt-4">
           <Link
             href={`/san-pham/${product.slug}#dat-hoa`}
-            className="block w-full py-2.5 rounded-sm border border-[var(--color-primary)] text-[var(--color-primary)] text-center font-medium hover:bg-[var(--color-primary)] hover:text-white transition"
+            className="flex w-full items-center justify-center border border-[#D8C7B8] px-3 py-2.5 text-sm font-semibold text-[var(--color-primary)] transition-colors duration-200 hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
           >
             Nhận tư vấn / Báo giá
           </Link>
