@@ -3,79 +3,84 @@ import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
 import mongoose from "mongoose";
+import { withRBAC } from "@/lib/auth/withRBAC";
 
-export async function GET(request: NextRequest) {
-  try {
-    await connectDB();
+export const runtime = "nodejs";
 
-    const { searchParams } = new URL(request.url);
-    const page = Math.max(Number(searchParams.get("page")) || 1, 1);
-    const limit = Math.min(
-      Math.max(Number(searchParams.get("limit")) || 10, 1),
-      50,
-    );
-    const filter: Record<string, unknown> = {};
-    const search = searchParams.get("search")?.trim();
-    const category = searchParams.get("category");
-    const status = searchParams.get("status");
+export const GET = withRBAC(
+  "products:read",
+  async (request: NextRequest, { admin }) => {
+    try {
+      await connectDB();
 
-    if (search) {
-      const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      filter.name = { $regex: escapedSearch, $options: "i" };
-    }
-
-    if (category && category !== "all") {
-      const categoryDoc = await Category.findOne({ slug: category }).select(
-        "_id",
+      const { searchParams } = new URL(request.url);
+      const page = Math.max(Number(searchParams.get("page")) || 1, 1);
+      const limit = Math.min(
+        Math.max(Number(searchParams.get("limit")) || 10, 1),
+        50,
       );
+      const filter: Record<string, unknown> = {};
+      const search = searchParams.get("search")?.trim();
+      const category = searchParams.get("category");
+      const status = searchParams.get("status");
 
-      if (!categoryDoc) {
-        return NextResponse.json({
-          success: true,
-          data: [],
-          pagination: { page, limit, total: 0, totalPages: 0 },
-        });
+      if (search) {
+        const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        filter.name = { $regex: escapedSearch, $options: "i" };
       }
 
-      filter.categoryId = categoryDoc._id;
+      if (category && category !== "all") {
+        const categoryDoc = await Category.findOne({ slug: category }).select(
+          "_id",
+        );
+
+        if (!categoryDoc) {
+          return NextResponse.json({
+            success: true,
+            data: [],
+            pagination: { page, limit, total: 0, totalPages: 0 },
+          });
+        }
+
+        filter.categoryId = categoryDoc._id;
+      }
+
+      if (status === "inStock") {
+        filter.inStock = true;
+      } else if (status === "outOfStock") {
+        filter.inStock = false;
+      }
+
+      const [products, total] = await Promise.all([
+        Product.find(filter)
+          .populate("categoryId", "name slug")
+          .sort({ createdAt: -1 })
+          .skip((page - 1) * limit)
+          .limit(limit)
+          .lean(),
+        Product.countDocuments(filter),
+      ]);
+
+      return NextResponse.json({
+        success: true,
+        data: products,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      });
+    } catch (error) {
+      console.error("GET ADMIN PRODUCTS ERROR:", error);
+
+      return NextResponse.json(
+        { success: false, message: "Không thể lấy sản phẩm" },
+        { status: 500 },
+      );
     }
-
-    if (status === "inStock") {
-      filter.inStock = true;
-    } else if (status === "outOfStock") {
-      filter.inStock = false;
-    }
-
-    const [products, total] = await Promise.all([
-      Product.find(filter)
-        .populate("categoryId", "name slug")
-        .sort({ createdAt: -1 })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .lean(),
-      Product.countDocuments(filter),
-    ]);
-
-    return NextResponse.json({
-      success: true,
-      data: products,
-      pagination: {
-        page,
-        limit,
-        total,
-        totalPages: Math.ceil(total / limit),
-      },
-    });
-  } catch (error) {
-    console.error("GET ADMIN PRODUCTS ERROR:", error);
-
-    return NextResponse.json(
-      { success: false, message: "Không thể lấy sản phẩm" },
-      { status: 500 },
-    );
-  }
-}
-
+  },
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -127,8 +132,7 @@ export async function POST(request: NextRequest) {
       images.length > 5 ||
       !images.every(
         (image: unknown) =>
-          typeof image === "string" &&
-          image.startsWith("https://"),
+          typeof image === "string" && image.startsWith("https://"),
       )
     ) {
       return NextResponse.json(
@@ -233,4 +237,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
