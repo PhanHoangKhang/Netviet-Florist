@@ -175,7 +175,7 @@ export default function AdminSidebar() {
           title="Xác nhận đăng xuất"
           description="Bạn có chắc chắn muốn đăng xuất khỏi trang quản trị Nét Việt Florist không?"
           confirmText="Đăng xuất"
-          cancelText="Ở lại"
+          cancelText="Hủy"
           isLoading={isLoggingOut}
           error={logoutError}
           onConfirm={handleLogout}

@@ -57,7 +57,7 @@ export default function ConfirmModal({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 py-6 backdrop-blur-[2px]"
+      className="confirm-modal-backdrop-enter fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4 py-6 backdrop-blur-[3px]"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget && !isLoading) {
           onCancel();
@@ -69,7 +69,7 @@ export default function ConfirmModal({
         aria-modal="true"
         aria-labelledby="confirm-modal-title"
         aria-describedby="confirm-modal-description"
-        className="w-full max-w-[420px] border border-gray-200 bg-white p-6 shadow-2xl sm:p-7"
+        className="confirm-modal-enter w-full max-w-[420px] border border-gray-200 bg-white p-6 shadow-2xl sm:p-7"
       >
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
@@ -129,7 +129,7 @@ export default function ConfirmModal({
             type="button"
             onClick={onCancel}
             disabled={isLoading}
-            className="h-10 border border-gray-200 px-4 text-sm font-medium text-gray-600 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="h-10 border border-gray-200 px-4 text-sm font-medium text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
           >
             {cancelText}
           </button>
@@ -138,7 +138,7 @@ export default function ConfirmModal({
             type="button"
             onClick={() => void onConfirm()}
             disabled={isLoading}
-            className={`flex h-10 items-center justify-center gap-2 px-4 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${confirmButtonClass}`}
+            className={`flex h-10 items-center justify-center gap-2 px-4 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 ${confirmButtonClass}`}
           >
             {isLoading && (
               <LoaderCircle size={16} className="animate-spin" />

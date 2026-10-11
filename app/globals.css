@@ -108,3 +108,40 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed; 
 }
+
+@keyframes confirm-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.confirm-modal-enter {
+  animation: confirm-modal-enter 220ms ease-out both;
+}
+
+@keyframes confirm-modal-backdrop-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.confirm-modal-backdrop-enter {
+  animation: confirm-modal-backdrop-enter 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm-modal-enter,
+  .confirm-modal-backdrop-enter {
+    animation: none;
+  }
+}
