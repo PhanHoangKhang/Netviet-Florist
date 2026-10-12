@@ -77,8 +77,8 @@ export default function ConfirmModal({
             <div
               className={`flex h-10 w-10 shrink-0 items-center justify-center ${
                 variant === "danger"
-                  ? "bg-red-50 text-red-600"
-                  : "bg-[#F5F0EA] text-[var(--color-primary)]"
+                  ? " text-red-600"
+                  : " text-[var(--color-primary)]"
               }`}
             >
               <AlertTriangle size={20} strokeWidth={1.8} />

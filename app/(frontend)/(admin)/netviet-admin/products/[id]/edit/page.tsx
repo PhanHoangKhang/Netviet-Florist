@@ -412,7 +412,7 @@ export default function EditProductPage() {
       {/* Messages */}
 
       {error && (
-        <div className="mb-5 border border-red-200 bg-red-50 px-4 py-3">
+        <div className="mb-5 border border-red-200 px-4 py-3">
           <p className="text-sm text-red-700">
             {error}
           </p>
@@ -420,7 +420,7 @@ export default function EditProductPage() {
       )}
 
       {success && (
-        <div className="mb-5 border border-green-200 bg-green-50 px-4 py-3">
+        <div className="mb-5 border border-green-200 px-4 py-3">
           <p className="text-sm text-green-700">
             {success}
           </p>

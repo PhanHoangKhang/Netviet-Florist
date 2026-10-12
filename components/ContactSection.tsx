@@ -44,7 +44,7 @@ export default function ContactSection() {
 
               {/* Address */}
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/5 text-[var(--color-primary)]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--color-primary)]">
                   <MapPin className="h-4 w-4" />
                 </div>
 
@@ -62,7 +62,7 @@ export default function ContactSection() {
 
               {/* Phone */}
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/5 text-[var(--color-primary)]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg  text-[var(--color-primary)]">
                   <Phone className="h-4 w-4" />
                 </div>
 
@@ -91,7 +91,7 @@ export default function ContactSection() {
 
               {/* Opening hours */}
               <div className="flex items-start gap-3">
-                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[var(--color-primary)]/5 text-[var(--color-primary)]">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-[var(--color-primary)]">
                   <Clock className="h-4 w-4" />
                 </div>
 

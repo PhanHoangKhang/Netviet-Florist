@@ -318,7 +318,7 @@ export default function ProductsPage() {
                             </p>
 
                             {product.isFeatured && (
-                              <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10px] font-medium text-amber-700">
+                              <span className="rounded-full px-2 py-0.5 text-[10px] font-medium text-amber-700">
                                 Nổi bật
                               </span>
                             )}
@@ -359,7 +359,7 @@ export default function ProductsPage() {
 
                         <span
                           className={
-                            product.inStock ? "text-gray-700" : "text-gray-400"
+                            product.inStock ? "text-emerald-500" : "text-gray-400"
                           }
                         >
                           {product.inStock ? "Còn hàng" : "Hết hàng"}

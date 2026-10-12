@@ -191,7 +191,7 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-600 transition hover:border-gray-300 hover:text-[var(--color-primary)]"
+        className="relative flex h-10 w-10 items-center justify-center border border-gray-200 bg-white text-gray-600 transition hover:border-gray-300 hover:text-[var(--color-primary)]"
         aria-label="Thông báo"
       >
         <Bell className="h-5 w-5" />
@@ -212,7 +212,7 @@ export default function NotificationBell() {
             onClick={() => setOpen(false)}
           />
 
-          <div className="fixed left-4 right-4 top-20 z-50 overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:w-[400px]">
+          <div className="fixed left-4 right-4 top-20 z-50 overflow-hidden border border-gray-200 bg-white shadow-xl sm:absolute sm:left-auto sm:right-0 sm:top-12 sm:w-[400px]">
             {/* Header */}
             <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
               <div>
@@ -282,12 +282,12 @@ export default function NotificationBell() {
                     <div
                       className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${
                         notification.type === "order"
-                          ? "bg-blue-50 text-blue-600"
+                          ? " text-blue-600"
                           : notification.type === "consultation"
-                            ? "bg-purple-50 text-purple-600"
+                            ? " text-purple-600"
                             : notification.type === "product"
-                              ? "bg-orange-50 text-orange-600"
-                              : "bg-gray-100 text-gray-600"
+                              ? " text-orange-600"
+                              : " text-gray-600"
                       }`}
                     >
                       {getIcon(notification.type)}

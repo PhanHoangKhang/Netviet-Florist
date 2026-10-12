@@ -66,7 +66,7 @@ export default function ProductCard({
             href={`/san-pham/${product.slug}#dat-hoa`}
             className="flex w-full items-center justify-center border border-[#D8C7B8] px-3 py-2.5 text-sm font-semibold text-[var(--color-primary)] transition-colors duration-200 hover:border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:text-white"
           >
-            Nhận tư vấn / Báo giá
+            Xem chi tiết
           </Link>
         </div>
       </div>
