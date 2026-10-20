@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -49,9 +48,7 @@ export default function ProductDetailPage() {
         const result = await response.json();
 
         if (!result.success || !result.data) {
-          throw new Error(
-            result.message || "Không tìm thấy sản phẩm",
-          );
+          throw new Error(result.message || "Không tìm thấy sản phẩm");
         }
 
         const currentProduct: Product = result.data;
@@ -72,8 +69,7 @@ export default function ProductDetailPage() {
             if (relatedResult.success) {
               setRelatedProducts(
                 relatedResult.data.filter(
-                  (item: Product) =>
-                    item._id !== currentProduct._id,
+                  (item: Product) => item._id !== currentProduct._id,
                 ),
               );
             }
@@ -84,11 +80,7 @@ export default function ProductDetailPage() {
       } catch (err) {
         console.error("FETCH PRODUCT DETAIL ERROR:", err);
 
-        setError(
-          err instanceof Error
-            ? err.message
-            : "Không thể tải sản phẩm",
-        );
+        setError(err instanceof Error ? err.message : "Không thể tải sản phẩm");
       } finally {
         setLoading(false);
       }
@@ -100,9 +92,7 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <div className="min-h-[60vh] px-4 py-32 text-center">
-        <p className="text-sm text-black">
-          Đang tải thông tin sản phẩm...
-        </p>
+        <p className="text-sm text-black">Đang tải thông tin sản phẩm...</p>
       </div>
     );
   }
@@ -137,14 +127,10 @@ export default function ProductDetailPage() {
     ) ?? [];
 
   const galleryImages =
-    productImages.length > 0
-      ? productImages
-      : ["/images/placeholder.jpg"];
+    productImages.length > 0 ? productImages : ["/images/placeholder.jpg"];
 
   const productImage =
-    galleryImages[
-      Math.min(selectedImageIndex, galleryImages.length - 1)
-    ];
+    galleryImages[Math.min(selectedImageIndex, galleryImages.length - 1)];
 
   const scrollToOrderForm = () => {
     document.getElementById("dat-hoa")?.scrollIntoView({
@@ -156,7 +142,6 @@ export default function ProductDetailPage() {
   return (
     <main className="min-h-screen text-[var(--foreground)]">
       <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 sm:py-9 lg:px-10">
-
         {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
@@ -187,16 +172,15 @@ export default function ProductDetailPage() {
 
         {/* Product overview */}
         <section className="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-2 lg:gap-14">
-
           {/* Product gallery */}
           <div className="min-w-0">
-            <div className="flex min-h-[340px] items-center justify-center bg-[var(--color-bg-light)] sm:min-h-[480px] lg:sticky lg:top-28 lg:min-h-[560px]">
+            <div className="flex min-h-[300px] items-center justify-center sm:min-h-[400px] lg:min-h-[460px]">
               <img
                 key={productImage}
                 src={productImage}
                 alt={product.name}
                 fetchPriority="high"
-                className="h-full max-h-[560px] w-full object-contain"
+                className="max-h-[300px] w-auto max-w-[90%] object-contain sm:max-h-[400px] lg:max-h-[460px]"
               />
             </div>
 
@@ -222,7 +206,7 @@ export default function ProductDetailPage() {
                       src={image}
                       alt={`${product.name} - ảnh ${index + 1}`}
                       loading="lazy"
-                      className="h-full w-full object-contain"
+                      className="h-full w-full object-cover"
                     />
                   </button>
                 ))}
@@ -251,17 +235,17 @@ export default function ProductDetailPage() {
               </p>
 
               <p className="mt-2 text-sm leading-6 text-black">
-                Giá sản phẩm có thể thay đổi tùy theo loại hoa,
-                kích thước và yêu cầu thiết kế.
+                Giá sản phẩm có thể thay đổi tùy theo loại hoa, kích thước và
+                yêu cầu thiết kế.
               </p>
             </div>
 
             {/* Short introduction */}
             <div className="py-6">
               <p className="text-sm leading-7 text-black">
-                Mỗi mẫu hoa tại Nét Việt Florist được chăm chút
-                trong từng chi tiết, phù hợp để gửi trao tình cảm
-                và lưu giữ những khoảnh khắc ý nghĩa.
+                Mỗi mẫu hoa tại Nét Việt Florist được chăm chút trong từng chi
+                tiết, phù hợp để gửi trao tình cảm và lưu giữ những khoảnh khắc
+                ý nghĩa.
               </p>
 
               <ul className="mt-5 space-y-4">
@@ -393,8 +377,8 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
             </h2>
 
             <p className="mt-3 text-sm leading-7 text-black">
-              Điền thông tin bên dưới để shop liên hệ tư vấn,
-              xác nhận mẫu hoa, giá và thời gian giao hàng.
+              Điền thông tin bên dưới để shop liên hệ tư vấn, xác nhận mẫu hoa,
+              giá và thời gian giao hàng.
             </p>
           </div>
 
