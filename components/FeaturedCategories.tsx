@@ -51,7 +51,7 @@ export default function FeaturedCategories() {
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories", {
+        const response = await fetch("/api/feature-categories", {
           signal: controller.signal,
           cache: "force-cache",
         });

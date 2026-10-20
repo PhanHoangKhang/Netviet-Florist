@@ -8,9 +8,7 @@ export async function GET() {
   try {
     await connectDB();
 
-    const categories = await Category.find({
-      isFeatured: true,
-    })
+    const categories = await Category.find({})
       .sort({ order: 1, createdAt: -1 })
       .lean();
 
@@ -48,12 +46,12 @@ export async function GET() {
       },
     );
   } catch (error) {
-    console.error("GET FEATURED CATEGORIES ERROR:", error);
+    console.error("GET CATEGORIES ERROR:", error);
 
     return NextResponse.json(
       {
         success: false,
-        message: "Không thể lấy danh mục nổi bật.",
+        message: "Không thể lấy danh mục.",
       },
       { status: 500 },
     );
