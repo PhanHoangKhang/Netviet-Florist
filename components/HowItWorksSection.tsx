@@ -93,7 +93,7 @@ export default function HowItWorksSection() {
             </span>
           </h2>
 
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-gray-500">
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[var(--color-text-main)]">
             Chỉ với 4 bước đơn giản.
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function HowItWorksSection() {
                     {item.title}
                   </h3>
 
-                  <p className="mx-auto mt-2 max-w-[230px] text-sm leading-6 text-gray-500">
+                  <p className="mx-auto mt-2 max-w-[230px] text-sm leading-6 text-[var(--color-text-main)]">
                     {item.desc}
                   </p>
                 </div>

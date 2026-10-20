@@ -42,7 +42,7 @@ export default function ProductSlider({
             </h2>
 
             {subtitle && (
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm text-[var(--color-text-main)] mt-1">
                 {subtitle}
               </p>
             )}

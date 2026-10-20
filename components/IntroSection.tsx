@@ -60,7 +60,7 @@ export default function IntroSection() {
                 />
               </h1>
 
-              <p className="mt-6 max-w-lg text-base leading-7 text-gray-500 sm:text-lg">
+              <p className="mt-6 max-w-lg text-base leading-7 text-[var(--color-text-main)] sm:text-lg">
                 Những thiết kế hoa được chọn lọc và chăm chút cho sinh nhật, kỷ
                 niệm, khai trương, cưới hỏi và những dịp đặc biệt trong cuộc
                 sống.

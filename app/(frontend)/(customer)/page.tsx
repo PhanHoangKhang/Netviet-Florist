@@ -9,6 +9,7 @@ import HowItWorksSection from "@/components/HowItWorksSection";
 import ProductSlider from "@/components/ProductSlider";
 import IntroSection from "@/components/IntroSection";
 import FAQSection from "@/components/FAQSection";
+import FeaturedCategories from "@/components/FeaturedCategories";
 
 import type { Product } from "@/types/product";
 import ContactSection from "@/components/ContactSection";
@@ -85,11 +86,11 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
-        {/* CATEGORY */}
-        <Category />
 
         {/* INTRO - NEW */}
         <IntroSection />
+
+        <FeaturedCategories />
 
         {/* POSTER */}
         <div

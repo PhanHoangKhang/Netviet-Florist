@@ -18,13 +18,13 @@ export default function Footer() {
 
               <span className="text-xl font-semibold tracking-tight text-[var(--color-primary)]">
                 Nét Việt
-                <span className="block text-xs font-medium uppercase tracking-[0.16em] text-gray-400">
+                <span className="block text-xs font-medium uppercase tracking-[0.16em] text-[var(--color-text-main)]">
                   Florist
                 </span>
               </span>
             </Link>
 
-            <p className="mt-4 max-w-xs text-sm leading-6 text-gray-500">
+            <p className="mt-4 max-w-xs text-sm leading-6 text-[var(--color-text-main)]">
               Chuyên thiết kế hoa tươi sự kiện, sinh nhật, khai trương theo yêu
               cầu. Trao gửi cảm xúc trọn vẹn.
             </p>
@@ -36,14 +36,14 @@ export default function Footer() {
               Liên hệ
             </h5>
 
-            <div className="space-y-2 text-sm leading-6 text-gray-500">
+            <div className="space-y-2 text-sm leading-6 text-[var(--color-text-main)]">
               <p>
-                <span className="font-medium text-gray-700">Địa chỉ:</span>{" "}
+                <span className="font-medium text-[var(--color-text-main)]">Địa chỉ:</span>{" "}
                 275 Trần Hưng Đạo, Phan Thiết, Bình Thuận
               </p>
 
               <p>
-                <span className="font-medium text-gray-700">Email:</span>{" "}
+                <span className="font-medium text-[var(--color-text-main)]">Email:</span>{" "}
                 <a
                   href="mailto:khanhuyen222811@gmail.com"
                   className="transition-colors hover:text-[var(--color-primary)]"
@@ -53,7 +53,7 @@ export default function Footer() {
               </p>
 
               <p>
-                <span className="font-medium text-gray-700">Hotline 1:</span>{" "}
+                <span className="font-medium text-[var(--color-text-main)]">Hotline 1:</span>{" "}
                 <a
                   href="tel:0933660399"
                   className="transition-colors hover:text-[var(--color-primary)]"
@@ -63,7 +63,7 @@ export default function Footer() {
               </p>
 
               <p>
-                <span className="font-medium text-gray-700">Hotline 2:</span>{" "}
+                <span className="font-medium text-[var(--color-text-main)]">Hotline 2:</span>{" "}
                 <a
                   href="tel:0982310982"
                   className="transition-colors hover:text-[var(--color-primary)]"
@@ -81,7 +81,7 @@ export default function Footer() {
                 Hỗ trợ & Vị trí
               </h5>
 
-              <div className="mb-4 space-y-1.5 text-sm leading-6 text-gray-500">
+              <div className="mb-4 space-y-1.5 text-sm leading-6 text-[var(--color-text-main)]">
                 <p>• Tư vấn chọn hoa qua Zalo 24/7</p>
                 <p>• Giao hoa tận nơi nhanh chóng</p>
                 <p>• Miễn phí thiệp & banner chúc mừng</p>
@@ -147,7 +147,7 @@ export default function Footer() {
         {/* Legal Links */}
         <div className="mt-10 border-t border-[#eee7e4] pt-5">
           <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-            <div className="flex items-center gap-5 text-sm text-gray-400">
+            <div className="flex items-center gap-5 text-sm text-[var(--color-text-main)]">
               <Link
                 href="/chinh-sach-bao-mat"
                 className="transition-colors hover:text-[var(--color-primary)]"
@@ -165,14 +165,14 @@ export default function Footer() {
               </Link>
             </div>
 
-            <p className="text-sm text-gray-400">
+            <p className="text-sm text-[var(--color-text-main)]">
               © {new Date().getFullYear()} Nét Việt Florist. All rights reserved.
             </p>
           </div>
         </div>
 
         {/* Dòng thiết kế */}
-        <div className="mt-3 text-center text-sm text-gray-400">
+        <div className="mt-3 text-center text-sm text-[var(--color-text-main)]">
           Thiết kế dành riêng cho Nét Việt Florist
         </div>
       </div>

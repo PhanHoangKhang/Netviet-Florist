@@ -213,7 +213,7 @@ export default function ValuePropsSection() {
                   {item.title}
                 </h3>
 
-                <p className="mx-auto mt-2 max-w-[230px] text-sm leading-6 text-gray-500">
+                <p className="mx-auto mt-2 max-w-[230px] text-sm leading-6 text-[var(--color-text-main)]">
                   {item.desc}
                 </p>
               </div>

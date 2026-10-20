@@ -389,7 +389,7 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
         {relatedProducts.length > 0 && (
           <section className="mt-14 border-t border-black/15 pt-10 sm:mt-20 sm:pt-12">
             <ProductSlider
-              title="Mẫu hoa cùng danh mục"
+              title="Có thể bạn sẽ thích"
               subtitle="Khám phá thêm những thiết kế phù hợp với bạn."
               products={relatedProducts}
             />
