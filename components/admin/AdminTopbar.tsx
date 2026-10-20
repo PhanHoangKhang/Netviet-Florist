@@ -172,16 +172,7 @@ export default function AdminTopbar({
               <Menu className="h-5 w-5" />
             </button>
 
-            {/* Search */}
-            <div className="relative hidden sm:block">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-
-              <input
-                type="text"
-                placeholder="Tìm kiếm..."
-                className="h-10 w-64 rounded-xl border border-gray-200 bg-gray-50 pl-9 pr-4 text-sm text-gray-700 outline-none transition focus:border-[var(--color-primary)] focus:bg-white focus:ring-1 focus:ring-[var(--color-primary)]"
-              />
-            </div>
+            
           </div>
 
           {/* Right */}

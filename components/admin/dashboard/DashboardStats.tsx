@@ -30,14 +30,6 @@ export default function DashboardStats() {
       icon: <ShoppingBag size={21} />,
     },
     {
-      title: "Giá trị đơn hôm nay",
-      value: data
-        ? currencyFormatter.format(data.orderValueToday)
-        : "—",
-      description: "Không bao gồm đơn đã hủy",
-      icon: <Wallet size={21} />,
-    },
-    {
       title: "Chờ xác nhận",
       value: data ? data.pendingOrders.toLocaleString("vi-VN") : "—",
       description: "Đơn đang chờ xử lý",
