@@ -141,7 +141,7 @@ export default function ProductDetailPage() {
 
   return (
     <main className="min-h-screen text-[var(--foreground)]">
-      <div className="mx-auto max-w-[1520px] px-4 py-6 sm:px-6 sm:py-9 lg:px-10">
+      <div className="mx-auto max-w-[1420px] px-4 py-6 sm:px-6 sm:py-9 lg:px-10">
         {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
