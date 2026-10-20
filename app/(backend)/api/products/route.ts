@@ -11,17 +11,13 @@ export async function GET(request: NextRequest) {
 
     const category = searchParams.get("category");
 
-    
     const search = searchParams.get("search");
 
-    const page = Math.max(
-      Number(searchParams.get("page")) || 1,
-      1
-    );
+    const page = Math.max(Number(searchParams.get("page")) || 1, 1);
 
     const limit = Math.min(
       Math.max(Number(searchParams.get("limit")) || 10, 1),
-      50
+      50,
     );
 
     const skip = (page - 1) * limit;
@@ -31,10 +27,14 @@ export async function GET(request: NextRequest) {
     };
 
     /* =========================
-       FILTER BY CATEGORY
-    ========================= */
+   FILTER BY CATEGORY
+========================= */
 
-    if (category && category !== "all") {
+    if (category === "featured") {
+      // Chỉ lấy sản phẩm nổi bật
+      filter.isFeatured = true;
+    } else if (category && category !== "all") {
+      // Lọc theo danh mục thông thường
       const categoryDoc = await Category.findOne({
         slug: category,
       }).select("_id");
@@ -99,7 +99,7 @@ export async function GET(request: NextRequest) {
         success: false,
         message: "Không thể lấy sản phẩm",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
