@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import Category from "@/components/Category";
 import HeroSlider from "@/components/HeroSlider";
 import ValuePropsSection from "@/components/ValuePropsSection";
 import HowItWorksSection from "@/components/HowItWorksSection";

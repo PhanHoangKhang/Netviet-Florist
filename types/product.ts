@@ -7,11 +7,11 @@ export interface Product {
   description?: string;
   categoryId: Category;
   images: string[];
-  imagePublicIds: string[];
   isFeatured: boolean;
   inStock: boolean;
   createdAt: string;
   updatedAt: string;
+  imageKeys?: string[];
 }
 
 export interface Pagination {
@@ -21,7 +21,7 @@ export interface Pagination {
   totalPages: number;
 }
 
-export interface ImageItem {
+export type ImageItem = {
   url: string;
-  publicId: string;
-}
+  key: string;
+};

@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { fileTypeFromBuffer } from "file-type";
 import sharp from "sharp";
-import cloudinary from "@/lib/cloudinary";
 import { withRBAC } from "@/lib/auth/withRBAC";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { randomUUID } from "node:crypto";
+import {
+  s3,
+  S3_BUCKET,
+  getCloudFrontUrl,
+} from "@/lib/s3";
+
 
 export const runtime = "nodejs";
 
@@ -186,47 +193,33 @@ export const POST = withRBAC(
       }
 
       // ========================================
-      // 9. UPLOAD PROCESSED IMAGE TO CLOUDINARY
+      // 9. UPLOAD PROCESSED IMAGE TO S3
       // ========================================
 
-      const result = await new Promise<{
-        secure_url: string;
-        public_id: string;
-      }>((resolve, reject) => {
-        cloudinary.uploader
-          .upload_stream(
-            {
-              folder: "netviet-florist/products",
-              resource_type: "image",
-              format: "webp",
-            },
-            (error, uploadResult) => {
-              if (error || !uploadResult) {
-                reject(error || new Error("Cloudinary upload failed."));
+      const key = `netviet-florist/products/${randomUUID()}.webp`;
 
-                return;
-              }
-
-              resolve({
-                secure_url: uploadResult.secure_url,
-                public_id: uploadResult.public_id,
-              });
-            },
-          )
-          .end(processedBuffer);
-      });
+      await s3.send(
+        new PutObjectCommand({
+          Bucket: S3_BUCKET,
+          Key: key,
+          Body: processedBuffer,
+          ContentType: "image/webp",
+          CacheControl: "public, max-age=31536000, immutable",
+        }),
+      );
 
       // ========================================
-      // 10. RETURN RESULT
+      // 10. RETURN CLOUDFRONT URL + S3 KEY
       // ========================================
 
       return NextResponse.json({
         success: true,
         data: {
-          url: result.secure_url,
-          publicId: result.public_id,
+          url: getCloudFrontUrl(key),
+          key,
         },
       });
+
     } catch (error) {
       console.error("UPLOAD IMAGE ERROR:", error);
 

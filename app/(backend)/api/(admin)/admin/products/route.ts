@@ -96,7 +96,7 @@ export const POST = withRBAC(
         description,
         categoryId,
         images,
-        imagePublicIds,
+        imageKeys,
         isFeatured,
         inStock,
       } = body;
@@ -129,36 +129,39 @@ export const POST = withRBAC(
       }
 
       if (
-        !Array.isArray(images) ||
-        images.length < 1 ||
-        images.length > 5 ||
-        !images.every(
-          (image: unknown) =>
-            typeof image === "string" && image.startsWith("https://"),
+        !Array.isArray(imageKeys) ||
+        imageKeys.length !== images.length ||
+        !imageKeys.every(
+          (key: unknown) =>
+            typeof key === "string" &&
+            /^netviet-florist\/products\/[a-f0-9-]+\.webp$/i.test(key),
         )
       ) {
         return NextResponse.json(
           {
             success: false,
-            message: "Sản phẩm cần từ 1 đến 5 URL ảnh hợp lệ.",
+            message: "Thông tin ảnh S3 không hợp lệ.",
           },
           { status: 400 },
         );
       }
 
+      const expectedUrls = imageKeys.map((key: string) => {
+        return `${process.env.CLOUDFRONT_DOMAIN?.replace(/\/+$/, "")}/${key
+          .split("/")
+          .map(encodeURIComponent)
+          .join("/")}`;
+      });
+
       if (
-        !Array.isArray(imagePublicIds) ||
-        imagePublicIds.length !== images.length ||
-        !imagePublicIds.every(
-          (publicId: unknown) =>
-            typeof publicId === "string" &&
-            publicId.startsWith("netviet-florist/products/"),
+        !images.every(
+          (url: string, index: number) => url === expectedUrls[index],
         )
       ) {
         return NextResponse.json(
           {
             success: false,
-            message: "Thông tin ảnh Cloudinary không hợp lệ.",
+            message: "URL ảnh không khớp với S3 object key.",
           },
           { status: 400 },
         );
@@ -201,7 +204,7 @@ export const POST = withRBAC(
             : "",
         categoryId,
         images,
-        imagePublicIds,
+        imageKeys,
         isFeatured: isFeatured === true,
         inStock: inStock !== false,
       });

@@ -10,7 +10,7 @@ export interface IProduct extends Document {
   inStock: boolean;
   createdAt: Date;
   updatedAt: Date;
-  imagePublicIds?: string[];
+  imageKeys?: string[];
 }
 
 const ProductSchema = new Schema<IProduct>(
@@ -46,8 +46,7 @@ const ProductSchema = new Schema<IProduct>(
       },
     ],
 
-    // Xóa ảnh khỏi cloudinary
-    imagePublicIds: {
+    imageKeys: {
       type: [String],
       default: [],
     },
@@ -64,7 +63,7 @@ const ProductSchema = new Schema<IProduct>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export default mongoose.models.Product ||
