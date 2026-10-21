@@ -129,6 +129,21 @@ export const POST = withRBAC(
       }
 
       if (
+        !Array.isArray(images) ||
+        images.length < 1 ||
+        images.length > 5 ||
+        !images.every((url: unknown) => typeof url === "string")
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Sản phẩm cần từ 1 đến 5 URL ảnh hợp lệ.",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (
         !Array.isArray(imageKeys) ||
         imageKeys.length !== images.length ||
         !imageKeys.every(
@@ -146,11 +161,22 @@ export const POST = withRBAC(
         );
       }
 
+      const domain = process.env.CLOUDFRONT_DOMAIN?.replace(/\/+$/, "");
+
+      if (!domain) {
+        console.error("CLOUDFRONT_DOMAIN is missing.");
+
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Cấu hình CloudFront chưa hợp lệ.",
+          },
+          { status: 500 },
+        );
+      }
+
       const expectedUrls = imageKeys.map((key: string) => {
-        return `${process.env.CLOUDFRONT_DOMAIN?.replace(/\/+$/, "")}/${key
-          .split("/")
-          .map(encodeURIComponent)
-          .join("/")}`;
+        return `${domain}/${key.split("/").map(encodeURIComponent).join("/")}`;
       });
 
       if (
