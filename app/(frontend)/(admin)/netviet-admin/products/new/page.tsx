@@ -14,11 +14,8 @@ import {
 } from "lucide-react";
 import { fetchAdminCategories } from "@/lib/admin-catalog";
 import type { Category } from "@/types/category";
+import { ImageItem } from "@/types/product";
 
-interface UploadedImage {
-  url: string;
-  publicId: string;
-}
 
 function generateSlug(value: string) {
   return value
@@ -39,7 +36,7 @@ export default function NewProductPage() {
   const [description, setDescription] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState<Category[]>([]);
-  const [images, setImages] = useState<UploadedImage[]>([]);
+  const [images, setImages] = useState<ImageItem[]>([]);
   const [isFeatured, setIsFeatured] = useState(false);
   const [inStock, setInStock] = useState(true);
 
@@ -104,7 +101,7 @@ export default function NewProductPage() {
     setUploading(true);
 
     try {
-      const uploaded: UploadedImage[] = [];
+      const uploaded: ImageItem[] = [];
 
       for (const file of files) {
         if (file.size > 5 * 1024 * 1024) {
@@ -131,7 +128,7 @@ export default function NewProductPage() {
 
         uploaded.push({
           url: result.data.url,
-          publicId: result.data.publicId,
+          key: result.data.key,
         });
       }
 
@@ -195,7 +192,7 @@ export default function NewProductPage() {
           description: description.trim(),
           categoryId,
           images: images.map((image) => image.url),
-          imagePublicIds: images.map((image) => image.publicId),
+          imageKeys: images.map((image) => image.key),
           isFeatured,
           inStock,
         }),
@@ -363,7 +360,7 @@ export default function NewProductPage() {
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {images.map((image, index) => (
                   <div
-                    key={image.publicId}
+                    key={image.key}
                     className="group relative aspect-square overflow-hidden border border-gray-200 bg-gray-50"
                   >
                     <img
