@@ -134,7 +134,7 @@ export const POST = withRBAC(
         !imageKeys.every(
           (key: unknown) =>
             typeof key === "string" &&
-            /^netviet-florist\/products\/[a-f0-9-]+\.webp$/i.test(key),
+            /^products\/[a-f0-9-]+\.webp$/i.test(key),
         )
       ) {
         return NextResponse.json(

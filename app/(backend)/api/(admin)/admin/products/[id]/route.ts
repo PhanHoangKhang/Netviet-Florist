@@ -194,7 +194,7 @@ export const PATCH = withRBAC(
         const validKeys = imageKeys.every(
           (key: unknown) =>
             typeof key === "string" &&
-            /^netviet-florist\/products\/[a-f0-9-]+\.webp$/i.test(key),
+            /^products\/[a-f0-9-]+\.webp$/i.test(key),
         );
 
         const uniqueKeys =
@@ -302,7 +302,7 @@ export const DELETE = withRBAC("products:delete", async (request, context) => {
       ? product.imageKeys.filter(
           (key: unknown): key is string =>
             typeof key === "string" &&
-            /^netviet-florist\/products\/[a-f0-9-]+\.webp$/i.test(key),
+            /^products\/[a-f0-9-]+\.webp$/i.test(key),
         )
       : [];
 

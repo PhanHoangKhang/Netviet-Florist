@@ -196,7 +196,7 @@ export const POST = withRBAC(
       // 9. UPLOAD PROCESSED IMAGE TO S3
       // ========================================
 
-      const key = `netviet-florist/products/${randomUUID()}.webp`;
+     const key = `products/${randomUUID()}.webp`;
 
       await s3.send(
         new PutObjectCommand({
