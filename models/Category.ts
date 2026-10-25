@@ -7,6 +7,7 @@ export interface ICategory extends Document {
   createdAt: Date;
   updatedAt: Date;
   image?: string;
+  imageKey?: string;
 }
 
 const CategorySchema = new Schema<ICategory>(
@@ -18,6 +19,10 @@ const CategorySchema = new Schema<ICategory>(
       maxlength: 100,
     },
     image: {
+      type: String,
+      default: "",
+    },
+    imageKey: {
       type: String,
       default: "",
     },

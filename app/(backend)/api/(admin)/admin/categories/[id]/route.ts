@@ -9,15 +9,15 @@ type CategoryUpdates = {
   name?: string;
   slug?: string;
   description?: string;
+  image?: string;
+  imageKey?: string;
 };
 
 function isValidId(id: string): boolean {
   return mongoose.Types.ObjectId.isValid(id);
 }
 
-function isDuplicateKeyError(
-  error: unknown,
-): error is { code: number } {
+function isDuplicateKeyError(error: unknown): error is { code: number } {
   return (
     typeof error === "object" &&
     error !== null &&
@@ -27,52 +27,43 @@ function isDuplicateKeyError(
 }
 
 function errorResponse(message: string, status: number) {
-  return NextResponse.json(
-    { success: false, message },
-    { status },
-  );
+  return NextResponse.json({ success: false, message }, { status });
 }
 
 // GET: Lấy chi tiết một danh mục
-export const GET = withRBAC(
-  "categories:read",
-  async (_request, context) => {
-    try {
-      const { id } = await context.params;
+export const GET = withRBAC("categories:read", async (_request, context) => {
+  try {
+    const { id } = await context.params;
 
-      if (!isValidId(id)) {
-        return errorResponse("ID danh mục không hợp lệ.", 400);
-      }
-
-      await connectDB();
-
-      const category = await Category.findById(id).lean();
-
-      if (!category) {
-        return errorResponse("Không tìm thấy danh mục.", 404);
-      }
-
-      const productCount = await Product.countDocuments({
-        categoryId: category._id,
-      });
-
-      return NextResponse.json({
-        success: true,
-        data: {
-          ...category,
-          productCount,
-        },
-      });
-    } catch (error) {
-      console.error("GET CATEGORY ERROR:", error);
-
-      return errorResponse(
-        "Không thể lấy thông tin danh mục.",
-        500,
-      );
+    if (!isValidId(id)) {
+      return errorResponse("ID danh mục không hợp lệ.", 400);
     }
-  },
-);
+
+    await connectDB();
+
+    const category = await Category.findById(id).lean();
+
+    if (!category) {
+      return errorResponse("Không tìm thấy danh mục.", 404);
+    }
+
+    const productCount = await Product.countDocuments({
+      categoryId: category._id,
+    });
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        ...category,
+        productCount,
+      },
+    });
+  } catch (error) {
+    console.error("GET CATEGORY ERROR:", error);
+
+    return errorResponse("Không thể lấy thông tin danh mục.", 500);
+  }
+});
 
 // PATCH: Cập nhật danh mục
 export const PATCH = withRBAC(
@@ -89,6 +80,8 @@ export const PATCH = withRBAC(
         name?: unknown;
         slug?: unknown;
         description?: unknown;
+        image?: unknown;
+        imageKey?: unknown;
       };
 
       try {
@@ -97,11 +90,7 @@ export const PATCH = withRBAC(
         return errorResponse("JSON request không hợp lệ.", 400);
       }
 
-      if (
-        typeof body !== "object" ||
-        body === null ||
-        Array.isArray(body)
-      ) {
+      if (typeof body !== "object" || body === null || Array.isArray(body)) {
         return errorResponse("Dữ liệu gửi lên không hợp lệ.", 400);
       }
 
@@ -109,10 +98,7 @@ export const PATCH = withRBAC(
 
       // Validate name
       if (body.name !== undefined) {
-        if (
-          typeof body.name !== "string" ||
-          !body.name.trim()
-        ) {
+        if (typeof body.name !== "string" || !body.name.trim()) {
           return errorResponse("Tên danh mục không hợp lệ.", 400);
         }
 
@@ -162,11 +148,36 @@ export const PATCH = withRBAC(
         updates.description = description;
       }
 
+      if (body.image !== undefined || body.imageKey !== undefined) {
+        if (
+          typeof body.image !== "string" ||
+          typeof body.imageKey !== "string"
+        ) {
+          return errorResponse("Thông tin ảnh không hợp lệ.", 400);
+        }
+
+        const domain = process.env.CLOUDFRONT_DOMAIN?.replace(/\/+$/, "");
+
+        const validKey = /^categories\/[a-f0-9-]+\.webp$/i.test(body.imageKey);
+
+        const expectedUrl =
+          domain && validKey
+            ? `${domain}/${body.imageKey
+                .split("/")
+                .map(encodeURIComponent)
+                .join("/")}`
+            : "";
+
+        if (!domain || !validKey || body.image !== expectedUrl) {
+          return errorResponse("URL ảnh hoặc S3 key không hợp lệ.", 400);
+        }
+
+        updates.image = body.image;
+        updates.imageKey = body.imageKey;
+      }
+
       if (Object.keys(updates).length === 0) {
-        return errorResponse(
-          "Không có thông tin nào để cập nhật.",
-          400,
-        );
+        return errorResponse("Không có thông tin nào để cập nhật.", 400);
       }
 
       await connectDB();
@@ -185,10 +196,7 @@ export const PATCH = withRBAC(
         }).lean();
 
         if (existingCategory) {
-          return errorResponse(
-            "Slug danh mục đã tồn tại.",
-            409,
-          );
+          return errorResponse("Slug danh mục đã tồn tại.", 409);
         }
       }
 
@@ -207,10 +215,7 @@ export const PATCH = withRBAC(
 
       console.error("UPDATE CATEGORY ERROR:", error);
 
-      return errorResponse(
-        "Không thể cập nhật danh mục.",
-        500,
-      );
+      return errorResponse("Không thể cập nhật danh mục.", 500);
     }
   },
 );
@@ -258,10 +263,7 @@ export const DELETE = withRBAC(
     } catch (error) {
       console.error("DELETE CATEGORY ERROR:", error);
 
-      return errorResponse(
-        "Không thể xóa danh mục.",
-        500,
-      );
+      return errorResponse("Không thể xóa danh mục.", 500);
     }
   },
 );

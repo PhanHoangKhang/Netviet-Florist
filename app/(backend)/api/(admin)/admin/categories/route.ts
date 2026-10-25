@@ -54,6 +54,8 @@ export const POST = withRBAC(
       const body = await request.json();
       const name = typeof body.name === "string" ? body.name.trim() : "";
       const slug = typeof body.slug === "string" ? body.slug.trim() : "";
+      const image = typeof body.image === "string" ? body.image : "";
+      const imageKey = typeof body.imageKey === "string" ? body.imageKey : "";
       const description =
         typeof body.description === "string" ? body.description.trim() : "";
 
@@ -107,10 +109,31 @@ export const POST = withRBAC(
         );
       }
 
+      const domain = process.env.CLOUDFRONT_DOMAIN?.replace(/\/+$/, "");
+
+      const validImageKey = /^categories\/[a-f0-9-]+\.webp$/i.test(imageKey);
+
+      const expectedImageUrl =
+        domain && validImageKey
+          ? `${domain}/${imageKey.split("/").map(encodeURIComponent).join("/")}`
+          : "";
+
+      if (!domain || !validImageKey || image !== expectedImageUrl) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Vui lòng upload ảnh danh mục hợp lệ.",
+          },
+          { status: 400 },
+        );
+      }
+
       const category = await Category.create({
         name,
         slug,
         description,
+        image,
+        imageKey,
       });
 
       return NextResponse.json(

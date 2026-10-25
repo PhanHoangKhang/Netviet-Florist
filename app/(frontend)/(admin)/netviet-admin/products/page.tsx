@@ -11,6 +11,15 @@ import {
 import type { Category } from "@/types/category";
 import type { Product, Pagination } from "@/types/product";
 import { toast } from "sonner";
+import {
+  FolderTree,
+  Plus,
+  Search,
+  Pencil,
+  Trash2,
+  LoaderCircle,
+  X,
+} from "lucide-react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -383,7 +392,7 @@ export default function ProductsPage() {
                           href={`/netviet-admin/products/${product._id}/edit`}
                           className="text-sm font-medium text-gray-500 transition-colors hover:text-[var(--color-primary)]"
                         >
-                          Sửa
+                           <Pencil size={15} />
                         </Link>
 
                         <button
@@ -391,7 +400,7 @@ export default function ProductsPage() {
                           onClick={() => handleDelete(product._id)}
                           className="text-sm font-medium text-gray-400 transition-colors hover:text-red-600"
                         >
-                          Xóa
+                          <Trash2 size={15} />
                         </button>
                       </div>
                     </td>

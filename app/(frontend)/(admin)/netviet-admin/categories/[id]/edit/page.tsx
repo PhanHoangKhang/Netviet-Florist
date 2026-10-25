@@ -12,11 +12,19 @@ import {
   AlertCircle,
   CheckCircle2,
 } from "lucide-react";
+import {
+  getCategory,
+  updateCategory,
+  uploadCategoryImage,
+  type CategoryFormData,
+} from "@/services/category.service";
 
 interface CategoryForm {
   name: string;
   slug: string;
   description: string;
+  image: string;
+  imageKey: string;
 }
 
 export default function EditCategoryPage() {
@@ -28,43 +36,34 @@ export default function EditCategoryPage() {
     name: "",
     slug: "",
     description: "",
+    image: "",
+    imageKey: "",
   });
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const fetchCategory = useCallback(async () => {
     try {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        `/api/admin/categories/${encodeURIComponent(id)}`,
-        { cache: "no-store" }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Không thể tải thông tin danh mục."
-        );
-      }
-
+      const result = await getCategory(id);
       const category = result.data;
 
       setForm({
         name: category.name ?? "",
         slug: category.slug ?? "",
         description: category.description ?? "",
+        image: category.image ?? "",
+        imageKey: category.imageKey ?? "",
       });
     } catch (err) {
       setError(
-        err instanceof Error
-          ? err.message
-          : "Đã xảy ra lỗi khi tải danh mục."
+        err instanceof Error ? err.message : "Đã xảy ra lỗi khi tải danh mục.",
       );
     } finally {
       setLoading(false);
@@ -93,9 +92,50 @@ export default function EditCategoryPage() {
     }));
   }
 
-  async function handleSubmit(
-    event: React.FormEvent<HTMLFormElement>
-  ) {
+  async function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Cho phép chọn lại cùng một file nếu lần trước bị lỗi.
+    event.target.value = "";
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    if (!allowedTypes.includes(file.type)) {
+      setError("Chỉ chấp nhận ảnh JPG, PNG hoặc WebP.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Ảnh không được vượt quá 5 MB.");
+      return;
+    }
+
+    setError("");
+    setUploadingImage(true);
+
+    try {
+      const uploaded = await uploadCategoryImage(file);
+
+      setForm((prev) => ({
+        ...prev,
+        image: uploaded.url,
+        imageKey: uploaded.key,
+      }));
+
+      toast.success("Đã tải ảnh danh mục lên.");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Không thể tải ảnh lên.";
+
+      setError(message);
+      toast.error(message);
+    } finally {
+      setUploadingImage(false);
+    }
+  }
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     setError("");
@@ -114,41 +154,34 @@ export default function EditCategoryPage() {
       return;
     }
 
+    if (!form.image || !form.imageKey) {
+      setError("Vui lòng tải ảnh danh mục lên.");
+      return;
+    }
+
+    if (uploadingImage) {
+      setError("Vui lòng đợi ảnh tải lên hoàn tất.");
+      return;
+    }
+
     setSaving(true);
 
     try {
-      const response = await fetch(
-        `/api/admin/categories/${encodeURIComponent(id)}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name,
-            slug,
-            description: form.description.trim(),
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(
-          result.message || "Không thể cập nhật danh mục."
-        );
-      }
+      await updateCategory(id, {
+        name,
+        slug,
+        description: form.description.trim(),
+        image: form.image,
+        imageKey: form.imageKey,
+      });
 
       toast.success(`Đã cập nhật danh mục "${name}".`);
-      // Quay lại danh sách sau khi cập nhật thành công
       router.push("/netviet-admin/categories");
       router.refresh();
     } catch (err) {
       const message =
-        err instanceof Error
-          ? err.message
-          : "Đã xảy ra lỗi khi cập nhật.";
+        err instanceof Error ? err.message : "Đã xảy ra lỗi khi cập nhật.";
+
       setError(message);
       toast.error(message);
     } finally {
@@ -166,9 +199,7 @@ export default function EditCategoryPage() {
           size={22}
           className="animate-spin text-[var(--color-primary)]"
         />
-        <span className="ml-3 text-sm text-gray-500">
-          Đang tải danh mục...
-        </span>
+        <span className="ml-3 text-sm text-gray-500">Đang tải danh mục...</span>
       </div>
     );
   }
@@ -186,12 +217,7 @@ export default function EditCategoryPage() {
         </Link>
 
         <div className="flex items-start gap-4">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center border border-gray-200 bg-white">
-            <FolderTree
-              size={22}
-              className="text-[var(--color-primary)]"
-            />
-          </div>
+          
 
           <div>
             <h1 className="text-2xl font-semibold tracking-tight text-gray-900">
@@ -205,10 +231,7 @@ export default function EditCategoryPage() {
       </div>
 
       {/* Form */}
-      <form
-        onSubmit={handleSubmit}
-        className="border border-gray-200 bg-white"
-      >
+      <form onSubmit={handleSubmit} className="border border-gray-200 bg-white">
         <div className="space-y-6 p-5 sm:p-7">
           {error && (
             <div
@@ -222,20 +245,61 @@ export default function EditCategoryPage() {
 
           {success && (
             <div className="flex items-start gap-3 border border-green-200 bg-green-50 p-4 text-sm text-green-700">
-              <CheckCircle2
-                size={18}
-                className="mt-0.5 shrink-0"
-              />
+              <CheckCircle2 size={18} className="mt-0.5 shrink-0" />
               <p>{success}</p>
             </div>
           )}
 
-          {/* Name */}
+          {/* Category image */}
           <div>
             <label
-              htmlFor="name"
-              className="text-sm font-medium text-gray-800"
+              htmlFor="category-image"
+              className="text-sm font-medium text-[var(--foreground)]"
             >
+              Ảnh danh mục <span className="text-red-500">*</span>
+            </label>
+
+            {form.image && (
+              <div className="mt-3">
+                <img
+                  src={form.image}
+                  alt="Ảnh danh mục"
+                  className="h-48 w-full max-w-sm border border-gray-200 object-cover"
+                />
+                <p className="mt-2 break-all text-xs text-[var(--foreground)]/70">
+                  {form.imageKey}
+                </p>
+              </div>
+            )}
+
+            <input
+              id="category-image"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleImageChange}
+              disabled={uploadingImage || saving}
+              className="mt-3 block w-full text-sm text-[var(--foreground)]
+      file:mr-4 file:border file:border-gray-200 file:bg-white
+      file:px-4 file:py-2 file:text-sm file:font-medium
+      file:text-[var(--foreground)] hover:file:bg-gray-50
+      disabled:opacity-60"
+            />
+
+            <p className="mt-2 text-xs text-[var(--foreground)]/70">
+              JPG, PNG hoặc WebP. Tối đa 5 MB.
+            </p>
+
+            {uploadingImage && (
+              <p className="mt-2 flex items-center gap-2 text-sm text-[var(--foreground)]">
+                <LoaderCircle size={15} className="animate-spin" />
+                Đang tải ảnh lên...
+              </p>
+            )}
+          </div>
+
+          {/* Name */}
+          <div>
+            <label htmlFor="name" className="text-sm font-medium text-gray-800">
               Tên danh mục <span className="text-red-500">*</span>
             </label>
 
@@ -245,9 +309,7 @@ export default function EditCategoryPage() {
               required
               maxLength={100}
               value={form.name}
-              onChange={(event) =>
-                handleNameChange(event.target.value)
-              }
+              onChange={(event) => handleNameChange(event.target.value)}
               placeholder="Ví dụ: Hoa sinh nhật"
               className={inputClass}
             />
@@ -259,10 +321,7 @@ export default function EditCategoryPage() {
 
           {/* Slug */}
           <div>
-            <label
-              htmlFor="slug"
-              className="text-sm font-medium text-gray-800"
-            >
+            <label htmlFor="slug" className="text-sm font-medium text-gray-800">
               Slug <span className="text-red-500">*</span>
             </label>
 
@@ -272,9 +331,7 @@ export default function EditCategoryPage() {
               required
               maxLength={120}
               value={form.slug}
-              onChange={(event) =>
-                handleSlugChange(event.target.value)
-              }
+              onChange={(event) => handleSlugChange(event.target.value)}
               placeholder="hoa-sinh-nhat"
               className={inputClass}
             />
@@ -325,7 +382,7 @@ export default function EditCategoryPage() {
 
           <button
             type="submit"
-            disabled={saving}
+            disabled={saving || uploadingImage}
             className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? (

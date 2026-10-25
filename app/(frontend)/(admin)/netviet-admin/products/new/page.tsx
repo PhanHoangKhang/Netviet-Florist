@@ -112,6 +112,7 @@ export default function NewProductPage() {
 
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "product");
 
         const response = await fetch("/api/admin/upload", {
           method: "POST",

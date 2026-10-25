@@ -4,12 +4,7 @@ import sharp from "sharp";
 import { withRBAC } from "@/lib/auth/withRBAC";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { randomUUID } from "node:crypto";
-import {
-  s3,
-  S3_BUCKET,
-  getCloudFrontUrl,
-} from "@/lib/s3";
-
+import { s3, S3_BUCKET, getCloudFrontUrl } from "@/lib/s3";
 
 export const runtime = "nodejs";
 
@@ -32,6 +27,18 @@ export const POST = withRBAC(
 
       const formData = await request.formData();
       const file = formData.get("file");
+
+      const type = formData.get("type");
+
+      if (type !== "product" && type !== "category") {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Loại ảnh không hợp lệ.",
+          },
+          { status: 400 },
+        );
+      }
 
       if (!(file instanceof File)) {
         return NextResponse.json(
@@ -196,7 +203,10 @@ export const POST = withRBAC(
       // 9. UPLOAD PROCESSED IMAGE TO S3
       // ========================================
 
-     const key = `products/${randomUUID()}.webp`;
+      const prefix =
+        type === "category" ? "categories" : "products";
+
+      const key = `${prefix}/${randomUUID()}.webp`;
 
       await s3.send(
         new PutObjectCommand({
@@ -219,7 +229,6 @@ export const POST = withRBAC(
           key,
         },
       });
-
     } catch (error) {
       console.error("UPLOAD IMAGE ERROR:", error);
 
