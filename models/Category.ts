@@ -4,10 +4,12 @@ export interface ICategory extends Document {
   name: string;
   slug: string;
   description?: string;
-  createdAt: Date;
-  updatedAt: Date;
   image?: string;
   imageKey?: string;
+  isFeatured: boolean;
+  order: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 const CategorySchema = new Schema<ICategory>(
@@ -38,6 +40,14 @@ const CategorySchema = new Schema<ICategory>(
       type: String,
       default: "",
       maxlength: 1000,
+    },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    order: {
+      type: Number,
+      default: 0,
     },
   },
   { timestamps: true },

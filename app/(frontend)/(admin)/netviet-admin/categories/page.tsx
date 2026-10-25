@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
@@ -13,12 +12,15 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
+import ConfirmModal from "@/components/ConfirmModal";
 
 interface CategoryItem {
   _id: string;
   name: string;
   slug: string;
   description?: string;
+  image?: string;
+  imageKey?: string;
   productCount?: number;
 }
 
@@ -28,8 +30,10 @@ export default function CategoriesPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [confirmCategory, setConfirmCategory] =
-    useState<CategoryItem | null>(null);
+  const [confirmCategory, setConfirmCategory] = useState<CategoryItem | null>(
+    null,
+  );
+  const [deleteError, setDeleteError] = useState("");
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -45,11 +49,7 @@ export default function CategoriesPage() {
 
       setCategories(result.data);
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Không thể tải danh mục.",
-      );
+      setError(err instanceof Error ? err.message : "Không thể tải danh mục.");
     } finally {
       setLoading(false);
     }
@@ -86,9 +86,9 @@ export default function CategoriesPage() {
     } catch (err) {
       const message =
         err instanceof Error ? err.message : "Không thể xóa danh mục.";
-      setError(message);
+
+      setDeleteError(message);
       toast.error(message);
-      setConfirmCategory(null);
     } finally {
       setDeletingId(null);
     }
@@ -218,9 +218,23 @@ export default function CategoriesPage() {
                   >
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center bg-[#F1E6DC] text-[var(--color-primary)]">
-                          <FolderTree size={18} strokeWidth={1.6} />
+                        <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden border border-gray-200 bg-[#F1E6DC]">
+                          {category.image ? (
+                            <img
+                              src={category.image}
+                              alt={category.name}
+                              loading="lazy"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <FolderTree
+                              size={18}
+                              strokeWidth={1.6}
+                              className="text-[var(--color-primary)]"
+                            />
+                          )}
                         </div>
+
                         <div>
                           <p className="text-sm font-medium text-gray-900">
                             {category.name}
@@ -254,7 +268,10 @@ export default function CategoriesPage() {
 
                         <button
                           type="button"
-                          onClick={() => setConfirmCategory(category)}
+                          onClick={() => {
+                            setConfirmCategory(category);
+                            setDeleteError("");
+                          }}
                           disabled={deletingId === category._id}
                           aria-label={`Xóa ${category.name}`}
                           className="flex h-9 w-9 items-center justify-center border border-gray-200 text-gray-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
@@ -282,54 +299,27 @@ export default function CategoriesPage() {
       </div>
 
       {/* Delete confirmation */}
-      {confirmCategory && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 p-4">
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="delete-category-title"
-            className="w-full max-w-md border border-gray-200 bg-white p-6"
-          >
-            <h2
-              id="delete-category-title"
-              className="text-lg font-semibold text-gray-900"
-            >
-              Xóa danh mục?
-            </h2>
+      <ConfirmModal
+        isOpen={Boolean(confirmCategory)}
+        title="Xóa danh mục?"
+        description={
+          confirmCategory
+            ? `Bạn có chắc muốn xóa danh mục "${confirmCategory.name}"? Không thể xóa nếu vẫn còn sản phẩm sử dụng danh mục này.`
+            : ""
+        }
+        confirmText="Xóa danh mục"
+        cancelText="Hủy"
+        variant="danger"
+        isLoading={deletingId !== null}
+        error={deleteError}
+        onConfirm={deleteCategory}
+        onCancel={() => {
+          if (deletingId !== null) return;
 
-            <p className="mt-3 text-sm leading-relaxed text-gray-500">
-              Bạn có chắc muốn xóa{" "}
-              <span className="font-medium text-gray-900">
-                {confirmCategory.name}
-              </span>
-              ? Hãy đảm bảo API kiểm tra sản phẩm đang sử dụng danh mục
-              này trước khi xóa.
-            </p>
-
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setConfirmCategory(null)}
-                className="border border-gray-200 px-4 py-2.5 text-sm text-gray-600 hover:bg-gray-50"
-              >
-                Hủy
-              </button>
-
-              <button
-                type="button"
-                onClick={deleteCategory}
-                disabled={deletingId !== null}
-                className="flex items-center gap-2 bg-red-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
-              >
-                {deletingId && (
-                  <LoaderCircle size={15} className="animate-spin" />
-                )}
-                Xóa danh mục
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+          setConfirmCategory(null);
+          setDeleteError("");
+        }}
+      />
     </div>
   );
 }

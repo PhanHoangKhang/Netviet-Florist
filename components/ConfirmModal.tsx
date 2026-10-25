@@ -116,7 +116,7 @@ export default function ConfirmModal({
         {error && (
           <p
             role="alert"
-            className="mt-5 border-l-2 border-red-500 bg-red-50 px-3 py-2 text-sm leading-5 text-red-700"
+            className="mt-5 border-l-2 border-red-500 px-3 py-2 text-sm leading-5 text-red-700"
           >
             {error}
           </p>

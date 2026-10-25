@@ -1,3 +1,4 @@
+
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
@@ -11,10 +12,12 @@ export async function GET() {
     const categories = await Category.find({
       isFeatured: true,
     })
+      .select(
+        "_id name slug description image imageKey isFeatured order createdAt",
+      )
       .sort({ order: 1, createdAt: -1 })
       .lean();
 
-    // Đếm số sản phẩm trong từng danh mục
     const productCounts = await Product.aggregate([
       {
         $group: {
@@ -43,7 +46,8 @@ export async function GET() {
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+          "Cache-Control":
+            "public, s-maxage=60, stale-while-revalidate=300",
         },
       },
     );
