@@ -26,7 +26,7 @@ export default function Navbar() {
         transition={{ duration: 0.22, ease: "easeInOut" }}
         className="hidden overflow-hidden bg-[var(--color-primary)] px-4 py-2 text-xs text-white sm:block"
       >
-        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 my-1">
           {/* Địa chỉ & Hotline */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6">
             <span className="flex items-center gap-1.5">
@@ -43,39 +43,6 @@ export default function Navbar() {
             </a>
           </div>
 
-          {/* Social Icons Link */}
-          <div className="flex items-center gap-3">
-            {/* Facebook Icon link */}
-            {/* Icon Facebook */}
-            <a
-              href="https://www.facebook.com/nguoilamhoa/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block transition-transform hover:scale-110"
-              title="Fanpage Facebook"
-            >
-              <img
-                src="/fb.png"
-                alt="Facebook Fanpage"
-                className="w-7 h-7 object-contain"
-              />
-            </a>
-
-            {/* Zalo Link */}
-            <a
-              href="https://zalo.me/0933660399"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block transition-transform hover:scale-110"
-              title="Chat Zalo Tư Vấn"
-            >
-              <img
-                src="/zalo.png"
-                alt="Zalo Fanpage"
-                className="w-7 h-7 object-contain"
-              />
-            </a>
-          </div>
         </div>
       </motion.div>
 
