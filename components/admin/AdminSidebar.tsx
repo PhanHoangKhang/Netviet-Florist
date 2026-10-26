@@ -1,7 +1,8 @@
+
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -10,10 +11,9 @@ import {
   Users,
   Settings,
   LogOut,
-  Flower2,
+  ScrollText,
 } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ConfirmModal";
 
 const menuItems = [
@@ -44,6 +44,19 @@ const menuItems = [
   },
 ];
 
+const systemItems = [
+  {
+    label: "System Logs",
+    href: "/netviet-admin/system-logs",
+    icon: ScrollText,
+  },
+  {
+    label: "Cài đặt",
+    href: "/netviet-admin/settings",
+    icon: Settings,
+  },
+];
+
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
@@ -69,16 +82,25 @@ export default function AdminSidebar() {
       }
 
       setShowLogoutModal(false);
-
       router.replace("/login");
       router.refresh();
     } catch (error) {
       setLogoutError(
-        error instanceof Error ? error.message : "Đã xảy ra lỗi khi đăng xuất.",
+        error instanceof Error
+          ? error.message
+          : "Đã xảy ra lỗi khi đăng xuất.",
       );
     } finally {
       setIsLoggingOut(false);
     }
+  };
+
+  const isItemActive = (href: string) => {
+    if (href === "/netviet-admin") {
+      return pathname === href;
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (
@@ -89,7 +111,7 @@ export default function AdminSidebar() {
           <img
             src="/logo.png"
             alt="Nét Việt Florist Logo"
-            className="w-12 h-12 object-contain rounded-full border border-gray-100"
+            className="h-12 w-12 rounded-full border border-gray-100 object-contain"
           />
 
           <div>
@@ -105,7 +127,7 @@ export default function AdminSidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-4 py-6">
+      <nav className="flex-1 overflow-y-auto px-4 py-6">
         <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
           Quản lý
         </p>
@@ -113,16 +135,13 @@ export default function AdminSidebar() {
         <div className="space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
-
-            const isActive =
-              item.href === "/netviet-admin"
-                ? pathname === "/netviet-admin"
-                : pathname.startsWith(item.href);
+            const isActive = isItemActive(item.href);
 
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={isActive ? "page" : undefined}
                 className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-[var(--color-primary)] text-white"
@@ -136,23 +155,34 @@ export default function AdminSidebar() {
           })}
         </div>
 
-        {/* Settings */}
+        {/* System */}
         <div className="mt-8">
           <p className="mb-3 px-3 text-[10px] font-bold uppercase tracking-widest text-gray-400">
             Hệ thống
           </p>
 
-          <Link
-            href="/netviet-admin/settings"
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
-              pathname.startsWith("/admin/settings")
-                ? "bg-[var(--color-primary)] text-white"
-                : "text-gray-600 hover:bg-gray-50 hover:text-[var(--color-primary)]"
-            }`}
-          >
-            <Settings className="h-[18px] w-[18px]" />
-            <span>Cài đặt</span>
-          </Link>
+          <div className="space-y-1">
+            {systemItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = isItemActive(item.href);
+
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-[var(--color-primary)] text-white"
+                      : "text-gray-600 hover:bg-gray-50 hover:text-[var(--color-primary)]"
+                  }`}
+                >
+                  <Icon className="h-[18px] w-[18px] shrink-0" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
         </div>
       </nav>
 

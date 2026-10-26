@@ -1,3 +1,4 @@
+
 import "server-only";
 
 export type AdminRole = "admin" | "staff";
@@ -19,6 +20,7 @@ export type AdminPermission =
   | "users:manage"
   | "notifications:update"
   | "notifications:delete"
+  | "audit-logs:read";
 
 const ALL_PERMISSIONS: readonly AdminPermission[] = [
   "products:read",
@@ -37,6 +39,7 @@ const ALL_PERMISSIONS: readonly AdminPermission[] = [
   "users:manage",
   "notifications:update",
   "notifications:delete",
+  "audit-logs:read",
 ];
 
 const ROLE_PERMISSIONS: Record<
