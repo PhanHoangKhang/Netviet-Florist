@@ -101,12 +101,17 @@ body {
   color: var(--color-text-main);
   font-family: system-ui, -apple-system, sans-serif;
 
-  /* --- THÊM HÌNH NỀN TẠI ĐÂY --- */
-  background-image: url('/background.png');
+  background-image:
+    linear-gradient(
+      rgba(255, 255, 255, 0.65),
+      rgba(255, 255, 255, 0.65)
+    ),
+    url('/background.png');
+
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed; 
+  background-attachment: fixed;
 }
 
 @keyframes confirm-modal-enter {

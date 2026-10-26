@@ -18,6 +18,7 @@ import ProductOrderForm from "@/components/ProductOrderForm";
 import ContactSection from "@/components/ContactSection";
 
 import type { Product } from "@/types/product";
+import FeaturedCategories from "@/components/FeaturedCategories";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -396,7 +397,8 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
           </section>
         )}
       </div>
-
+      
+      <FeaturedCategories />
       <ContactSection />
     </main>
   );
