@@ -253,7 +253,7 @@ export default function SystemLogsPage() {
       <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center text-blue-600">
+            <div className="flex h-10 w-10 items-center justify-center text-[#4d0d01]">
               <Activity size={20} />
             </div>
             <div>
@@ -269,7 +269,7 @@ export default function SystemLogsPage() {
 
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center  text-violet-600">
+            <div className="flex h-10 w-10 items-center justify-center  text-[#4d0d01]">
               <Clock size={20} />
             </div>
             <div>
@@ -283,7 +283,7 @@ export default function SystemLogsPage() {
 
         <div className="border border-gray-200 bg-white p-5">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center  text-emerald-600">
+            <div className="flex h-10 w-10 items-center justify-center  text-[#4d0d01]">
               <ShieldCheck size={20} />
             </div>
             <div>
@@ -502,7 +502,7 @@ export default function SystemLogsPage() {
 
         <div className="overflow-x-auto">
           <table className="w-full min-w-[950px] text-left text-sm">
-            <thead className="bg-gray-50 text-xs uppercase tracking-wide text-gray-500">
+            <thead className="bg-[#4d0d01] text-xs uppercase tracking-wide text-white">
               <tr>
                 <th className="px-5 py-3.5 font-semibold">Thời gian</th>
                 <th className="px-5 py-3.5 font-semibold">Người thực hiện</th>

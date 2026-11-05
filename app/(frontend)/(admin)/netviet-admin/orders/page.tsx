@@ -48,13 +48,12 @@ export default function OrdersPage() {
     totalPages: 0,
   });
 
-  const [pendingPagination, setPendingPagination] =
-    useState<Pagination>({
-      page: 1,
-      limit: PAGE_LIMIT,
-      total: 0,
-      totalPages: 0,
-    });
+  const [pendingPagination, setPendingPagination] = useState<Pagination>({
+    page: 1,
+    limit: PAGE_LIMIT,
+    total: 0,
+    totalPages: 0,
+  });
 
   // =========================
   // STATES
@@ -67,6 +66,14 @@ export default function OrdersPage() {
   const [pendingError, setPendingError] = useState("");
 
   const [retry, setRetry] = useState(0);
+
+  const [product, setProduct] = useState("");
+
+  const [deliveryFrom, setDeliveryFrom] = useState("");
+  const [deliveryTo, setDeliveryTo] = useState("");
+
+  const [createdFrom, setCreatedFrom] = useState("");
+  const [createdTo, setCreatedTo] = useState("");
 
   // =========================
   // FETCH DAILY ORDERS
@@ -93,9 +100,7 @@ export default function OrdersPage() {
         console.error(error);
 
         setError(
-          error instanceof Error
-            ? error.message
-            : "Không thể tải đơn hàng.",
+          error instanceof Error ? error.message : "Không thể tải đơn hàng.",
         );
       } finally {
         setLoading(false);
@@ -175,6 +180,23 @@ export default function OrdersPage() {
     }));
   };
 
+  const handleClearFilters = () => {
+    setSearch("");
+    setAppliedSearch("");
+    setProduct("");
+    setStatus("all");
+    setOccasion("all");
+    setDeliveryFrom("");
+    setDeliveryTo("");
+    setCreatedFrom("");
+    setCreatedTo("");
+
+    setPagination((prev) => ({
+      ...prev,
+      page: 1,
+    }));
+  };
+
   // =========================
   // UPDATE ORDER STATUS
   // =========================
@@ -189,9 +211,7 @@ export default function OrdersPage() {
       // Update daily orders
       setOrders((prev) =>
         prev.map((order) =>
-          order._id === orderId
-            ? { ...order, status: newStatus }
-            : order,
+          order._id === orderId ? { ...order, status: newStatus } : order,
         ),
       );
 
@@ -224,9 +244,7 @@ export default function OrdersPage() {
       console.error(error);
 
       toast.error(
-        error instanceof Error
-          ? error.message
-          : "Không thể cập nhật đơn hàng.",
+        error instanceof Error ? error.message : "Không thể cập nhật đơn hàng.",
       );
     }
   };
@@ -286,9 +304,7 @@ export default function OrdersPage() {
 
   if (loading) {
     return (
-      <div className="py-10 text-sm text-gray-500">
-        Đang tải đơn hàng...
-      </div>
+      <div className="py-10 text-sm text-gray-500">Đang tải đơn hàng...</div>
     );
   }
 
@@ -330,23 +346,30 @@ export default function OrdersPage() {
           </p>
         </div>
 
-        <p className="text-sm text-gray-500">
-          {pagination.total} đơn hàng
-        </p>
+        <p className="text-sm text-gray-500">{pagination.total} đơn hàng</p>
       </div>
 
       {/* FILTERS */}
 
       <OrderFilters
         search={search}
+        product={product}
         status={status}
         occasion={occasion}
-        date={date}
+        deliveryFrom={deliveryFrom}
+        deliveryTo={deliveryTo}
+        createdFrom={createdFrom}
+        createdTo={createdTo}
         onSearchChange={setSearch}
+        onProductChange={setProduct}
         onStatusChange={handleStatusFilter}
         onOccasionChange={handleOccasionFilter}
-        onDateChange={handleDateFilter}
+        onDeliveryFromChange={setDeliveryFrom}
+        onDeliveryToChange={setDeliveryTo}
+        onCreatedFromChange={setCreatedFrom}
+        onCreatedToChange={setCreatedTo}
         onSearch={handleSearch}
+        onClear={handleClearFilters}
       />
 
       {/* PENDING ORDERS */}

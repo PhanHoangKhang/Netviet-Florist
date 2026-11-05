@@ -56,7 +56,7 @@ export default function OrderSection({
         </div>
 
         <span
-          className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+          className={`shrink-0 rounded-full px-3 py-1 text-sm font-semibold ${
             variant === "warning"
               ? " text-amber-700"
               : " text-gray-600"
