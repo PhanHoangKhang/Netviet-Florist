@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
@@ -9,11 +10,14 @@ export async function GET(request: NextRequest) {
 
     const { searchParams } = new URL(request.url);
 
-    const category = searchParams.get("category");
+    // Query parameters
+    const category = searchParams.get("category") || "all";
+    const search = searchParams.get("search")?.trim() || "";
 
-    const search = searchParams.get("search");
-
-    const page = Math.max(Number(searchParams.get("page")) || 1, 1);
+    const page = Math.max(
+      Number(searchParams.get("page")) || 1,
+      1,
+    );
 
     const limit = Math.min(
       Math.max(Number(searchParams.get("limit")) || 10, 1),
@@ -22,23 +26,22 @@ export async function GET(request: NextRequest) {
 
     const skip = (page - 1) * limit;
 
+    // Base filter: only available products
     const filter: Record<string, any> = {
       inStock: true,
     };
 
-    /* =========================
-   FILTER BY CATEGORY
-========================= */
-
+    // FILTER BY CATEGORY
     if (category === "featured") {
-      // Chỉ lấy sản phẩm nổi bật
       filter.isFeatured = true;
-    } else if (category && category !== "all") {
-      // Lọc theo danh mục thông thường
+    } else if (category !== "all") {
       const categoryDoc = await Category.findOne({
         slug: category,
-      }).select("_id");
+      })
+        .select("_id")
+        .lean();
 
+      // Category does not exist
       if (!categoryDoc) {
         return NextResponse.json({
           success: true,
@@ -55,21 +58,31 @@ export async function GET(request: NextRequest) {
       filter.categoryId = categoryDoc._id;
     }
 
-    /* =========================
-       SEARCH BY PRODUCT NAME
-    ========================= */
+    // SEARCH BY PRODUCT NAME AND DESCRIPTION
+    if (search) {
+      // Escape special Regex characters
+      const escapedKeyword = search.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&",
+      );
 
-    if (search?.trim()) {
-      filter.name = {
-        $regex: search.trim(),
-        $options: "i",
-      };
+      filter.$or = [
+        {
+          name: {
+            $regex: escapedKeyword,
+            $options: "i",
+          },
+        },
+        {
+          description: {
+            $regex: escapedKeyword,
+            $options: "i",
+          },
+        },
+      ];
     }
 
-    /* =========================
-       QUERY PRODUCTS
-    ========================= */
-
+    // QUERY PRODUCTS AND TOTAL COUNT
     const [products, total] = await Promise.all([
       Product.find(filter)
         .populate("categoryId", "name slug")
@@ -81,6 +94,7 @@ export async function GET(request: NextRequest) {
       Product.countDocuments(filter),
     ]);
 
+    // RESPONSE
     return NextResponse.json({
       success: true,
       data: products,

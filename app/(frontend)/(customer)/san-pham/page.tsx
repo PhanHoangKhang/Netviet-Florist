@@ -18,6 +18,7 @@ interface Category {
 function ProductListContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
+  const searchParam = searchParams.get("search");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,6 +71,11 @@ function ProductListContent() {
 
     setCurrentPage(1);
   }, [categoryParam]);
+
+  useEffect(() => {
+    setSearchQuery(searchParam ?? "");
+    setCurrentPage(1);
+  }, [searchParam]);
 
   useEffect(() => {
     const fetchProducts = async () => {
