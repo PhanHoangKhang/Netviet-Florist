@@ -23,10 +23,7 @@ export async function GET() {
     ]);
 
     const countMap = new Map(
-      productCounts.map((item) => [
-        String(item._id),
-        item.count,
-      ]),
+      productCounts.map((item) => [String(item._id), item.count]),
     );
 
     const data = categories.map((category) => ({
@@ -37,11 +34,11 @@ export async function GET() {
     return NextResponse.json(
       {
         success: true,
-        data,
+        data: categories,
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=60, stale-while-revalidate=300",
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
         },
       },
     );
