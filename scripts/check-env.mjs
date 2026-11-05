@@ -1,27 +1,41 @@
+const envGroups = {
+  app: [
+    "MONGODB_URI",
+    "RESEND_API_KEY",
+    "ADMIN_EMAIL",
+    "AWS_REGION",
+    "AWS_S3_BUCKET",
+    "CLOUDFRONT_DOMAIN",
+  ],
 
-const requiredEnvVars = [
-  "MONGODB_USERNAME",
-  "MONGODB_PASSWORD",
-  "MONGODB_URI",
+  seed: [
+    "MONGODB_URI",
+    "ADMIN_EMAIL",
+    "ADMIN_PASSWORD",
+  ],
 
-  "RESEND_API_KEY",
+  awsCredentials: [
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+  ],
+};
 
-  "ADMIN_EMAIL",
-  "ADMIN_PASSWORD",
+const group = process.argv[2] || "app";
 
-  "AWS_REGION",
-  "AWS_S3_BUCKET",
-  "CLOUDFRONT_DOMAIN",
-  "AWS_ACCESS_KEY_ID",
-  "AWS_SECRET_ACCESS_KEY",
-];
+const requiredEnvVars = envGroups[group];
 
-const missing = requiredEnvVars.filter((key) => {
-  return !process.env[key]?.trim();
-});
+if (!requiredEnvVars) {
+  console.error(`Unknown environment group: ${group}`);
+  console.error("Available groups: app, seed, awsCredentials");
+  process.exit(1);
+}
+
+const missing = requiredEnvVars.filter(
+  (key) => !process.env[key]?.trim()
+);
 
 if (missing.length > 0) {
-  console.error("\n Missing environment variables:");
+  console.error("\nMissing environment variables:");
 
   missing.forEach((key) => {
     console.error(`- ${key}`);
@@ -30,4 +44,4 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
-console.log(" All required environment variables are configured.");
+console.log(`Environment check passed: ${group}`);

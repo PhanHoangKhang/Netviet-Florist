@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts",
     "seed:admin": "tsx scripts/seed-admin.ts",
-    "check:env": "node scripts/check-env.mjs"
+    "check:env": "node scripts/check-env.mjs",
+    "check:env:app": "node scripts/check-env.mjs app",
+    "check:env:seed": "node scripts/check-env.mjs seed"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1154.0",
