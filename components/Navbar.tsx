@@ -4,11 +4,14 @@ import { useState } from "react";
 import Link from "next/link";
 import { MapPin, Phone, Menu, X } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import { Search } from "lucide-react";
+import SearchModal from "@/components/ui/SearchModal";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 16);
@@ -42,77 +45,93 @@ export default function Navbar() {
               0933 660 399 - 0982 31 0982
             </a>
           </div>
-
         </div>
       </motion.div>
 
+      {/* 2. MAIN NAVBAR */}
       {/* 2. MAIN NAVBAR */}
       <div className="border-b border-gray-100 bg-white">
         <motion.div
           initial={false}
           animate={{ height: isScrolled ? 64 : 80 }}
           transition={{ duration: 0.22, ease: "easeInOut" }}
-          className="mx-auto flex max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-8"
+          className="mx-auto flex w-full max-w-[1400px] items-center justify-between gap-3 px-3 sm:px-6 lg:px-8"
         >
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
+          {/* LOGO */}
+          <Link
+            href="/"
+            className="flex min-w-0 shrink-0 items-center gap-2 sm:gap-3"
+          >
             <img
               src="/logo.png"
               alt="Nét Việt Florist Logo"
-              className={`object-contain rounded-full border border-gray-100 transition-[width,height] duration-200 ${isScrolled ? "h-10 w-10" : "h-12 w-12"}`}
+              className={`shrink-0 rounded-full border border-gray-100 object-contain transition-all duration-200 ${
+                isScrolled
+                  ? "h-9 w-9 sm:h-10 sm:w-10"
+                  : "h-10 w-10 sm:h-12 sm:w-12"
+              }`}
             />
-            <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
-              Nét Việt{" "}
-              <span className="text-[var(--color-secondary)] text-xs font-semibold uppercase tracking-widest block">
+
+            <span className="text-xl font-bold tracking-tight text-[var(--color-primary)] sm:text-2xl">
+              Nét Việt
+              <span className="block text-[10px] font-semibold uppercase tracking-widest text-[var(--color-secondary)] sm:text-xs">
                 Florist
               </span>
             </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center gap-8 font-semibold text-sm text-gray-700">
+          {/* DESKTOP NAVIGATION */}
+          <nav className="hidden flex-1 items-center justify-center gap-6 font-semibold text-sm text-gray-700 md:flex lg:gap-8">
             <Link
               href="/"
-              className="hover:text-[var(--color-primary)] transition-colors py-2"
+              className="whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
             >
               Trang Chủ
             </Link>
+
             <Link
               href="/san-pham"
-              className="hover:text-[var(--color-primary)] transition-colors py-2"
+              className="whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
             >
               Sản Phẩm
             </Link>
+
             <Link
               href="/lien-he"
-              className="hover:text-[var(--color-primary)] transition-colors py-2"
+              className="whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
             >
               Liên Hệ
             </Link>
           </nav>
 
-          {/* Right Action Button */}
-          <div className="hidden sm:flex items-center gap-3">
-            <a
-              href="tel:0933660399"
-              className="inline-flex items-center justify-center px-4 py-2 rounded-lg border border-[var(--color-primary)] text-[var(--color-primary)] font-bold text-xs hover:bg-[var(--color-primary)] hover:text-white transition-all duration-200 shadow-2xs"
-            >
-              Hotline: 0933 660 399
-            </a>
-          </div>
+          {/* RIGHT ACTIONS */}
+          <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+            {/* SEARCH BUTTON */}
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-[var(--color-primary)] focus:outline-none"
-            aria-label="Toggle Navigation Menu"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-8 h-8" />
-            ) : (
-              <Menu className="w-8 h-8" />
-            )}
-          </button>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Tìm kiếm sản phẩm"
+              className="hidden h-14 w-14 shrink-0 items-center justify-center text-[var(--color-primary)] transition-opacity hover:opacity-60 md:flex"
+            >
+              <Search size={27} strokeWidth={1.8} />
+            </button>
+
+            {/* MOBILE MENU BUTTON */}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              className="flex h-10 w-10 shrink-0 items-center justify-center text-gray-700 transition-colors hover:text-[var(--color-primary)] focus:outline-none md:hidden"
+              aria-label={isMobileMenuOpen ? "Đóng menu" : "Mở menu"}
+              aria-expanded={isMobileMenuOpen}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
+            </button>
+          </div>
         </motion.div>
       </div>
 
@@ -140,6 +159,18 @@ export default function Navbar() {
 
             {/* Navigation */}
             <nav className="px-5 py-6">
+              {/* SEARCH */}
+              <button
+                type="button"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setSearchOpen(true);
+                }}
+                className="mb-5 flex w-full items-center gap-3 border-b border-[#eee7e4] pb-4 text-sm text-gray-500 transition-colors hover:text-[var(--color-primary)]"
+              >
+                <Search size={19} strokeWidth={1.6} />
+                <span>Tìm kiếm sản phẩm hoa</span>
+              </button>
               <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Menu
               </p>
@@ -254,6 +285,7 @@ export default function Navbar() {
           </div>
         </>
       )}
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );
 }

@@ -181,7 +181,7 @@ export default function ActionableOrders() {
             <p className="mt-1 text-xs text-neutral-500">Đã xác nhận</p>
           </div>
 
-          <span className="ml-auto text-xs text-neutral-400">
+          <span className="ml-auto text-sm text-neutral-400">
             Hiển thị tối đa 6 đơn
           </span>
         </div>

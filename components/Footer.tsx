@@ -163,6 +163,13 @@ export default function Footer() {
               >
                 Điều khoản sử dụng
               </Link>
+
+              <Link
+                href="/chinh-sach-ban-hang"
+                className="transition-colors hover:text-[var(--color-primary)]"
+              >
+                Chính sách bán hàng
+              </Link>
             </div>
           </div>
         </div>

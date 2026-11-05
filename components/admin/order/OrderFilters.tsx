@@ -82,7 +82,7 @@ export default function OrderFilters({
 
         <div className="lg:col-span-2">
           <label className={labelClass}>
-            Search orders
+            Tìm kiếm đơn hàng
           </label>
 
           <div className="flex items-center gap-2 border-b border-gray-300 transition-colors focus-within:border-[var(--color-primary)]">
@@ -101,7 +101,7 @@ export default function OrderFilters({
               onKeyDown={(e) => {
                 if (e.key === "Enter") onSearch();
               }}
-              placeholder="Order ID, name, phone, email..."
+              placeholder="Mã đơn hàng, tên, số điện thoại, email..."
               className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-[var(--color-text-main)] outline-none placeholder:text-gray-400"
             />
           </div>
@@ -111,7 +111,7 @@ export default function OrderFilters({
 
         <div>
           <label className={labelClass}>
-            Product
+            Sản phẩm
           </label>
 
           <input
@@ -123,7 +123,7 @@ export default function OrderFilters({
             onKeyDown={(e) => {
               if (e.key === "Enter") onSearch();
             }}
-            placeholder="Product name or ID"
+            placeholder="Tên hoặc mã sản phẩm"
             className={inputClass}
           />
         </div>
@@ -132,7 +132,7 @@ export default function OrderFilters({
 
         <div>
           <label className={labelClass}>
-            Order status
+            Trạng thái đơn hàng
           </label>
 
           <select
@@ -142,11 +142,11 @@ export default function OrderFilters({
             }
             className={selectClass}
           >
-            <option value="all">All statuses</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
+            <option value="all">Tất cả trạng thái</option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="cancelled">Đã hủy</option>
           </select>
         </div>
 
@@ -154,7 +154,7 @@ export default function OrderFilters({
 
         <div>
           <label className={labelClass}>
-            Occasion
+            Dịp tặng
           </label>
 
           <select
@@ -164,7 +164,7 @@ export default function OrderFilters({
             }
             className={selectClass}
           >
-            <option value="all">All occasions</option>
+            <option value="all">Tất cả dịp</option>
             <option value="Sinh nhật">Sinh nhật</option>
             <option value="Kỷ niệm">Kỷ niệm</option>
             <option value="Chúc mừng">Chúc mừng</option>
@@ -181,15 +181,15 @@ export default function OrderFilters({
         <summary className="flex cursor-pointer list-none items-center justify-between px-4 py-3.5 text-sm text-gray-600 transition-colors hover:text-[var(--color-primary)]">
           <span className="inline-flex items-center gap-2">
             <SlidersHorizontal size={15} strokeWidth={1.5} />
-            Advanced filters
+            Bộ lọc nâng cao
           </span>
 
           <span className="text-xs text-gray-400 group-open:hidden">
-            Expand
+            Mở rộng
           </span>
 
           <span className="hidden text-xs text-gray-400 group-open:block">
-            Collapse
+            Thu gọn
           </span>
         </summary>
 
@@ -198,12 +198,12 @@ export default function OrderFilters({
 
           <div>
             <p className="mb-3 text-sm font-medium text-gray-800">
-              Delivery date
+              Ngày giao hàng
             </p>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>From</label>
+                <label className={labelClass}>Từ</label>
 
                 <input
                   type="date"
@@ -217,7 +217,7 @@ export default function OrderFilters({
               </div>
 
               <div>
-                <label className={labelClass}>To</label>
+                <label className={labelClass}>Đến</label>
 
                 <input
                   type="date"
@@ -236,12 +236,12 @@ export default function OrderFilters({
 
           <div>
             <p className="mb-3 text-sm font-medium text-gray-800">
-              Order created date
+              Ngày tạo đơn
             </p>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>From</label>
+                <label className={labelClass}>Từ</label>
 
                 <input
                   type="datetime-local"
@@ -255,7 +255,7 @@ export default function OrderFilters({
               </div>
 
               <div>
-                <label className={labelClass}>To</label>
+                <label className={labelClass}>Đến</label>
 
                 <input
                   type="datetime-local"
@@ -282,7 +282,7 @@ export default function OrderFilters({
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 transition-colors hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <X size={14} />
-          Clear filters
+          Xóa bộ lọc
         </button>
 
         <button
@@ -290,7 +290,7 @@ export default function OrderFilters({
           onClick={onSearch}
           className="border-b border-[var(--color-primary)] px-1 py-2 text-sm font-medium text-[var(--color-primary)] transition-opacity hover:opacity-70"
         >
-          Apply filters
+          Áp dụng bộ lọc
         </button>
       </div>
     </div>
