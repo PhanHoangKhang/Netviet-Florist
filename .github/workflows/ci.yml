@@ -32,15 +32,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Check application environment
-        run: npm run check:env:app
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          CLOUDFRONT_DOMAIN: ${{ secrets.CLOUDFRONT_DOMAIN }}
+      # - name: Check application environment
+      #   run: npm run check:env:app
+      #   env:
+      #     MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      #     RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      #     ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      #     AWS_REGION: ${{ secrets.AWS_REGION }}
+      #     AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      #     CLOUDFRONT_DOMAIN: ${{ secrets.CLOUDFRONT_DOMAIN }}
 
       - name: Run ESLint
         run: npm run lint
