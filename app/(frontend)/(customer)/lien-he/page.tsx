@@ -153,72 +153,7 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Thẻ Form Gửi Yêu Cầu Tư Vấn */}
-            <div className="bg-white p-6 rounded-sm border border-gray-100 shadow-sm">
-              <h2 className="text-lg font-bold text-gray-900 mb-1">
-                Gửi Yêu Cầu Tư Vấn Mẫu Hoa
-              </h2>
-              <p className="text-xs text-gray-500 mb-4">
-                Điền thông tin bên dưới, shop sẽ nhắn tin tư vấn trực tiếp qua
-                Zalo cho bạn.
-              </p>
-
-              <form onSubmit={handleSubmit} className="space-y-3.5">
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Tên của bạn
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Nguyễn Văn A"
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Số điện thoại / Zalo (*)
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="0933 xxx xxx"
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-gray-700 mb-1">
-                    Yêu cầu đặc biệt (Mẫu hoa, Ngân sách, Dịp tặng...)
-                  </label>
-                  <textarea
-                    rows={3}
-                    placeholder="Ví dụ: Tư vấn giỏ hoa sinh nhật mẹ khoảng 500k - 700k..."
-                    value={formData.note}
-                    onChange={(e) =>
-                      setFormData({ ...formData, note: e.target.value })
-                    }
-                    className="w-full px-3.5 py-2.5 text-xs rounded-sm border border-gray-200 focus:outline-none focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] transition-all resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-sm bg-[var(--color-primary)] text-white font-bold text-xs hover:bg-[var(--color-primary)]/90 transition-colors shadow-sm"
-                >
-                  <Send className="w-4 h-4" />
-                  Gửi Yêu Cầu Cho Shop
-                </button>
-              </form>
-            </div>
+            
           </div>
 
           {/* Cột phải (6 cột): Bản đồ Google Maps */}

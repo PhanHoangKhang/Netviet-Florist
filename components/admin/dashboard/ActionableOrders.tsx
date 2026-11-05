@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -38,11 +37,7 @@ function formatDateTime(value: string) {
   }).format(new Date(value));
 }
 
-function StatusBadge({
-  status,
-}: {
-  status: ActionableOrder["status"];
-}) {
+function StatusBadge({ status }: { status: ActionableOrder["status"] }) {
   return (
     <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-xs text-neutral-500">
       <span
@@ -121,26 +116,37 @@ function OrderRow({ order }: { order: ActionableOrder }) {
 }
 
 export default function ActionableOrders() {
-  const { orders, loading, error, refresh } = useActionableOrders();
+  const { orders, counts, loading, error, refresh } = useActionableOrders();
 
-  const pendingCount = orders.filter(
-    (order) => order.status === "pending",
-  ).length;
+  const pendingCount = counts.pending;
+  const confirmedCount = counts.confirmed;
 
-  const confirmedCount = orders.filter(
-    (order) => order.status === "confirmed",
-  ).length;
+  const sortedOrders = [...orders].sort((a, b) => {
+    // Pending luôn đứng trước confirmed
+    if (a.status !== b.status) {
+      return a.status === "pending" ? -1 : 1;
+    }
+
+    // Ngày giao gần nhất đứng trước
+    const dateA = a.deliveryDate
+      ? new Date(a.deliveryDate).getTime()
+      : Infinity;
+
+    const dateB = b.deliveryDate
+      ? new Date(b.deliveryDate).getTime()
+      : Infinity;
+
+    return dateA - dateB;
+  });
 
   return (
-    <section className="border border-neutral-200 bg-white p-5 sm:p-6">
+    <section className="bg-white p-5 sm:p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold tracking-tight text-neutral-900">
-              Đơn hàng cần xử lý
-            </h2>
-          </div>
+          <h2 className="text-lg font-semibold tracking-tight text-neutral-900">
+            Đơn hàng cần xử lý
+          </h2>
 
           <p className="mt-2 text-sm text-neutral-500">
             Theo dõi các đơn hàng đang chờ xác nhận và chuẩn bị giao.
@@ -153,40 +159,30 @@ export default function ActionableOrders() {
           disabled={loading}
           className="inline-flex w-fit items-center gap-2 text-sm text-neutral-500 transition-colors hover:text-[#4d0d01] disabled:opacity-40"
         >
-          <RefreshCw
-            size={14}
-            strokeWidth={1.5}
-            className={loading ? "animate-spin" : ""}
-          />
+          <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           Làm mới
         </button>
       </div>
 
       {/* Summary */}
       {!loading && !error && (
-        <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3 border-y border-neutral-100 py-4">
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums text-neutral-900">
+        <div className="mt-6 flex flex-wrap items-center gap-8 border-y border-neutral-100 py-4">
+          <div>
+            <p className="text-2xl font-semibold tabular-nums text-[#4d0d01]">
               {pendingCount}
-            </span>
-            <span className="text-sm text-neutral-500">
-              Chờ xác nhận
-            </span>
+            </p>
+            <p className="mt-1 text-xs text-neutral-500">Chờ xác nhận</p>
           </div>
 
-          <span className="hidden h-7 w-px bg-neutral-200 sm:block" />
-
-          <div className="flex items-baseline gap-2">
-            <span className="text-2xl font-semibold tabular-nums text-neutral-900">
+          <div>
+            <p className="text-2xl font-semibold tabular-nums text-neutral-900">
               {confirmedCount}
-            </span>
-            <span className="text-sm text-neutral-500">
-              Đã xác nhận
-            </span>
+            </p>
+            <p className="mt-1 text-xs text-neutral-500">Đã xác nhận</p>
           </div>
 
           <span className="ml-auto text-xs text-neutral-400">
-            Tối đa 6 đơn
+            Hiển thị tối đa 6 đơn
           </span>
         </div>
       )}
@@ -198,7 +194,7 @@ export default function ActionableOrders() {
             {[1, 2, 3].map((item) => (
               <div
                 key={item}
-                className="space-y-3 border-b border-neutral-100 pb-5 last:border-0"
+                className="space-y-3 border-b border-neutral-100 pb-5"
               >
                 <div className="h-4 w-36 animate-pulse bg-neutral-100" />
                 <div className="h-3 w-52 animate-pulse bg-neutral-100" />
@@ -207,11 +203,9 @@ export default function ActionableOrders() {
             ))}
           </div>
         ) : error ? (
-          <div
-            role="alert"
-            className="py-8 text-sm text-neutral-600"
-          >
+          <div role="alert" className="py-8 text-sm text-neutral-600">
             <p>{error}</p>
+
             <button
               type="button"
               onClick={() => void refresh()}
@@ -220,23 +214,25 @@ export default function ActionableOrders() {
               Thử tải lại
             </button>
           </div>
-        ) : orders.length === 0 ? (
+        ) : sortedOrders.length === 0 ? (
           <div className="flex flex-col items-center py-12 text-center">
             <ShoppingBag
               size={25}
               strokeWidth={1.25}
               className="text-neutral-400"
             />
+
             <p className="mt-4 text-sm font-medium text-neutral-800">
               Không có đơn hàng cần xử lý
             </p>
+
             <p className="mt-1 text-sm text-neutral-500">
               Các đơn mới sẽ xuất hiện tại đây.
             </p>
           </div>
         ) : (
           <div>
-            {orders.map((order) => (
+            {sortedOrders.slice(0, 6).map((order) => (
               <OrderRow key={order.id} order={order} />
             ))}
           </div>
@@ -250,7 +246,7 @@ export default function ActionableOrders() {
           className="inline-flex items-center gap-2 text-sm font-medium text-[#4d0d01] transition-colors hover:gap-3"
         >
           Xem tất cả đơn hàng
-          <ArrowRight size={15} strokeWidth={1.5} />
+          <ArrowRight size={15} />
         </Link>
       </div>
     </section>

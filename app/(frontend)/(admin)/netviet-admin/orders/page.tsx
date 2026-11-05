@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 
 import OrderFilters from "@/components/admin/order/OrderFilters";
-import OrderTable from "@/components/admin/order/OrderTable";
+import PendingOrdersSection from "@/components/admin/order/PendingOrdersSection";
+import DailyOrdersSection from "@/components/admin/order/DailyOrdersSection";
 
 import {
   Order,
@@ -16,83 +16,167 @@ import { getAdminOrders, updateOrderStatus } from "@/lib/order-api";
 import ProductPagination from "@/components/ProductPagination";
 import { toast } from "sonner";
 
+const PAGE_LIMIT = 10;
+
 export default function OrdersPage() {
+  // =========================
+  // ORDERS
+  // =========================
+
   const [orders, setOrders] = useState<Order[]>([]);
+  const [pendingOrders, setPendingOrders] = useState<Order[]>([]);
+
+  // =========================
+  // FILTERS
+  // =========================
 
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("all");
+  const [appliedSearch, setAppliedSearch] = useState("");
 
   const [status, setStatus] = useState("all");
-
   const [occasion, setOccasion] = useState("all");
-
   const [date, setDate] = useState("");
+
+  // =========================
+  // PAGINATION
+  // =========================
 
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
-    limit: 10,
+    limit: PAGE_LIMIT,
     total: 0,
     totalPages: 0,
   });
 
+  const [pendingPagination, setPendingPagination] =
+    useState<Pagination>({
+      page: 1,
+      limit: PAGE_LIMIT,
+      total: 0,
+      totalPages: 0,
+    });
+
+  // =========================
+  // STATES
+  // =========================
+
   const [loading, setLoading] = useState(true);
+  const [pendingLoading, setPendingLoading] = useState(true);
 
   const [error, setError] = useState("");
+  const [pendingError, setPendingError] = useState("");
+
+  const [retry, setRetry] = useState(0);
 
   // =========================
-  // FETCH ORDERS
-  // =========================
-
-  const fetchOrders = async () => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const result = await getAdminOrders({
-        page: pagination.page,
-        limit: pagination.limit,
-        search,
-        status,
-        occasion,
-        date,
-      });
-
-      setOrders(result.data);
-      setPagination(result.pagination);
-    } catch (error) {
-      console.error(error);
-
-      setError(
-        error instanceof Error ? error.message : "Không thể tải đơn hàng.",
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // =========================
-  // INITIAL FETCH
+  // FETCH DAILY ORDERS
   // =========================
 
   useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const result = await getAdminOrders({
+          page: pagination.page,
+          limit: pagination.limit,
+          search: appliedSearch,
+          status,
+          occasion,
+          date,
+        });
+
+        setOrders(result.data);
+        setPagination(result.pagination);
+      } catch (error) {
+        console.error(error);
+
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Không thể tải đơn hàng.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchOrders();
-  }, [pagination.page, pagination.limit, status, occasion, date]);
+  }, [
+    pagination.page,
+    pagination.limit,
+    appliedSearch,
+    status,
+    occasion,
+    date,
+    retry,
+  ]);
+
+  // =========================
+  // FETCH ALL PENDING ORDERS
+  // =========================
+
+  useEffect(() => {
+    const fetchPendingOrders = async () => {
+      try {
+        setPendingLoading(true);
+        setPendingError("");
+
+        const result = await getAdminOrders({
+          page: pendingPagination.page,
+          limit: pendingPagination.limit,
+          search: appliedSearch,
+          status: "pending",
+          occasion,
+          date,
+        });
+
+        setPendingOrders(result.data);
+        setPendingPagination(result.pagination);
+      } catch (error) {
+        console.error(error);
+
+        setPendingError(
+          error instanceof Error
+            ? error.message
+            : "Không thể tải đơn chưa xác nhận.",
+        );
+      } finally {
+        setPendingLoading(false);
+      }
+    };
+
+    fetchPendingOrders();
+  }, [
+    pendingPagination.page,
+    pendingPagination.limit,
+    appliedSearch,
+    occasion,
+    date,
+    retry,
+  ]);
 
   // =========================
   // SEARCH
   // =========================
 
   const handleSearch = () => {
+    setAppliedSearch(search);
+
     setPagination((prev) => ({
       ...prev,
       page: 1,
     }));
 
-    fetchOrders();
+    setPendingPagination((prev) => ({
+      ...prev,
+      page: 1,
+    }));
   };
 
   // =========================
-  // STATUS
+  // UPDATE ORDER STATUS
   // =========================
 
   const handleStatusChange = async (
@@ -102,30 +186,47 @@ export default function OrdersPage() {
     try {
       await updateOrderStatus(orderId, newStatus);
 
+      // Update daily orders
       setOrders((prev) =>
         prev.map((order) =>
           order._id === orderId
-            ? {
-                ...order,
-                status: newStatus,
-              }
+            ? { ...order, status: newStatus }
             : order,
         ),
       );
+
+      // Update pending orders
+      if (newStatus !== "pending") {
+        setPendingOrders((prev) =>
+          prev.filter((order) => order._id !== orderId),
+        );
+
+        setPendingPagination((prev) => ({
+          ...prev,
+          total: Math.max(0, prev.total - 1),
+        }));
+      }
+
       const statusLabels: Record<OrderStatus, string> = {
         pending: "Chờ xác nhận",
         confirmed: "Đã xác nhận",
         completed: "Hoàn thành",
         cancelled: "Đã hủy",
       };
+
       toast.success(
         `Đã cập nhật đơn hàng #${orderId.slice(-8)}: ${statusLabels[newStatus]}.`,
       );
+
+      // Refresh both lists and their pagination
+      setRetry((prev) => prev + 1);
     } catch (error) {
       console.error(error);
 
       toast.error(
-        error instanceof Error ? error.message : "Không thể cập nhật đơn hàng.",
+        error instanceof Error
+          ? error.message
+          : "Không thể cập nhật đơn hàng.",
       );
     }
   };
@@ -150,6 +251,11 @@ export default function OrdersPage() {
       ...prev,
       page: 1,
     }));
+
+    setPendingPagination((prev) => ({
+      ...prev,
+      page: 1,
+    }));
   };
 
   const handleDateFilter = (value: string) => {
@@ -159,6 +265,19 @@ export default function OrdersPage() {
       ...prev,
       page: 1,
     }));
+
+    setPendingPagination((prev) => ({
+      ...prev,
+      page: 1,
+    }));
+  };
+
+  // =========================
+  // RETRY
+  // =========================
+
+  const handleRetry = () => {
+    setRetry((prev) => prev + 1);
   };
 
   // =========================
@@ -167,7 +286,9 @@ export default function OrdersPage() {
 
   if (loading) {
     return (
-      <div className="py-10 text-sm text-gray-500">Đang tải đơn hàng...</div>
+      <div className="py-10 text-sm text-gray-500">
+        Đang tải đơn hàng...
+      </div>
     );
   }
 
@@ -181,7 +302,7 @@ export default function OrdersPage() {
         <p className="text-sm text-gray-600">{error}</p>
 
         <button
-          onClick={fetchOrders}
+          onClick={handleRetry}
           className="mt-3 text-sm font-medium text-[var(--color-primary)] hover:underline"
         >
           Thử lại
@@ -190,13 +311,15 @@ export default function OrdersPage() {
     );
   }
 
-  return (
-    <div>
-      {/* =========================
-          HEADER
-      ========================= */}
+  // =========================
+  // RENDER
+  // =========================
 
-      <div className="mb-8 flex items-end justify-between">
+  return (
+    <div className="space-y-8">
+      {/* HEADER */}
+
+      <div className="flex items-end justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight text-[var(--color-text-main)]">
             Đơn hàng
@@ -207,12 +330,12 @@ export default function OrdersPage() {
           </p>
         </div>
 
-        <p className="text-sm text-gray-500">{pagination.total} đơn hàng</p>
+        <p className="text-sm text-gray-500">
+          {pagination.total} đơn hàng
+        </p>
       </div>
 
-      {/* =========================
-          FILTERS
-      ========================= */}
+      {/* FILTERS */}
 
       <OrderFilters
         search={search}
@@ -226,26 +349,75 @@ export default function OrdersPage() {
         onSearch={handleSearch}
       />
 
-      {/* =========================
-          TABLE
-      ========================= */}
+      {/* PENDING ORDERS */}
 
-      <OrderTable orders={orders} onStatusChange={handleStatusChange} />
-
-      {/* =========================
-          PAGINATION
-      ========================= */}
-
-      <ProductPagination
-        currentPage={pagination.page}
-        totalPages={pagination.totalPages}
+      <PendingOrdersSection
+        orders={pendingOrders}
+        total={pendingPagination.total}
+        loading={pendingLoading}
+        currentPage={pendingPagination.page}
+        totalPages={pendingPagination.totalPages}
         onPageChange={(page) =>
-          setPagination((prev) => ({
+          setPendingPagination((prev) => ({
             ...prev,
             page,
           }))
         }
+        onStatusChange={handleStatusChange}
       />
+
+      {pendingError && (
+        <div className="flex items-center justify-between rounded-lg border border-red-200 bg-red-50 p-3">
+          <p className="text-sm text-red-600">{pendingError}</p>
+
+          <button
+            onClick={handleRetry}
+            className="text-sm font-medium text-red-700 hover:underline"
+          >
+            Thử lại
+          </button>
+        </div>
+      )}
+
+      {/* DAILY ORDERS */}
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-[var(--color-text-main)]">
+              Đơn hàng theo ngày giao
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              Các đơn đã được xử lý, phân loại theo ngày khách nhận hoa.
+            </p>
+          </div>
+
+          <span className="text-sm text-gray-500">
+            {orders.filter((order) => order.status !== "pending").length} đơn
+          </span>
+        </div>
+
+        <DailyOrdersSection
+          orders={orders}
+          onStatusChange={handleStatusChange}
+        />
+
+        {/* DAILY PAGINATION */}
+
+        {pagination.totalPages > 1 && (
+          <ProductPagination
+            currentPage={pagination.page}
+            totalPages={pagination.totalPages}
+            onPageChange={(page) =>
+              setPagination((prev) => ({
+                ...prev,
+                page,
+              }))
+            }
+          />
+        )}
+      </section>
     </div>
   );
 }

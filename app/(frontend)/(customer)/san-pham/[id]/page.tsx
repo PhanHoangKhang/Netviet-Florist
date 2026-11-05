@@ -373,10 +373,6 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
               Đặt hoa theo yêu cầu
             </p>
 
-            <h2 className="mt-3 text-2xl font-medium text-[var(--color-text-main)] sm:text-3xl">
-              Để shop giúp bạn chuẩn bị một món quà ý nghĩa
-            </h2>
-
             <p className="mt-3 text-sm leading-7 text-black">
               Điền thông tin bên dưới để shop liên hệ tư vấn, xác nhận mẫu hoa,
               giá và thời gian giao hàng.

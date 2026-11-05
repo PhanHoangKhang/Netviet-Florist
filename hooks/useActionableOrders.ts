@@ -17,10 +17,25 @@ export type ActionableOrder = {
 type ActionableOrdersResponse = {
   success: boolean;
   data: ActionableOrder[];
+
+  counts: {
+    pending: number;
+    confirmed: number;
+    total: number;
+  };
+};
+
+const initialCounts = {
+  pending: 0,
+  confirmed: 0,
+  total: 0,
 };
 
 export function useActionableOrders() {
   const [orders, setOrders] = useState<ActionableOrder[]>([]);
+
+  const [counts, setCounts] = useState(initialCounts);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,6 +53,7 @@ export function useActionableOrders() {
       );
 
       setOrders(result.data);
+      setCounts(result.counts);
     } catch (err) {
       setError(
         err instanceof Error
@@ -53,5 +69,11 @@ export function useActionableOrders() {
     void refresh();
   }, [refresh]);
 
-  return { orders, loading, error, refresh };
+  return {
+    orders,
+    counts,
+    loading,
+    error,
+    refresh,
+  };
 }

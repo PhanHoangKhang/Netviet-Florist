@@ -164,16 +164,12 @@ export default function Footer() {
                 Điều khoản sử dụng
               </Link>
             </div>
-
-            <p className="text-sm text-[var(--color-text-main)]">
-              © {new Date().getFullYear()} Nét Việt Florist. All rights reserved.
-            </p>
           </div>
         </div>
 
         {/* Dòng thiết kế */}
         <div className="mt-3 text-center text-sm text-[var(--color-text-main)]">
-          Thiết kế dành riêng cho Nét Việt Florist
+           © {new Date().getFullYear()} Nét Việt Florist. All rights reserved.
         </div>
       </div>
     </footer>
