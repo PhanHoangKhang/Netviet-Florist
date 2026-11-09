@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     type: 'website',
   },
+  icons: {
+    icon: "/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
