@@ -194,31 +194,28 @@ function ProductListContent() {
               {/* Scrollable categories */}
               <div
                 id="category-slider"
-                className="overflow-x-auto scroll-smooth
-                 [scrollbar-width:thin]"
+                className="overflow-x-auto scroll-smooth [scrollbar-width:thin]"
               >
-                <div className="flex w-max min-w-full items-start justify-center gap-x-15 px-20 pb-2 md:px-10">
+                <div className="flex w-max min-w-full items-start justify-start gap-x-4 px-2 pb-2 sm:justify-center sm:gap-x-7 sm:px-8 lg:gap-x-10">
                   {/* All categories */}
                   <button
                     type="button"
                     onClick={() => handleCategoryChange("all")}
                     aria-pressed={selectedCategory === "all"}
-                    className="group flex w-[76px] shrink-0 flex-col
-                     items-center gap-2"
+                    className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
                   >
                     <span
-                      className={`flex h-16 w-16 items-center justify-center
-                        rounded-full border transition-colors ${
-                          selectedCategory === "all"
-                            ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                            : "border-[var(--color-primary)]/20 text-[var(--color-primary)] group-hover:border-[var(--color-primary)]"
-                        }`}
+                      className={`flex h-14 w-14 items-center justify-center rounded-full border transition-colors sm:h-16 sm:w-16 ${
+                        selectedCategory === "all"
+                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
+                          : "border-[var(--color-primary)]/20 text-[var(--color-primary)] group-hover:border-[var(--color-primary)]"
+                      }`}
                     >
                       <Filter className="h-5 w-5" />
                     </span>
 
                     <span
-                      className={`w-full text-center text-xs leading-4 ${
+                      className={`w-full text-center text-[11px] leading-4 sm:text-xs ${
                         selectedCategory === "all"
                           ? "font-semibold text-[var(--color-primary)]"
                           : "text-[var(--color-text-main)]"
@@ -233,10 +230,10 @@ function ProductListContent() {
                     type="button"
                     onClick={() => handleCategoryChange("featured")}
                     aria-pressed={selectedCategory === "featured"}
-                    className="group flex w-[76px] shrink-0 flex-col items-center gap-2"
+                    className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
                   >
                     <span
-                      className={`flex h-16 w-16 items-center justify-center rounded-full border transition-colors ${
+                      className={`flex h-14 w-14 items-center justify-center rounded-full border transition-colors sm:h-16 sm:w-16 ${
                         selectedCategory === "featured"
                           ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
                           : "border-[var(--color-primary)]/20 text-[var(--color-primary)] group-hover:border-[var(--color-primary)]"
@@ -246,7 +243,7 @@ function ProductListContent() {
                     </span>
 
                     <span
-                      className={`w-full whitespace-normal break-words text-center text-xs leading-4 ${
+                      className={`w-full whitespace-normal break-words text-center text-[11px] leading-4 sm:text-xs ${
                         selectedCategory === "featured"
                           ? "font-semibold text-[var(--color-primary)]"
                           : "text-[var(--color-text-main)]"
@@ -266,16 +263,14 @@ function ProductListContent() {
                         type="button"
                         onClick={() => handleCategoryChange(category.slug)}
                         aria-pressed={isSelected}
-                        className="group flex w-[76px] shrink-0 flex-col
-                         items-center gap-2"
+                        className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
                       >
                         <span
-                          className={`block h-16 w-16 overflow-hidden rounded-full
-                            border p-0.5 transition-colors ${
-                              isSelected
-                                ? "border-2 border-[var(--color-primary)]"
-                                : "border-[var(--color-primary)]/15 group-hover:border-[var(--color-primary)]"
-                            }`}
+                          className={`block h-14 w-14 overflow-hidden rounded-full border p-0.5 transition-colors sm:h-16 sm:w-16 ${
+                            isSelected
+                              ? "border-2 border-[var(--color-primary)]"
+                              : "border-[var(--color-primary)]/15 group-hover:border-[var(--color-primary)]"
+                          }`}
                         >
                           <img
                             src={
@@ -295,7 +290,7 @@ function ProductListContent() {
                         </span>
 
                         <span
-                          className={`w-full whitespace-normal break-words text-center text-xs leading-4 ${
+                          className={`w-full whitespace-normal break-words text-center text-[11px] leading-4 sm:text-xs ${
                             isSelected
                               ? "font-semibold text-[var(--color-primary)]"
                               : "text-[var(--color-text-main)] group-hover:text-[var(--color-primary)]"
