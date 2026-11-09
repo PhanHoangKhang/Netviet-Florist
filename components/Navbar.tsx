@@ -204,19 +204,43 @@ export default function Navbar() {
                 </Link>
               </div>
 
-              {/* Hotline */}
-              <div className="mt-8 border-t border-[#eee7e4] pt-6">
-                <p className="mb-3 text-xs text-gray-400">
-                  Cần tư vấn hoặc đặt hoa?
-                </p>
+              {/* Contact */}
+              <div className="mt-8 space-y-4 border-t border-[#eee7e4] pt-6">
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold text-[var(--color-text)]">
+                    Cần tư vấn hoặc đặt hoa?
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    Liên hệ với chúng tôi để được hỗ trợ nhanh chóng.
+                  </p>
+                </div>
 
-                <a
-                  href="tel:0933660399"
-                  className="inline-flex w-full items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-hover)]"
-                >
-                  <Phone className="h-4 w-4" />
-                  Gọi 0933 660 399
-                </a>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {/* Hotline */}
+                  <a
+                    href="tel:0933660399"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 bg-[var(--color-primary)] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+                  >
+                    <Phone className="h-4 w-4 shrink-0" />
+                    <span>Gọi 0933 660 399</span>
+                  </a>
+
+                  {/* Zalo */}
+                  <a
+                    href="https://zalo.me/2651705435336175205"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-12 items-center justify-center gap-2 bg-[#0068FF] px-4 py-3 text-sm font-semibold text-white transition-colors duration-200 hover:bg-[#0054CC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0068FF]"
+                  >
+                    <img
+                      src="/zalo.png"
+                      alt=""
+                      aria-hidden="true"
+                      className="h-6 w-6 shrink-0 object-contain"
+                    />
+                    <span>Liên hệ qua Zalo</span>
+                  </a>
+                </div>
               </div>
 
               {/* Contact Info */}
@@ -243,41 +267,6 @@ export default function Navbar() {
                     <span className="leading-5">
                       0933 660 399 - 0982 31 0982
                     </span>
-                  </a>
-                </div>
-              </div>
-
-              {/* Social */}
-              <div className="mt-8 border-t border-[#eee7e4] pt-6">
-                <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-                  Kết nối
-                </p>
-
-                <div className="flex items-center gap-4">
-                  <a
-                    href="https://www.facebook.com/nguoilamhoa/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Facebook"
-                  >
-                    <img
-                      src="/fb.png"
-                      alt="Facebook"
-                      className="h-7 w-7 object-contain"
-                    />
-                  </a>
-
-                  <a
-                    href="https://zalo.me/0933660399"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="Zalo"
-                  >
-                    <img
-                      src="/zalo.png"
-                      alt="Zalo"
-                      className="h-7 w-7 object-contain"
-                    />
                   </a>
                 </div>
               </div>

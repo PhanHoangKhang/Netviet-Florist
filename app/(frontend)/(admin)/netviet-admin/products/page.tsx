@@ -20,6 +20,7 @@ import {
   LoaderCircle,
   X,
 } from "lucide-react";
+import ConfirmModal from "@/components/ConfirmModal";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -38,20 +39,26 @@ export default function ProductsPage() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
-  const handleDelete = async (id: string) => {
-    const confirmed = window.confirm(
-      "Bạn có chắc muốn xóa sản phẩm này không?",
-    );
+  const handleDelete = (product: Product) => {
+    setSelectedProduct(product);
+    setDeleteError("");
+  };
 
-    if (!confirmed) return;
-
-    const product = products.find((item) => item._id === id);
+  const confirmDelete = async () => {
+    if (!selectedProduct) return;
 
     try {
-      const response = await fetch(`/api/admin/products/${id}`, {
-        method: "DELETE",
-      });
+      setIsDeleting(true);
+      setDeleteError("");
+
+      const response = await fetch(
+        `/api/admin/products/${selectedProduct._id}`,
+        { method: "DELETE" },
+      );
 
       const result = await response.json();
 
@@ -59,17 +66,18 @@ export default function ProductsPage() {
         throw new Error(result.message || "Không thể xóa sản phẩm.");
       }
 
-      toast.success(
-        product
-          ? `Đã xóa sản phẩm "${product.name}".`
-          : "Đã xóa sản phẩm.",
-      );
+      toast.success(`Đã xóa sản phẩm "${selectedProduct.name}".`);
+      setSelectedProduct(null);
+
       await fetchProducts();
     } catch (error) {
       console.error("DELETE PRODUCT ERROR:", error);
-      toast.error(
+
+      setDeleteError(
         error instanceof Error ? error.message : "Không thể xóa sản phẩm.",
       );
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -167,6 +175,26 @@ export default function ProductsPage() {
 
   return (
     <div>
+      <ConfirmModal
+        isOpen={!!selectedProduct}
+        title="Xóa sản phẩm?"
+        description={
+          selectedProduct
+            ? `Bạn có chắc chắn muốn xóa "${selectedProduct.name}"? Hành động này không thể hoàn tác.`
+            : ""
+        }
+        confirmText="Xóa sản phẩm"
+        cancelText="Hủy"
+        variant="danger"
+        isLoading={isDeleting}
+        error={deleteError}
+        onConfirm={confirmDelete}
+        onCancel={() => {
+          if (isDeleting) return;
+          setSelectedProduct(null);
+          setDeleteError("");
+        }}
+      />
       <div className="mb-8 flex items-end justify-between">
         <div>
           <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-[var(--color-primary)]">
@@ -368,7 +396,9 @@ export default function ProductsPage() {
 
                         <span
                           className={
-                            product.inStock ? "text-emerald-500" : "text-gray-400"
+                            product.inStock
+                              ? "text-emerald-500"
+                              : "text-gray-400"
                           }
                         >
                           {product.inStock ? "Còn hàng" : "Hết hàng"}
@@ -392,12 +422,13 @@ export default function ProductsPage() {
                           href={`/netviet-admin/products/${product._id}/edit`}
                           className="text-sm font-medium text-gray-500 transition-colors hover:text-[var(--color-primary)]"
                         >
-                           <Pencil size={15} />
+                          <Pencil size={15} />
                         </Link>
 
                         <button
                           type="button"
-                          onClick={() => handleDelete(product._id)}
+                          onClick={() => handleDelete(product)}
+                          aria-label={`Xóa ${product.name}`}
                           className="text-sm font-medium text-gray-400 transition-colors hover:text-red-600"
                         >
                           <Trash2 size={15} />
