@@ -293,19 +293,28 @@ export default function ProductDetailPage() {
 
             {/* Actions */}
             <div className="mt-auto border-t border-black/15 pt-6">
-              <button
-                type="button"
-                onClick={scrollToOrderForm}
-                className="flex w-full flex-col items-center justify-center bg-[var(--color-primary)] px-5 py-4 text-white transition-colors duration-200 hover:bg-[var(--color-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-primary)]"
+              <a
+                href="https://zalo.me/2651705435336175205"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex w-full items-center justify-center gap-3 bg-[#0068FF] px-5 py-4 text-white transition-colors duration-200 hover:bg-[#0054CC] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0068FF]"
               >
-                <span className="text-sm font-medium tracking-wide">
-                  ĐẶT MẪU HOA NÀY
-                </span>
+                <img
+                  src="/zalo.png"
+                  alt="Zalo Logo"
+                  className="h-8 w-8 shrink-0 object-contain"
+                />
 
-                <span className="mt-1 text-xs text-white">
-                  Để lại thông tin, shop sẽ liên hệ xác nhận
-                </span>
-              </button>
+                <div className="flex flex-col items-start">
+                  <span className="text-sm font-semibold tracking-wide">
+                    LIÊN HỆ ZALO ĐỂ ĐẶT HÀNG
+                  </span>
+
+                  <span className="mt-1 text-xs text-white/90">
+                    Nhắn tin cho shop để được tư vấn và xác nhận đơn hàng
+                  </span>
+                </div>
+              </a>
 
               <a
                 href="tel:0933660399"
@@ -363,25 +372,6 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
           </div>
         </section>
 
-        {/* Order form */}
-        <section
-          id="dat-hoa"
-          className="mt-14 scroll-mt-24 border-t border-black/15 pt-10 sm:mt-20 sm:pt-12"
-        >
-          <div className="mb-8 max-w-xl">
-            <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-hover)]">
-              Đặt hoa theo yêu cầu
-            </p>
-
-            <p className="mt-3 text-sm leading-7 text-black">
-              Điền thông tin bên dưới để shop liên hệ tư vấn, xác nhận mẫu hoa,
-              giá và thời gian giao hàng.
-            </p>
-          </div>
-
-          <ProductOrderForm product={product} />
-        </section>
-
         {/* Related products */}
         {relatedProducts.length > 0 && (
           <section className="mt-14 border-t border-black/15 pt-10 sm:mt-20 sm:pt-12">
@@ -393,7 +383,7 @@ Do đặc tính của hoa tươi, một số loại hoa có thể được thay 
           </section>
         )}
       </div>
-      
+
       <FeaturedCategories />
       <ContactSection />
     </main>

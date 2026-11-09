@@ -1,13 +1,8 @@
-
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  Search,
-  X,
-  ArrowRight,
-} from "lucide-react";
+import { Search, X, ArrowRight } from "lucide-react";
 
 interface SearchModalProps {
   open: boolean;
@@ -24,14 +19,12 @@ const suggestions = [
   "Hoa lan",
 ];
 
-export default function SearchModal({
-  open,
-  onClose,
-}: SearchModalProps) {
+export default function SearchModal({ open, onClose }: SearchModalProps) {
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [query, setQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   // =========================
   // CLOSE MODAL
@@ -46,21 +39,39 @@ export default function SearchModal({
   // SEARCH
   // =========================
 
-  const handleSearch = (e?: React.FormEvent) => {
+  const handleSearch = async (e?: React.FormEvent) => {
     e?.preventDefault();
 
     const keyword = query.trim();
 
-    if (!keyword) {
-      inputRef.current?.focus();
-      return;
+    if (!keyword || isSearching) return;
+
+    try {
+      setIsSearching(true);
+
+      const params = new URLSearchParams({
+        search: keyword,
+        page: "1",
+        limit: "12",
+      });
+
+      // Kiểm tra và tải kết quả trước khi chuyển trang
+      const response = await fetch(`/api/products?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error("Không thể tìm kiếm sản phẩm");
+      }
+
+      // Chỉ chuyển trang sau khi API trả về thành công
+      closeModal();
+
+      router.push(`/san-pham?search=${encodeURIComponent(keyword)}`);
+    } catch (error) {
+      console.error("Search error:", error);
+      alert("Không thể tìm kiếm sản phẩm. Vui lòng thử lại.");
+    } finally {
+      setIsSearching(false);
     }
-
-    closeModal();
-
-    router.push(
-      `/san-pham?search=${encodeURIComponent(keyword)}`
-    );
   };
 
   // =========================
@@ -86,30 +97,21 @@ export default function SearchModal({
 
       // Focus trap
       if (event.key === "Tab") {
-        const dialog = document.getElementById(
-          "product-search-dialog"
-        );
+        const dialog = document.getElementById("product-search-dialog");
 
-        const focusable =
-          dialog?.querySelectorAll<HTMLElement>(
-            'button:not([disabled]), input:not([disabled]), a[href]'
-          );
+        const focusable = dialog?.querySelectorAll<HTMLElement>(
+          "button:not([disabled]), input:not([disabled]), a[href]",
+        );
 
         if (!focusable?.length) return;
 
         const first = focusable[0];
         const last = focusable[focusable.length - 1];
 
-        if (
-          event.shiftKey &&
-          document.activeElement === first
-        ) {
+        if (event.shiftKey && document.activeElement === first) {
           event.preventDefault();
           last.focus();
-        } else if (
-          !event.shiftKey &&
-          document.activeElement === last
-        ) {
+        } else if (!event.shiftKey && document.activeElement === last) {
           event.preventDefault();
           first.focus();
         }
@@ -123,10 +125,7 @@ export default function SearchModal({
 
       document.body.style.overflow = previousOverflow;
 
-      window.removeEventListener(
-        "keydown",
-        handleKeyDown
-      );
+      window.removeEventListener("keydown", handleKeyDown);
 
       if (previousFocus instanceof HTMLElement) {
         previousFocus.focus();
@@ -264,10 +263,10 @@ export default function SearchModal({
           <button
             type="button"
             onClick={() => handleSearch()}
-            disabled={!query.trim()}
+            disabled={!query.trim() || isSearching}
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] transition-opacity hover:opacity-60 disabled:cursor-not-allowed disabled:opacity-30"
           >
-            Tìm kiếm
+            {isSearching ? "Đang tìm..." : "Tìm kiếm"}
             <ArrowRight size={16} />
           </button>
         </div>
