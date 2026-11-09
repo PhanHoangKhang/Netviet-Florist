@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Reveal from "@/components/animations/Reveal";
 import TypingText from "@/components/animations/TypingText";
+import { motion } from "framer-motion";
 
 export default function IntroSection() {
   return (
@@ -40,7 +41,7 @@ export default function IntroSection() {
           ))}
         </div>
       </div>
-      <div className="mx-auto mb-25 grid max-w-[1400px] grid-cols-1 items-center gap-10 px-4 py-14 sm:px-6 md:py-5 lg:grid-cols-2 lg:px-8 mb-10">
+      <div className="mx-auto mt-4 mb-12 grid max-w-[1400px] grid-cols-1 items-center gap-6 px-4 py-8 sm:mt-6 sm:mb-16 sm:gap-8 sm:px-6 sm:py-10 md:py-12 lg:mt-8 lg:mb-20 lg:grid-cols-2 lg:gap-10 lg:px-8 lg:py-14">
         {/* LEFT */}
         <div className="order-2 lg:order-1">
           <Reveal direction="left">
@@ -88,24 +89,33 @@ export default function IntroSection() {
         {/* RIGHT */}
         <div className="order-1 lg:order-2">
           <Reveal direction="right" delay={0.15}>
-            <div className="relative mx-auto aspect-square w-full max-w-[420px] overflow-hidden rounded-full drop-shadow-[0_12px_35px_rgba(77,13,1,0.18)]">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 1,
+                ease: "easeOut",
+              }}
+              className="relative mx-auto aspect-square w-[65%] max-w-[180px] overflow-hidden rounded-2xl drop-shadow-[0_12px_35px_rgba(77,13,1,0.18)] sm:w-[75%] sm:max-w-[280px] lg:w-full lg:max-w-[360px]"
+            >
               {/* Animated rotating border */}
               <div className="absolute inset-[-100%] animate-border-spin bg-[conic-gradient(from_0deg,transparent_0deg,transparent_280deg,var(--color-primary)_315deg,var(--color-primary-hover)_335deg,transparent_360deg)] motion-reduce:animate-none" />
 
               {/* Image */}
-              <div className="absolute inset-[3px] z-10 overflow-hidden rounded-full bg-[var(--color-bg-light)]">
+              <div className="absolute inset-[3px] z-10 overflow-hidden rounded-[13px] bg-[var(--color-bg-light)]">
                 <img
-                  src="/netviet.svg"
+                  src="/Olivia_Florist.png"
                   alt="Nét Việt Florist"
-                  className="h-full w-full object-contain"
+                  className="h-full w-full object-cover"
                 />
 
                 {/* Light sweep */}
-                <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-full">
+                <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden rounded-[13px]">
                   <div className="absolute -left-[80%] top-[-20%] h-[140%] w-[35%] rotate-[25deg] bg-gradient-to-r from-transparent via-white/50 to-transparent blur-md animate-shine motion-reduce:animate-none" />
                 </div>
               </div>
-            </div>
+            </motion.div>
           </Reveal>
         </div>
       </div>
