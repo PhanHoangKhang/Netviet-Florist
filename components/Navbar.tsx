@@ -2,16 +2,70 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { MapPin, Phone, Menu, X } from "lucide-react";
+import { MapPin, Phone, Menu, X, Search, ChevronDown } from "lucide-react";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { Search } from "lucide-react";
 import SearchModal from "@/components/ui/SearchModal";
+
+// Các nhóm danh mục trên Navbar
+const productGroups = [
+  {
+    label: "Chủ Đề",
+    slug: "topic",
+    children: [
+      { label: "Hoa sinh nhật", slug: "hoa-sinh-nhat" },
+      { label: "Hoa khai trương", slug: "hoa-khai-truong" },
+      { label: "Hoa chúc mừng", slug: "hoa-chuc-mung" },
+      { label: "Hoa chia buồn", slug: "hoa-chia-buon" },
+    ],
+  },
+  {
+    label: "Đối Tượng",
+    slug: "audience",
+    children: [
+      { label: "Hoa tặng người yêu", slug: "hoa-tang-nguoi-yeu" },
+      { label: "Hoa tặng mẹ", slug: "hoa-tang-me" },
+      { label: "Hoa tặng bạn bè", slug: "hoa-tang-ban-be" },
+    ],
+  },
+  {
+    label: "Kiểu Dáng",
+    slug: "style",
+    children: [
+      { label: "Hoa bó", slug: "hoa-bo" },
+      { label: "Hoa giỏ", slug: "hoa-gio" },
+      { label: "Hoa hộp", slug: "hoa-hop" },
+    ],
+  },
+  {
+    label: "Hoa Tươi",
+    slug: "flower",
+    children: [
+      { label: "Hoa hồng", slug: "hoa-hong" },
+      { label: "Hoa hướng dương", slug: "hoa-huong-duong" },
+      { label: "Hoa đồng tiền", slug: "hoa-dong-tien" },
+      { label: "Lan hồ điệp", slug: "lan-ho-diep" },
+    ],
+  },
+  {
+    label: "Màu Sắc",
+    slug: "color",
+    children: [
+      { label: "Hoa đỏ", slug: "hoa-do" },
+      { label: "Hoa trắng", slug: "hoa-trang" },
+      { label: "Hoa màu hồng", slug: "hoa-mau-hong" },
+    ],
+  },
+];
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { scrollY } = useScroll();
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileProductOpen, setMobileProductOpen] = useState<string | null>(
+    null,
+  );
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 16);
@@ -19,7 +73,7 @@ export default function Navbar() {
 
   return (
     <header className="sticky top-0 z-50 shadow-sm bg-white">
-      {/* 1. TOP BAR - Nền màu Teal thương hiệu (--color-primary) */}
+      {/* 1. TOP BAR */}
       <motion.div
         initial={false}
         animate={{
@@ -30,13 +84,14 @@ export default function Navbar() {
         className="hidden overflow-hidden bg-[var(--color-primary)] px-4 py-2 text-xs text-white sm:block"
       >
         <div className="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 my-1">
-          {/* Địa chỉ & Hotline */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6">
             <span className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 shrink-0" />
               275 Trần Hưng Đạo, Phan Thiết, Bình Thuận
             </span>
+
             <span className="hidden md:inline text-white/40">|</span>
+
             <a
               href="tel:0933660399"
               className="flex items-center gap-1.5 hover:text-teal-100 transition-colors font-medium"
@@ -48,7 +103,6 @@ export default function Navbar() {
         </div>
       </motion.div>
 
-      {/* 2. MAIN NAVBAR */}
       {/* 2. MAIN NAVBAR */}
       <div className="border-b border-gray-100 bg-white">
         <motion.div
@@ -81,7 +135,7 @@ export default function Navbar() {
           </Link>
 
           {/* DESKTOP NAVIGATION */}
-          <nav className="hidden flex-1 items-center justify-center gap-6 font-semibold text-sm text-gray-700 md:flex lg:gap-8">
+          <nav className="hidden flex-1 items-center justify-center gap-4 font-semibold text-xs text-gray-700 md:flex lg:gap-6 lg:text-sm">
             <Link
               href="/"
               className="whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
@@ -89,12 +143,60 @@ export default function Navbar() {
               Trang Chủ
             </Link>
 
-            <Link
-              href="/san-pham"
-              className="whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
-            >
-              Sản Phẩm
-            </Link>
+            {productGroups.map((group) => (
+              <div
+                key={group.label}
+                className="relative"
+                onMouseEnter={() => setActiveDropdown(group.label)}
+                onMouseLeave={() => setActiveDropdown(null)}
+              >
+                <button
+                  type="button"
+                  onClick={() =>
+                    setActiveDropdown((prev) =>
+                      prev === group.label ? null : group.label,
+                    )
+                  }
+                  className="flex items-center gap-1 whitespace-nowrap py-2 transition-colors hover:text-[var(--color-primary)]"
+                  aria-haspopup="true"
+                  aria-expanded={activeDropdown === group.label}
+                >
+                  {group.label}
+                  <ChevronDown
+                    size={14}
+                    className={`transition-transform duration-200 ${
+                      activeDropdown === group.label ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* DROPDOWN */}
+                {activeDropdown === group.label && (
+                  <div className="absolute left-1/2 top-full z-50 min-w-[220px] -translate-x-1/2 border border-gray-100 bg-white py-2 shadow-xl">
+                    {group.children.map((item) => (
+                      <Link
+                        key={item.slug}
+                        href={`/san-pham?category=${item.slug}`}
+                        onClick={() => setActiveDropdown(null)}
+                        className="block px-5 py-2.5 text-sm font-normal text-black transition-colors hover:bg-gray-50 hover:pl-6 hover:text-[var(--color-primary)]"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+
+                    <div className="mt-2 border-t border-gray-100 pt-2">
+                      <Link
+                        href={`/san-pham?group=${group.slug}`}
+                        onClick={() => setActiveDropdown(null)}
+                        className="block px-5 py-2 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
+                      >
+                        Xem tất cả sản phẩm {group.label} →
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
 
             <Link
               href="/lien-he"
@@ -107,7 +209,6 @@ export default function Navbar() {
           {/* RIGHT ACTIONS */}
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             {/* SEARCH BUTTON */}
-
             <button
               type="button"
               onClick={() => setSearchOpen(true)}
@@ -145,7 +246,7 @@ export default function Navbar() {
           />
 
           {/* Side Menu */}
-          <div className="fixed right-0 top-0 z-50 h-full w-[82%] max-w-sm bg-white shadow-xl md:hidden animate-slide-in-right">
+          <div className="fixed right-0 top-0 z-50 h-full w-[82%] max-w-sm overflow-y-auto bg-white shadow-xl md:hidden animate-slide-in-right">
             {/* Header */}
             <div className="flex h-20 text-right items-center justify-end border-b border-[#eee7e4] px-5">
               <button
@@ -171,11 +272,13 @@ export default function Navbar() {
                 <Search size={19} strokeWidth={1.6} />
                 <span>Tìm kiếm sản phẩm hoa</span>
               </button>
+
               <p className="mb-4 text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
                 Menu
               </p>
 
               <div className="divide-y divide-[#eee7e4]">
+                {/* HOME */}
                 <Link
                   href="/"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -185,15 +288,63 @@ export default function Navbar() {
                   <span className="text-gray-300">→</span>
                 </Link>
 
-                <Link
-                  href="/san-pham"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between py-4 text-sm font-semibold text-[var(--color-text-main)] transition-colors hover:text-[var(--color-primary)]"
-                >
-                  Sản Phẩm
-                  <span className="text-gray-300">→</span>
-                </Link>
+                {/* PRODUCT GROUPS */}
+                {productGroups.map((group) => {
+                  const isOpen = mobileProductOpen === group.label;
 
+                  return (
+                    <div key={group.label}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setMobileProductOpen(isOpen ? null : group.label)
+                        }
+                        className="flex w-full items-center justify-between py-4 text-sm font-semibold text-[var(--color-text-main)] transition-colors hover:text-[var(--color-primary)]"
+                        aria-expanded={isOpen}
+                      >
+                        {group.label}
+
+                        <ChevronDown
+                          size={18}
+                          className={`text-gray-400 transition-transform duration-200 ${
+                            isOpen ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+
+                      {isOpen && (
+                        <div className="space-y-1 pb-4 pl-3">
+                          {group.children.map((item) => (
+                            <Link
+                              key={item.slug}
+                              href={`/san-pham?category=${item.slug}`}
+                              onClick={() => {
+                                setIsMobileMenuOpen(false);
+                                setMobileProductOpen(null);
+                              }}
+                              className="block py-2 text-sm font-normal text-gray-600 transition-colors hover:text-[var(--color-primary)]"
+                            >
+                              {item.label}
+                            </Link>
+                          ))}
+
+                          <Link
+                            href="/san-pham"
+                            onClick={() => {
+                              setIsMobileMenuOpen(false);
+                              setMobileProductOpen(null);
+                            }}
+                            className="mt-2 block border-t border-[#eee7e4] pt-3 text-sm font-semibold text-[var(--color-primary)]"
+                          >
+                            Xem tất cả sản phẩm →
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+
+                {/* CONTACT */}
                 <Link
                   href="/lien-he"
                   onClick={() => setIsMobileMenuOpen(false)}
@@ -244,7 +395,7 @@ export default function Navbar() {
               </div>
 
               {/* Contact Info */}
-              <div className=" border-[#eee7e4] px-5 py-5">
+              <div className="border-[#eee7e4] px-5 py-5">
                 <div className="space-y-3 text-xs text-gray-500">
                   {/* Địa chỉ */}
                   <div className="flex items-start gap-3">
@@ -274,6 +425,7 @@ export default function Navbar() {
           </div>
         </>
       )}
+
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );

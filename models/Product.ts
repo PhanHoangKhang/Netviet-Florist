@@ -4,7 +4,10 @@ export interface IProduct extends Document {
   name: string;
   slug: string;
   description?: string;
-  categoryId: mongoose.Types.ObjectId;
+
+  // Một sản phẩm có thể thuộc nhiều Category
+  categoryIds: mongoose.Types.ObjectId[];
+
   images: string[];
   isFeatured: boolean;
   inStock: boolean;
@@ -32,12 +35,13 @@ const ProductSchema = new Schema<IProduct>(
       type: String,
     },
 
-    categoryId: {
-      type: Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-      index: true,
-    },
+    categoryIds: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
+      },
+    ],
 
     images: [
       {
@@ -65,6 +69,9 @@ const ProductSchema = new Schema<IProduct>(
     timestamps: true,
   },
 );
+
+// Index hỗ trợ lọc sản phẩm theo Category
+ProductSchema.index({ categoryIds: 1 });
 
 export default mongoose.models.Product ||
   mongoose.model<IProduct>("Product", ProductSchema);
