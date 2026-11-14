@@ -176,7 +176,7 @@ export default function Navbar() {
                     {group.children.map((item) => (
                       <Link
                         key={item.slug}
-                        href={`/san-pham?category=${item.slug}`}
+                        href={`/san-pham?group=${group.slug}&category=${item.slug}`}
                         onClick={() => setActiveDropdown(null)}
                         className="block px-5 py-2.5 text-sm font-normal text-black transition-colors hover:bg-gray-50 hover:pl-6 hover:text-[var(--color-primary)]"
                       >
@@ -322,7 +322,7 @@ export default function Navbar() {
                           {group.children.map((item) => (
                             <Link
                               key={item.slug}
-                              href={`/san-pham?category=${item.slug}`}
+                              href={`/san-pham?group=${group.slug}&category=${item.slug}`}
                               onClick={closeMobileMenu}
                               className="block py-2 text-sm font-normal text-black transition-colors hover:text-[var(--color-primary)]"
                             >

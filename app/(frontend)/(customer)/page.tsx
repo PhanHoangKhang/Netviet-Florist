@@ -25,35 +25,23 @@ export default function Home() {
         setLoading(true);
         setError("");
 
-        const response = await fetch(
-          "/api/products?limit=50"
-        );
+        const response = await fetch("/api/products?limit=50");
 
         if (!response.ok) {
-          throw new Error(
-            "Không thể lấy sản phẩm"
-          );
+          throw new Error("Không thể lấy sản phẩm");
         }
 
         const result = await response.json();
 
         if (!result.success) {
-          throw new Error(
-            result.message ||
-              "Không thể lấy sản phẩm"
-          );
+          throw new Error(result.message || "Không thể lấy sản phẩm");
         }
 
         setProducts(result.data);
       } catch (error) {
-        console.error(
-          "FETCH HOME PRODUCTS ERROR:",
-          error
-        );
+        console.error("FETCH HOME PRODUCTS ERROR:", error);
 
-        setError(
-          "Không thể tải sản phẩm"
-        );
+        setError("Không thể tải sản phẩm");
       } finally {
         setLoading(false);
       }
@@ -62,40 +50,46 @@ export default function Home() {
     fetchProducts();
   }, []);
 
-  const bestSellers = products.filter(
-    (product) => product.isFeatured
+  const bestSellers = products.filter((product) => product.isFeatured);
+
+  // const hoaBoProducts = products.filter(
+  //   (product) =>
+  //     product.categoryId?.slug === "hoa-bo"
+  // );
+
+  // const hoaGioProducts = products.filter(
+  //   (product) =>
+  //     product.categoryId?.slug === "hoa-gio"
+  // );
+
+  // const lanHoDiepProducts = products.filter(
+  //   (product) =>
+  //     product.categoryId?.slug ===
+  //     "lan-ho-diep"
+  // );
+
+  const hoaBoProducts = products.filter((product) =>
+    product.categoryIds?.some((category) => category.slug === "hoa-bo"),
   );
 
-  const hoaBoProducts = products.filter(
-    (product) =>
-      product.categoryId?.slug === "hoa-bo"
+  const hoaGioProducts = products.filter((product) =>
+    product.categoryIds?.some((category) => category.slug === "hoa-gio"),
   );
 
-  const hoaGioProducts = products.filter(
-    (product) =>
-      product.categoryId?.slug === "hoa-gio"
-  );
-
-  const lanHoDiepProducts = products.filter(
-    (product) =>
-      product.categoryId?.slug ===
-      "lan-ho-diep"
+  const lanHoDiepProducts = products.filter((product) =>
+    product.categoryIds?.some((category) => category.slug === "lan-ho-diep"),
   );
 
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-1">
-
         {/* INTRO - NEW */}
         <IntroSection />
 
         <FeaturedCategories />
 
         {/* POSTER */}
-        <div
-          id="products"
-          className="w-full"
-        >
+        <div id="products" className="w-full">
           <HeroSlider />
 
           <ValuePropsSection />
@@ -109,9 +103,7 @@ export default function Home() {
         )}
 
         {!loading && error && (
-          <div className="py-16 text-center text-sm text-gray-500">
-            {error}
-          </div>
+          <div className="py-16 text-center text-sm text-gray-500">{error}</div>
         )}
 
         {!loading && !error && (
@@ -120,28 +112,24 @@ export default function Home() {
               title="MẪU HOA BÁN CHẠY NHẤT"
               subtitle="Những mẫu hoa được đông đảo khách hàng tin chọn tại Nét Việt Florist"
               products={bestSellers}
-              
             />
 
             <ProductSlider
               title="BỘ SƯU TẬP HOA BÓ"
               subtitle="Thiết kế hiện đại, bó hoa trao gửi cảm xúc"
               products={hoaBoProducts}
-              
             />
 
             <ProductSlider
               title="HOA GIỎ"
               subtitle="Phù hợp tặng sinh nhật, kỷ niệm, sự kiện đối tác"
               products={hoaGioProducts}
-             
             />
 
             <ProductSlider
               title="LAN HỒ ĐIỆP CAO CẤP"
               subtitle="Chậu lan quý phái, quà tặng khai trương & đối tác đẳng cấp"
               products={lanHoDiepProducts}
-              
             />
           </>
         )}
