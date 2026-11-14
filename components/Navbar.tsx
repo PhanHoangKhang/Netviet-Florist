@@ -424,7 +424,7 @@ export default function Navbar() {
           </div>
         </>
       )}
-
+      
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   );

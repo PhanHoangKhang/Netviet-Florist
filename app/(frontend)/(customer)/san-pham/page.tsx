@@ -260,9 +260,9 @@ function ProductListContent() {
                     type="button"
                     onClick={() => handleCategoryChange(category.slug)}
                     aria-pressed={isSelected}
-                    className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm transition-colors ${
+                    className={`flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors ${
                       isSelected
-                        ? "bg-[var(--color-bg-light)] font-semibold text-[var(--color-primary)]"
+                        ? "bg-[var(--color-primary)] font-semibold text-white"
                         : "text-[var(--color-text-main)] hover:bg-[var(--color-bg-light)] hover:text-[var(--color-primary)]"
                     }`}
                   >
