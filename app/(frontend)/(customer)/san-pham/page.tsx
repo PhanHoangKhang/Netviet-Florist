@@ -139,7 +139,7 @@ function ProductListContent() {
   return (
     <div className="min-h-screen py-8 sm:py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+        {/* HEADER */}
         <div className="text-center max-w-xl mx-auto mb-8">
           <span className="text-2xl font-bold tracking-tight text-[var(--color-primary)]">
             Nét Việt{" "}
@@ -153,242 +153,198 @@ function ProductListContent() {
           </h1>
         </div>
 
-        {/* Search & Category Slider */}
-        <div className="mb-8 space-y-5">
-          {/* Search - giữ nguyên chức năng */}
-          <div className="relative mx-auto max-w-xl">
-            <input
-              type="text"
-              placeholder="Tìm tên mẫu hoa (VD: Hoa hồng, Lan hồ điệp...)"
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full border border-[var(--color-primary)]/20 bg-transparent py-3 pl-11 pr-4 text-sm text-black outline-none transition-colors placeholder:text-black/50 focus:border-[var(--color-primary)]"
-            />
+        {/* SEARCH BAR - TOP */}
+        <div className="relative w-full mb-8">
+          <input
+            type="text"
+            placeholder="Tìm tên mẫu hoa (VD: Hoa hồng, Lan hồ điệp...)"
+            value={searchQuery}
+            onChange={(e) => handleSearchChange(e.target.value)}
+            className="w-full border border-[var(--color-primary)]/20 bg-transparent py-3 pl-11 pr-4 text-sm text-black outline-none transition-colors placeholder:text-black/50 focus:border-[var(--color-primary)]"
+          />
 
-            <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-primary)]" />
-          </div>
-
-          {/* Category slider */}
-          <div className="border border-[var(--color-primary)]/10 bg-transparent px-3 py-4 sm:px-5">
-            <div className="relative">
-              {/* Previous button */}
-              <button
-                type="button"
-                aria-label="Cuộn danh mục sang trái"
-                onClick={() =>
-                  document.getElementById("category-slider")?.scrollBy({
-                    left: -280,
-                    behavior: "smooth",
-                  })
-                }
-                className="absolute left-0 top-8 z-10 hidden h-8 w-8
-                 items-center justify-center rounded-full
-                 border border-[var(--color-primary)]/15
-                 bg-white text-[var(--color-primary)] shadow-sm
-                 transition hover:bg-[var(--color-bg-light)]
-                 md:flex"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-
-              {/* Scrollable categories */}
-              <div
-                id="category-slider"
-                className="overflow-x-auto scroll-smooth [scrollbar-width:thin]"
-              >
-                <div className="flex w-max min-w-full items-start justify-start gap-x-4 px-2 pb-2 sm:justify-center sm:gap-x-7 sm:px-8 lg:gap-x-10">
-                  {/* All categories */}
-                  <button
-                    type="button"
-                    onClick={() => handleCategoryChange("all")}
-                    aria-pressed={selectedCategory === "all"}
-                    className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
-                  >
-                    <span
-                      className={`flex h-14 w-14 items-center justify-center rounded-full border transition-colors sm:h-16 sm:w-16 ${
-                        selectedCategory === "all"
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                          : "border-[var(--color-primary)]/20 text-[var(--color-primary)] group-hover:border-[var(--color-primary)]"
-                      }`}
-                    >
-                      <Filter className="h-5 w-5" />
-                    </span>
-
-                    <span
-                      className={`w-full text-center text-[11px] leading-4 sm:text-xs ${
-                        selectedCategory === "all"
-                          ? "font-semibold text-[var(--color-primary)]"
-                          : "text-[var(--color-text-main)]"
-                      }`}
-                    >
-                      Tất cả
-                    </span>
-                  </button>
-
-                  {/* Featured products */}
-                  <button
-                    type="button"
-                    onClick={() => handleCategoryChange("featured")}
-                    aria-pressed={selectedCategory === "featured"}
-                    className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
-                  >
-                    <span
-                      className={`flex h-14 w-14 items-center justify-center rounded-full border transition-colors sm:h-16 sm:w-16 ${
-                        selectedCategory === "featured"
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                          : "border-[var(--color-primary)]/20 text-[var(--color-primary)] group-hover:border-[var(--color-primary)]"
-                      }`}
-                    >
-                      <Star className="h-5 w-5" />
-                    </span>
-
-                    <span
-                      className={`w-full whitespace-normal break-words text-center text-[11px] leading-4 sm:text-xs ${
-                        selectedCategory === "featured"
-                          ? "font-semibold text-[var(--color-primary)]"
-                          : "text-[var(--color-text-main)]"
-                      }`}
-                    >
-                      Nổi bật
-                    </span>
-                  </button>
-
-                  {/* Dynamic categories */}
-                  {categories.map((category) => {
-                    const isSelected = selectedCategory === category.slug;
-
-                    return (
-                      <button
-                        key={category._id}
-                        type="button"
-                        onClick={() => handleCategoryChange(category.slug)}
-                        aria-pressed={isSelected}
-                        className="group flex w-[64px] shrink-0 flex-col items-center gap-2 sm:w-[76px]"
-                      >
-                        <span
-                          className={`block h-14 w-14 overflow-hidden rounded-full border p-0.5 transition-colors sm:h-16 sm:w-16 ${
-                            isSelected
-                              ? "border-2 border-[var(--color-primary)]"
-                              : "border-[var(--color-primary)]/15 group-hover:border-[var(--color-primary)]"
-                          }`}
-                        >
-                          <img
-                            src={
-                              category.image?.trim() ||
-                              "/images/placeholder.jpg"
-                            }
-                            alt={category.name}
-                            loading="lazy"
-                            onError={(e) => {
-                              if (e.currentTarget.dataset.fallback !== "true") {
-                                e.currentTarget.dataset.fallback = "true";
-                                e.currentTarget.src = "/images/placeholder.jpg";
-                              }
-                            }}
-                            className="h-full w-full rounded-full object-cover"
-                          />
-                        </span>
-
-                        <span
-                          className={`w-full whitespace-normal break-words text-center text-[11px] leading-4 sm:text-xs ${
-                            isSelected
-                              ? "font-semibold text-[var(--color-primary)]"
-                              : "text-[var(--color-text-main)] group-hover:text-[var(--color-primary)]"
-                          }`}
-                        >
-                          {category.name}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Next button */}
-              <button
-                type="button"
-                aria-label="Cuộn danh mục sang phải"
-                onClick={() =>
-                  document.getElementById("category-slider")?.scrollBy({
-                    left: 280,
-                    behavior: "smooth",
-                  })
-                }
-                className="absolute right-0 top-8 z-10 hidden h-8 w-8
-                 items-center justify-center rounded-full
-                 border border-[var(--color-primary)]/15
-                 bg-white text-[var(--color-primary)] shadow-sm
-                 transition hover:bg-[var(--color-bg-light)]
-                 md:flex"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
+          <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-primary)]" />
         </div>
 
-        {/* Result Count */}
-        <div className="flex items-center justify-between mb-6 px-1">
-          <p className="text-xs text-gray-500">
-            Hiển thị{" "}
-            <strong className="text-gray-800">{pagination.total}</strong> sản
-            phẩm
-          </p>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="bg-red-50 text-red-600 rounded-2xl p-6 text-center mb-8">
-            <p className="text-sm font-semibold">{error}</p>
-          </div>
-        )}
-
-        {/* Loading */}
-        {loading ? (
-          <div className="py-20 text-center">
-            <p className="text-sm text-gray-400">Đang tải sản phẩm...</p>
-          </div>
-        ) : products.length > 0 ? (
-          <>
-            {/* Product Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
-              {products.map((product) => (
-                <ProductCard key={product._id} product={product} />
-              ))}
-            </div>
-
-            {/* Pagination */}
-            {pagination.totalPages > 1 && (
-              <ProductPagination
-                currentPage={pagination.page}
-                totalPages={pagination.totalPages}
-                onPageChange={(page) => setCurrentPage(page)}
-              />
-            )}
-          </>
-        ) : (
-          /* Empty State */
-          <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-xs my-8">
-            <p className="text-sm font-semibold text-gray-600">
-              Không tìm thấy sản phẩm phù hợp.
+        {/* MAIN LAYOUT */}
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[20%_minmax(0,1fr)]">
+          {/* LEFT SIDEBAR - CATEGORY */}
+          {/* Category filter */}
+          <div className="lg:hidden">
+            <p className="mb-3 text-sm font-semibold text-[var(--color-text-main)]">
+              Danh Mục Sản Phẩm
             </p>
 
-            <p className="text-xs text-gray-400 mt-1">
-              Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn lại danh mục.
-            </p>
-
-            <button
-              onClick={() => {
-                setSelectedCategory("all");
-                setSearchQuery("");
-                setCurrentPage(1);
-              }}
-              className="mt-4 px-4 py-2 rounded-sm bg-[var(--color-primary)] text-white text-xs font-bold shadow-xs hover:opacity-90 transition-opacity"
+            <select
+              value={selectedCategory}
+              onChange={(e) => handleCategoryChange(e.target.value)}
+              className="w-full cursor-pointer border border-[#eee7e4] bg-white px-4 py-3 text-sm text-[var(--color-text-main)] outline-none transition-colors hover:border-[var(--color-primary)] focus:border-[var(--color-primary)]"
             >
-              Xem Tất Cả Sản Phẩm
-            </button>
+              <option value="all">Tất cả sản phẩm</option>
+              <option value="featured">Sản phẩm nổi bật</option>
+
+              {categories.map((category) => (
+                <option key={category._id} value={category.slug}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
           </div>
-        )}
+
+          <aside className="hidden lg:block h-fit border border-[var(--color-primary)]/10 bg-transparent p-4 sm:p-5">
+            <h2 className="mb-5 text-sm font-bold text-[var(--color-primary)]">
+              Danh Mục Sản Phẩm
+            </h2>
+
+            <div className="space-y-1">
+              {/* ALL CATEGORIES */}
+              <button
+                type="button"
+                onClick={() => handleCategoryChange("all")}
+                aria-pressed={selectedCategory === "all"}
+                className={`flex w-full items-center justify-between px-3 py-3 text-left text-sm transition-colors ${
+                  selectedCategory === "all"
+                    ? "bg-[var(--color-primary)] text-white font-semibold"
+                    : "text-[var(--color-text-main)] hover:bg-[var(--color-bg-light)] hover:text-[var(--color-primary)]"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  Tất cả sản phẩm
+                </span>
+              </button>
+
+              {/* FEATURED PRODUCTS */}
+              <button
+                type="button"
+                onClick={() => handleCategoryChange("featured")}
+                aria-pressed={selectedCategory === "featured"}
+                className={`flex w-full items-center justify-between px-3 py-3 text-left text-sm transition-colors ${
+                  selectedCategory === "featured"
+                    ? "bg-[var(--color-primary)] text-white font-semibold"
+                    : "text-[var(--color-text-main)] hover:bg-[var(--color-bg-light)] hover:text-[var(--color-primary)]"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Star className="h-4 w-4" />
+                  Sản phẩm nổi bật
+                </span>
+              </button>
+
+              <div className="my-3 border-t border-[var(--color-primary)]/10" />
+
+              {/* DYNAMIC CATEGORIES */}
+              {categories.map((category) => {
+                const isSelected = selectedCategory === category.slug;
+
+                return (
+                  <button
+                    key={category._id}
+                    type="button"
+                    onClick={() => handleCategoryChange(category.slug)}
+                    aria-pressed={isSelected}
+                    className={`flex w-full items-center gap-3 px-3 py-2.5 text-left text-sm transition-colors ${
+                      isSelected
+                        ? "bg-[var(--color-bg-light)] font-semibold text-[var(--color-primary)]"
+                        : "text-[var(--color-text-main)] hover:bg-[var(--color-bg-light)] hover:text-[var(--color-primary)]"
+                    }`}
+                  >
+                    <span className="h-9 w-9 shrink-0 overflow-hidden rounded-full border border-[var(--color-primary)]/15">
+                      <img
+                        src={
+                          category.image?.trim() || "/images/placeholder.jpg"
+                        }
+                        alt={category.name}
+                        loading="lazy"
+                        onError={(e) => {
+                          if (e.currentTarget.dataset.fallback !== "true") {
+                            e.currentTarget.dataset.fallback = "true";
+                            e.currentTarget.src = "/images/placeholder.jpg";
+                          }
+                        }}
+                        className="h-full w-full object-cover"
+                      />
+                    </span>
+
+                    <span className="min-w-0 flex-1 break-words">
+                      {category.name}
+                    </span>
+
+                    {isSelected && (
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--color-primary)]" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </aside>
+
+          {/* RIGHT CONTENT - PRODUCTS */}
+          <section className="min-w-0">
+            {/* RESULT COUNT */}
+            <div className="mb-6 flex items-center justify-between px-1">
+              <p className="text-xs text-gray-500">
+                Hiển thị{" "}
+                <strong className="text-gray-800">{pagination.total}</strong>{" "}
+                sản phẩm
+              </p>
+            </div>
+
+            {/* ERROR */}
+            {error && (
+              <div className="bg-red-50 text-red-600 rounded-2xl p-6 text-center mb-8">
+                <p className="text-sm font-semibold">{error}</p>
+              </div>
+            )}
+
+            {/* LOADING */}
+            {loading ? (
+              <div className="py-20 text-center">
+                <p className="text-sm text-gray-400">Đang tải sản phẩm...</p>
+              </div>
+            ) : products.length > 0 ? (
+              <>
+                {/* PRODUCT GRID */}
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-4 sm:gap-6">
+                  {products.map((product) => (
+                    <ProductCard key={product._id} product={product} />
+                  ))}
+                </div>
+
+                {/* PAGINATION */}
+                {pagination.totalPages > 1 && (
+                  <ProductPagination
+                    currentPage={pagination.page}
+                    totalPages={pagination.totalPages}
+                    onPageChange={(page) => setCurrentPage(page)}
+                  />
+                )}
+              </>
+            ) : (
+              /* EMPTY STATE */
+              <div className="bg-white rounded-2xl p-12 text-center border border-gray-100 shadow-xs my-8">
+                <p className="text-sm font-semibold text-gray-600">
+                  Không tìm thấy sản phẩm phù hợp.
+                </p>
+
+                <p className="text-xs text-gray-400 mt-1">
+                  Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn lại danh mục.
+                </p>
+
+                <button
+                  onClick={() => {
+                    setSelectedCategory("all");
+                    setSearchQuery("");
+                    setCurrentPage(1);
+                  }}
+                  className="mt-4 px-4 py-2 rounded-sm bg-[var(--color-primary)] text-white text-xs font-bold shadow-xs hover:opacity-90 transition-opacity"
+                >
+                  Xem Tất Cả Sản Phẩm
+                </button>
+              </div>
+            )}
+          </section>
+        </div>
       </div>
     </div>
   );
