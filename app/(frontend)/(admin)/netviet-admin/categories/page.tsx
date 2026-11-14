@@ -19,10 +19,19 @@ interface CategoryItem {
   name: string;
   slug: string;
   description?: string;
+  group?: "topic" | "audience" | "style" | "flower" | "color";
   image?: string;
   imageKey?: string;
   productCount?: number;
 }
+
+const categoryGroupLabels: Record<string, string> = {
+  topic: "Chủ Đề",
+  audience: "Đối Tượng",
+  style: "Kiểu Dáng",
+  flower: "Hoa Tươi",
+  color: "Màu Sắc",
+};
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
@@ -99,7 +108,10 @@ export default function CategoriesPage() {
 
     return (
       category.name.toLowerCase().includes(keyword) ||
-      category.slug.toLowerCase().includes(keyword)
+      category.slug.toLowerCase().includes(keyword) ||
+      categoryGroupLabels[category.group ?? "topic"]
+        .toLowerCase()
+        .includes(keyword)
     );
   });
 
@@ -202,6 +214,9 @@ export default function CategoriesPage() {
                     Slug
                   </th>
                   <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
+                    Nhóm
+                  </th>
+                  <th className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
                     Sản phẩm
                   </th>
                   <th className="px-6 py-4 text-right text-xs font-semibold uppercase tracking-wide text-gray-500">
@@ -250,6 +265,10 @@ export default function CategoriesPage() {
 
                     <td className="px-6 py-5 text-sm text-gray-500">
                       {category.slug}
+                    </td>
+
+                    <td className="px-6 py-5 text-sm text-gray-600">
+                      {categoryGroupLabels[category.group ?? "topic"] || "Chưa phân nhóm"}
                     </td>
 
                     <td className="px-6 py-5 text-sm text-gray-600">

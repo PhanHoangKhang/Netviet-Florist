@@ -18,14 +18,24 @@ interface CategoryForm {
   name: string;
   slug: string;
   description: string;
+  group: string;
   image: string;
   imageKey: string;
 }
+
+const categoryGroups = [
+  { label: "Chủ Đề", value: "topic" },
+  { label: "Đối Tượng", value: "audience" },
+  { label: "Kiểu Dáng", value: "style" },
+  { label: "Hoa Tươi", value: "flower" },
+  { label: "Màu Sắc", value: "color" },
+];
 
 const initialForm: CategoryForm = {
   name: "",
   slug: "",
   description: "",
+  group: "topic",
   image: "",
   imageKey: "",
 };
@@ -129,6 +139,7 @@ export default function NewCategoryPage() {
     const name = form.name.trim();
     const slug = form.slug.trim();
     const description = form.description.trim();
+    const group = form.group.trim();
 
     if (!name || !slug) {
       setError("Vui lòng nhập tên và slug danh mục.");
@@ -142,6 +153,11 @@ export default function NewCategoryPage() {
 
     if (description.length > 1000) {
       setError("Mô tả không được vượt quá 1000 ký tự.");
+      return;
+    }
+
+    if (!categoryGroups.some((item) => item.value === group)) {
+      setError("Vui lòng chọn nhóm danh mục hợp lệ.");
       return;
     }
 
@@ -162,6 +178,7 @@ export default function NewCategoryPage() {
           name,
           slug,
           description,
+          group,
           image: form.image,
           imageKey: form.imageKey,
         }),
@@ -257,6 +274,27 @@ export default function NewCategoryPage() {
             <p className="mt-2 text-xs text-gray-400">
               {form.name.length}/100 ký tự
             </p>
+          </div>
+
+          <div>
+            <label htmlFor="group" className="text-sm font-medium text-gray-800">
+              Nhóm danh mục <span className="text-red-500">*</span>
+            </label>
+
+            <select
+              id="group"
+              value={form.group}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, group: event.target.value }))
+              }
+              className={inputClass}
+            >
+              {categoryGroups.map((group) => (
+                <option key={group.value} value={group.value}>
+                  {group.label}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Slug */}

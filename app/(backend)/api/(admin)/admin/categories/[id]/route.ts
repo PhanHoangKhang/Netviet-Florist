@@ -9,6 +9,7 @@ type CategoryUpdates = {
   name?: string;
   slug?: string;
   description?: string;
+  group?: string;
   image?: string;
   imageKey?: string;
 };
@@ -48,7 +49,7 @@ export const GET = withRBAC("categories:read", async (_request, context) => {
     }
 
     const productCount = await Product.countDocuments({
-      categoryId: category._id,
+      categoryIds: category._id,
     });
 
     return NextResponse.json({
@@ -80,6 +81,7 @@ export const PATCH = withRBAC(
         name?: unknown;
         slug?: unknown;
         description?: unknown;
+        group?: unknown;
         image?: unknown;
         imageKey?: unknown;
       };
@@ -146,6 +148,20 @@ export const PATCH = withRBAC(
         }
 
         updates.description = description;
+      }
+
+      if (body.group !== undefined) {
+        if (typeof body.group !== "string") {
+          return errorResponse("Nhóm danh mục không hợp lệ.", 400);
+        }
+
+        const group = body.group.trim();
+
+        if (!['topic', 'audience', 'style', 'flower', 'color'].includes(group)) {
+          return errorResponse("Nhóm danh mục không hợp lệ.", 400);
+        }
+
+        updates.group = group;
       }
 
       if (body.image !== undefined || body.imageKey !== undefined) {
@@ -241,7 +257,7 @@ export const DELETE = withRBAC(
 
       // Không xóa danh mục vẫn đang được sản phẩm sử dụng
       const productCount = await Product.countDocuments({
-        categoryId: category._id,
+        categoryIds: category._id,
       });
 
       if (productCount > 0) {

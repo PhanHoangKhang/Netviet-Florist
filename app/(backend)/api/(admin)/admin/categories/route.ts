@@ -6,17 +6,19 @@ import { withRBAC } from "@/lib/auth/withRBAC";
 
 export const runtime = "nodejs";
 
+const validGroups = ["topic", "audience", "style", "flower", "color"];
+
 export const GET = withRBAC("categories:read", async () => {
   try {
     await connectDB();
 
     const categories = await Category.find({}).sort({ createdAt: -1 }).lean();
 
-    // Đếm số sản phẩm trong từng danh mục
     const productCounts = await Product.aggregate([
+      { $unwind: "$categoryIds" },
       {
         $group: {
-          _id: "$categoryId",
+          _id: "$categoryIds",
           count: { $sum: 1 },
         },
       },
@@ -56,6 +58,7 @@ export const POST = withRBAC(
       const slug = typeof body.slug === "string" ? body.slug.trim() : "";
       const image = typeof body.image === "string" ? body.image : "";
       const imageKey = typeof body.imageKey === "string" ? body.imageKey : "";
+      const group = typeof body.group === "string" ? body.group.trim() : "";
       const description =
         typeof body.description === "string" ? body.description.trim() : "";
 
@@ -84,6 +87,16 @@ export const POST = withRBAC(
           {
             success: false,
             message: "Mô tả không được vượt quá 1000 ký tự.",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (!validGroups.includes(group)) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Nhóm danh mục không hợp lệ.",
           },
           { status: 400 },
         );
@@ -134,6 +147,7 @@ export const POST = withRBAC(
         description,
         image,
         imageKey,
+        group,
       });
 
       return NextResponse.json(

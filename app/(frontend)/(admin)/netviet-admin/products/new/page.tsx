@@ -17,6 +17,14 @@ import type { Category } from "@/types/category";
 import { ImageItem } from "@/types/product";
 
 
+const productCategoryGroups = [
+  { label: "Chủ Đề", value: "topic" },
+  { label: "Đối Tượng", value: "audience" },
+  { label: "Kiểu Dáng", value: "style" },
+  { label: "Hoa Tươi", value: "flower" },
+  { label: "Màu Sắc", value: "color" },
+];
+
 function generateSlug(value: string) {
   return value
     .toLowerCase()
@@ -326,11 +334,23 @@ export default function NewProductPage() {
                       : "Chọn danh mục"}
                   </option>
 
-                  {categories.map((category) => (
-                    <option key={category._id} value={category._id}>
-                      {category.name}
-                    </option>
-                  ))}
+                  {productCategoryGroups.flatMap((group) => {
+                    const groupCategories = categories.filter(
+                      (category) => category.group === group.value,
+                    );
+
+                    if (groupCategories.length === 0) return [];
+
+                    return [
+                      <optgroup key={group.value} label={group.label}>
+                        {groupCategories.map((category) => (
+                          <option key={category._id} value={category._id}>
+                            {category.name}
+                          </option>
+                        ))}
+                      </optgroup>,
+                    ];
+                  })}
                 </select>
 
                 {!loadingCategories && categories.length === 0 && (

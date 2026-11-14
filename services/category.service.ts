@@ -2,6 +2,7 @@ export interface CategoryFormData {
   name: string;
   slug: string;
   description: string;
+  group: string;
   image: string;
   imageKey: string;
 }
