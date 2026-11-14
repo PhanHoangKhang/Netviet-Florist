@@ -147,6 +147,7 @@ export default function EditProductPage() {
       for (const file of files) {
         const formData = new FormData();
         formData.append("file", file);
+        formData.append("type", "product");
 
         const response = await fetch("/api/admin/upload", {
           method: "POST",
