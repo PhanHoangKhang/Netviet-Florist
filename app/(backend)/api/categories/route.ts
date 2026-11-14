@@ -1,31 +1,49 @@
+
 import { NextResponse } from "next/server";
 
 import { connectDB } from "@/lib/mongodb";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
 
+export const runtime = "nodejs";
+
 export async function GET() {
   try {
     await connectDB();
 
-    const categories = await Category.find({})
-      .sort({ order: 1, createdAt: -1 })
-      .lean();
+    const [categories, productCounts] = await Promise.all([
+      Category.find({})
+        .sort({ group: 1, order: 1, createdAt: -1 })
+        .lean(),
 
-    // Đếm số sản phẩm trong từng danh mục
-    const productCounts = await Product.aggregate([
-      {
-        $group: {
-          _id: "$categoryId",
-          count: { $sum: 1 },
+      // Count products belonging to each category
+      Product.aggregate([
+        {
+          $match: {
+            inStock: true,
+          },
         },
-      },
+        {
+          $unwind: "$categoryIds",
+        },
+        {
+          $group: {
+            _id: "$categoryIds",
+            count: { $sum: 1 },
+          },
+        },
+      ]),
     ]);
 
+    // Create category product count map
     const countMap = new Map(
-      productCounts.map((item) => [String(item._id), item.count]),
+      productCounts.map((item) => [
+        String(item._id),
+        item.count,
+      ]),
     );
 
+    // Attach product count to each category
     const data = categories.map((category) => ({
       ...category,
       productCount: countMap.get(String(category._id)) ?? 0,
@@ -34,11 +52,12 @@ export async function GET() {
     return NextResponse.json(
       {
         success: true,
-        data: categories,
+        data,
       },
       {
         headers: {
-          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+          "Cache-Control":
+            "public, s-maxage=300, stale-while-revalidate=600",
         },
       },
     );

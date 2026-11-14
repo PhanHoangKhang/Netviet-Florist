@@ -19,6 +19,8 @@ function ProductListContent() {
   const searchParams = useSearchParams();
   const categoryParam = searchParams.get("category");
   const searchParam = searchParams.get("search");
+  const groupParam = searchParams.get("group");
+  const [selectedGroup, setSelectedGroup] = useState(groupParam ?? "");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -78,6 +80,11 @@ function ProductListContent() {
   }, [searchParam]);
 
   useEffect(() => {
+    setSelectedGroup(groupParam ?? "");
+    setCurrentPage(1);
+  }, [groupParam]);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
@@ -86,6 +93,10 @@ function ProductListContent() {
         const params = new URLSearchParams();
 
         params.set("category", selectedCategory);
+
+        if (selectedGroup) {
+          params.set("group", selectedGroup);
+        }
 
         if (searchQuery.trim()) {
           params.set("search", searchQuery.trim());
@@ -124,10 +135,11 @@ function ProductListContent() {
     };
 
     fetchProducts();
-  }, [selectedCategory, searchQuery, currentPage]);
+  }, [selectedCategory, selectedGroup, searchQuery, currentPage]);
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
+    setSelectedGroup("");
     setCurrentPage(1);
   };
 
@@ -334,6 +346,7 @@ function ProductListContent() {
                 <button
                   onClick={() => {
                     setSelectedCategory("all");
+                    setSelectedGroup("");
                     setSearchQuery("");
                     setCurrentPage(1);
                   }}

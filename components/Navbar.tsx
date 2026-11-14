@@ -324,7 +324,7 @@ export default function Navbar() {
                               key={item.slug}
                               href={`/san-pham?category=${item.slug}`}
                               onClick={closeMobileMenu}
-                              className="block py-2 text-sm font-normal text-gray-600 transition-colors hover:text-[var(--color-primary)]"
+                              className="block py-2 text-sm font-normal text-black transition-colors hover:text-[var(--color-primary)]"
                             >
                               {item.label}
                             </Link>
