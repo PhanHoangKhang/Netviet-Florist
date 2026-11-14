@@ -372,7 +372,9 @@ export default function ProductsPage() {
 
                     <td className="px-6 py-4">
                       <span className="text-sm text-gray-600">
-                        {product.categoryIds?.[0]?.name || "Chưa phân loại"}
+                        {product.categoryIds
+                          ?.map((category) => category.name)
+                          .join(", ") || "Chưa phân loại"}
                       </span>
                     </td>
 

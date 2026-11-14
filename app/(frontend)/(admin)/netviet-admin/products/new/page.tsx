@@ -13,17 +13,9 @@ import {
   X,
 } from "lucide-react";
 import { fetchAdminCategories } from "@/lib/admin-catalog";
-import type { Category } from "@/types/category";
+import { CATEGORY_GROUPS, type Category } from "@/types/category";
 import { ImageItem } from "@/types/product";
 
-
-const productCategoryGroups = [
-  { label: "Chủ Đề", value: "topic" },
-  { label: "Đối Tượng", value: "audience" },
-  { label: "Kiểu Dáng", value: "style" },
-  { label: "Hoa Tươi", value: "flower" },
-  { label: "Màu Sắc", value: "color" },
-];
 
 function generateSlug(value: string) {
   return value
@@ -42,7 +34,7 @@ export default function NewProductPage() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [images, setImages] = useState<ImageItem[]>([]);
   const [isFeatured, setIsFeatured] = useState(false);
@@ -161,6 +153,12 @@ export default function NewProductPage() {
     toast.info("Đã xóa ảnh khỏi danh sách sản phẩm.");
   };
 
+  const toggleCategory = (id: string) => {
+    setCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((categoryId) => categoryId !== id) : [...prev, id],
+    );
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -172,8 +170,8 @@ export default function NewProductPage() {
       return;
     }
 
-    if (!categoryId) {
-      setError("Vui lòng chọn danh mục.");
+    if (categoryIds.length === 0) {
+      setError("Vui lòng chọn ít nhất một danh mục.");
       return;
     }
 
@@ -199,8 +197,7 @@ export default function NewProductPage() {
           name: name.trim(),
           slug: slug.trim(),
           description: description.trim(),
-          categoryId,
-          categoryIds: categoryId ? [categoryId] : [],
+          categoryIds,
           images: images.map((image) => image.url),
           imageKeys: images.map((image) => image.key),
           isFeatured,
@@ -317,46 +314,80 @@ export default function NewProductPage() {
               </div>
 
               <div className="mt-5">
-                <label className="text-sm font-medium text-gray-700">
+                <p className="text-sm font-medium text-gray-700">
                   Danh mục <span className="text-red-500">*</span>
-                </label>
+                  <span className="ml-2 font-normal text-gray-500">
+                    (đã chọn {categoryIds.length})
+                  </span>
+                </p>
 
-                <select
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                  required
-                  disabled={loadingCategories}
-                  className={inputClass}
-                >
-                  <option value="">
-                    {loadingCategories
-                      ? "Đang tải danh mục..."
-                      : "Chọn danh mục"}
-                  </option>
-
-                  {productCategoryGroups.flatMap((group) => {
-                    const groupCategories = categories.filter(
-                      (category) => category.group === group.value,
-                    );
-
-                    if (groupCategories.length === 0) return [];
-
-                    return [
-                      <optgroup key={group.value} label={group.label}>
-                        {groupCategories.map((category) => (
-                          <option key={category._id} value={category._id}>
-                            {category.name}
-                          </option>
-                        ))}
-                      </optgroup>,
-                    ];
-                  })}
-                </select>
-
-                {!loadingCategories && categories.length === 0 && (
+                {loadingCategories ? (
+                  <p className="mt-2 text-sm text-gray-500">
+                    Đang tải danh mục...
+                  </p>
+                ) : categories.length === 0 ? (
                   <p className="mt-2 text-xs text-amber-700">
                     Chưa có danh mục. Hãy tạo danh mục trước.
                   </p>
+                ) : (
+                  <div className="mt-3 space-y-4">
+                    {CATEGORY_GROUPS.map((group) => {
+                      const groupCategories = categories.filter(
+                        (category) => category.group === group.value,
+                      );
+
+                      if (groupCategories.length === 0) return null;
+
+                      return (
+                        <fieldset key={group.value}>
+                          <legend className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                            {group.label}
+                          </legend>
+                          <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                            {groupCategories.map((category) => (
+                              <label
+                                key={category._id}
+                                className="flex cursor-pointer items-center gap-2 border border-gray-200 px-3 py-2 text-sm text-gray-700"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={categoryIds.includes(category._id)}
+                                  onChange={() => toggleCategory(category._id)}
+                                  className="h-4 w-4 accent-[var(--color-primary)]"
+                                />
+                                {category.name}
+                              </label>
+                            ))}
+                          </div>
+                        </fieldset>
+                      );
+                    })}
+                    {categories.some((category) => !category.group) && (
+                      <fieldset>
+                        <legend className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          Chưa phân nhóm
+                        </legend>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                          {categories
+                            .filter((category) => !category.group)
+                            .map((category) => (
+                              <label
+                                key={category._id}
+                                className="flex cursor-pointer items-center gap-2 border border-gray-200 px-3 py-2 text-sm text-gray-700"
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={categoryIds.includes(category._id)}
+                                  onChange={() => toggleCategory(category._id)}
+                                  className="h-4 w-4 accent-[var(--color-primary)]"
+                                />
+                                {category.name}
+                              </label>
+                            ))}
+                        </div>
+                      </fieldset>
+                    )}
+                  </div>
                 )}
               </div>
             </section>

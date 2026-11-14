@@ -135,19 +135,28 @@ export const PATCH = withRBAC(
         }
       }
 
-      const incomingCategoryIds = Array.isArray(categoryIds)
+      if (categoryIds !== undefined && !Array.isArray(categoryIds)) {
+        return NextResponse.json(
+          { success: false, message: "Danh mục không hợp lệ." },
+          { status: 400 },
+        );
+      }
+
+      const incomingCategoryIds: unknown[] | undefined = Array.isArray(categoryIds)
         ? categoryIds
         : categoryId !== undefined
           ? [categoryId]
           : undefined;
 
       if (incomingCategoryIds !== undefined) {
+        const validCategoryIds = incomingCategoryIds.filter(
+          (id): id is string =>
+            typeof id === "string" && mongoose.Types.ObjectId.isValid(id),
+        );
+
         if (
-          incomingCategoryIds.length === 0 ||
-          incomingCategoryIds.some(
-            (id: unknown) =>
-              typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id),
-          )
+          validCategoryIds.length === 0 ||
+          validCategoryIds.length !== incomingCategoryIds.length
         ) {
           return NextResponse.json(
             { success: false, message: "Danh mục không hợp lệ." },
@@ -155,7 +164,7 @@ export const PATCH = withRBAC(
           );
         }
 
-        const uniqueCategoryIds = [...new Set(incomingCategoryIds)];
+        const uniqueCategoryIds = [...new Set(validCategoryIds)];
         const categories = await Category.find({
           _id: { $in: uniqueCategoryIds },
         }).select("_id");

@@ -119,18 +119,27 @@ export const POST = withRBAC(
         );
       }
 
-      const normalizedCategoryIds = Array.isArray(categoryIds)
+      if (categoryIds !== undefined && !Array.isArray(categoryIds)) {
+        return NextResponse.json(
+          { success: false, message: "Danh mục không hợp lệ." },
+          { status: 400 },
+        );
+      }
+
+      const normalizedCategoryIds: unknown[] = Array.isArray(categoryIds)
         ? categoryIds
         : categoryId !== undefined
           ? [categoryId]
           : [];
 
+      const validCategoryIds = normalizedCategoryIds.filter(
+        (id): id is string =>
+          typeof id === "string" && mongoose.Types.ObjectId.isValid(id),
+      );
+
       if (
-        normalizedCategoryIds.length === 0 ||
-        normalizedCategoryIds.some(
-          (id: unknown) =>
-            typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id),
-        )
+        validCategoryIds.length === 0 ||
+        validCategoryIds.length !== normalizedCategoryIds.length
       ) {
         return NextResponse.json(
           {
@@ -207,10 +216,12 @@ export const POST = withRBAC(
       }
 
       const categories = await Category.find({
-        _id: { $in: normalizedCategoryIds },
+        _id: { $in: validCategoryIds },
       }).select("_id");
 
-      if (categories.length !== new Set(normalizedCategoryIds).size) {
+      const uniqueCategoryIds = [...new Set(validCategoryIds)];
+
+      if (categories.length !== uniqueCategoryIds.length) {
         return NextResponse.json(
           {
             success: false,
@@ -243,7 +254,7 @@ export const POST = withRBAC(
           typeof description === "string"
             ? description.trim().slice(0, 5000)
             : "",
-        categoryIds: [...new Set(normalizedCategoryIds)],
+        categoryIds: uniqueCategoryIds,
         images,
         imageKeys,
         isFeatured: isFeatured === true,

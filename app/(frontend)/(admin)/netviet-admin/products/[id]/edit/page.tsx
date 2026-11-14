@@ -6,7 +6,7 @@ import { ArrowLeft, ImagePlus, Loader2, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-import type { Category } from "@/types/category";
+import { CATEGORY_GROUPS, type Category } from "@/types/category";
 import type { Product, ImageItem } from "@/types/product";
 
 export default function EditProductPage() {
@@ -26,7 +26,7 @@ export default function EditProductPage() {
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [categoryIds, setCategoryIds] = useState<string[]>([]);
 
   const [images, setImages] = useState<ImageItem[]>([]);
 
@@ -75,19 +75,9 @@ export default function EditProductPage() {
         setSlug(data.slug);
         setDescription(data.description || "");
 
-        const categoryIds = Array.isArray(data.categoryIds)
-          ? data.categoryIds.map((category: string | { _id: string }) =>
-              typeof category === "string" ? category : category._id,
-            )
-          : Array.isArray((data as any).categoryId)
-            ? (data as any).categoryId.map((category: string | { _id: string }) =>
-                typeof category === "string" ? category : category._id,
-              )
-            : typeof (data as any).categoryId === "string"
-              ? [(data as any).categoryId]
-              : [];
-
-        setCategoryId(categoryIds[0] ?? "");
+        setCategoryIds(
+          (data.categoryIds ?? []).map((category) => category._id),
+        );
 
         setIsFeatured(data.isFeatured);
         setInStock(data.inStock);
@@ -207,6 +197,12 @@ export default function EditProductPage() {
     );
   };
 
+  const toggleCategory = (id: string) => {
+    setCategoryIds((prev) =>
+      prev.includes(id) ? prev.filter((categoryId) => categoryId !== id) : [...prev, id],
+    );
+  };
+
   // ========================================
   // SAVE PRODUCT
   // ========================================
@@ -225,8 +221,8 @@ export default function EditProductPage() {
         throw new Error("Vui lòng nhập slug.");
       }
 
-      if (!categoryId) {
-        throw new Error("Vui lòng chọn danh mục.");
+      if (categoryIds.length === 0) {
+        throw new Error("Vui lòng chọn ít nhất một danh mục.");
       }
 
       if (!images.length) {
@@ -242,8 +238,7 @@ export default function EditProductPage() {
           name: name.trim(),
           slug: slug.trim(),
           description: description.trim(),
-          categoryId,
-          categoryIds: categoryId ? [categoryId] : [],
+          categoryIds,
           images: images.map((image) => image.url),
           imageKeys: images.map((image) => image.key),
           isFeatured,
@@ -413,27 +408,72 @@ export default function EditProductPage() {
             {/* Category */}
 
             <div>
-              <label
-                htmlFor="category"
-                className="mb-2 block text-sm font-medium text-gray-900"
-              >
-                Danh mục
-              </label>
+              <p className="mb-2 text-sm font-medium text-gray-900">
+                Danh mục ({categoryIds.length} đã chọn)
+              </p>
 
-              <select
-                id="category"
-                value={categoryId}
-                onChange={(e) => setCategoryId(e.target.value)}
-                className="w-full border border-gray-200 bg-white px-3.5 py-2.5 text-sm outline-none transition focus:border-[var(--color-primary)]"
-              >
-                <option value="">Chọn danh mục</option>
+              {categories.length === 0 ? (
+                <p className="text-sm text-gray-500">Chưa có danh mục.</p>
+              ) : (
+                <div className="space-y-4">
+                  {CATEGORY_GROUPS.map((group) => {
+                    const groupCategories = categories.filter(
+                      (category) => category.group === group.value,
+                    );
 
-                {categories.map((category) => (
-                  <option key={category._id} value={category._id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
+                    if (groupCategories.length === 0) return null;
+
+                    return (
+                      <fieldset key={group.value}>
+                        <legend className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                          {group.label}
+                        </legend>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                          {groupCategories.map((category) => (
+                            <label
+                              key={category._id}
+                              className="flex cursor-pointer items-center gap-2 border border-gray-200 px-3 py-2 text-sm text-gray-700"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={categoryIds.includes(category._id)}
+                                onChange={() => toggleCategory(category._id)}
+                                className="h-4 w-4 accent-[var(--color-primary)]"
+                              />
+                              {category.name}
+                            </label>
+                          ))}
+                        </div>
+                      </fieldset>
+                    );
+                  })}
+                  {categories.some((category) => !category.group) && (
+                    <fieldset>
+                      <legend className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+                        Chưa phân nhóm
+                      </legend>
+                      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                        {categories
+                          .filter((category) => !category.group)
+                          .map((category) => (
+                            <label
+                              key={category._id}
+                              className="flex cursor-pointer items-center gap-2 border border-gray-200 px-3 py-2 text-sm text-gray-700"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={categoryIds.includes(category._id)}
+                                onChange={() => toggleCategory(category._id)}
+                                className="h-4 w-4 accent-[var(--color-primary)]"
+                              />
+                              {category.name}
+                            </label>
+                          ))}
+                      </div>
+                    </fieldset>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Description */}
