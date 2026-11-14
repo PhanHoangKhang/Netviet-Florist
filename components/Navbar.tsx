@@ -190,7 +190,7 @@ export default function Navbar() {
                         onClick={() => setActiveDropdown(null)}
                         className="block px-5 py-2 text-sm font-semibold text-[var(--color-primary)] hover:text-[var(--color-primary-hover)]"
                       >
-                        Xem tất cả sản phẩm {group.label} →
+                        Xem thêm →
                       </Link>
                     </div>
                   </div>
@@ -292,6 +292,11 @@ export default function Navbar() {
                 {productGroups.map((group) => {
                   const isOpen = mobileProductOpen === group.label;
 
+                  const closeMobileMenu = () => {
+                    setMobileProductOpen(null);
+                    setIsMobileMenuOpen(false);
+                  };
+
                   return (
                     <div key={group.label}>
                       <button
@@ -318,10 +323,7 @@ export default function Navbar() {
                             <Link
                               key={item.slug}
                               href={`/san-pham?category=${item.slug}`}
-                              onClick={() => {
-                                setIsMobileMenuOpen(false);
-                                setMobileProductOpen(null);
-                              }}
+                              onClick={closeMobileMenu}
                               className="block py-2 text-sm font-normal text-gray-600 transition-colors hover:text-[var(--color-primary)]"
                             >
                               {item.label}
@@ -329,14 +331,11 @@ export default function Navbar() {
                           ))}
 
                           <Link
-                            href="/san-pham"
-                            onClick={() => {
-                              setIsMobileMenuOpen(false);
-                              setMobileProductOpen(null);
-                            }}
+                            href={`/san-pham?group=${group.slug}`}
+                            onClick={closeMobileMenu}
                             className="mt-2 block border-t border-[#eee7e4] pt-3 text-sm font-semibold text-[var(--color-primary)]"
                           >
-                            Xem tất cả sản phẩm →
+                            Xem thêm →
                           </Link>
                         </div>
                       )}
