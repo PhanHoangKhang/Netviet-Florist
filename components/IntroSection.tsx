@@ -117,6 +117,11 @@ export default function IntroSection() {
               </div>
             </motion.div>
           </Reveal>
+
+          <p className="mx-auto mt-4 w-[65%] max-w-[180px] text-center text-xs leading-5 text-gray-500 sm:mt-5 sm:w-[75%] sm:max-w-[280px] sm:text-sm sm:leading-6 lg:w-full lg:max-w-[360px]">
+            Nét Việt Florist – Shop hoa tươi tại Phan Thiết, Bình Thuận, chuyên
+            cung cấp hoa bó, hoa giỏ và hoa thiết kế theo yêu cầu.
+          </p>
         </div>
       </div>
     </section>

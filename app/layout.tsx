@@ -14,11 +14,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://hoatuoiphanthiet.vn"),
+  metadataBase: new URL("https://www.hoatuoiphanthiet.vn"),
 
   title: {
-    default:
-      "Nét Việt Florist | Shop Hoa Tươi Phan Thiết, Giao Hoa Tận Nơi",
+    default: "Nét Việt Florist | Shop Hoa Tươi Phan Thiết, Giao Hoa Tận Nơi",
     template: "%s | Nét Việt Florist",
   },
 
@@ -40,14 +39,14 @@ export const metadata: Metadata = {
   ],
 
   alternates: {
-    canonical: "/",
+    canonical: "https://www.hoatuoiphanthiet.vn/",
   },
 
   openGraph: {
     title: "Nét Việt Florist - Shop Hoa Tươi Phan Thiết",
     description:
       "Shop hoa tươi Nét Việt Florist tại Phan Thiết. Hoa bó, hoa giỏ, hoa sinh nhật, hoa khai trương và điện hoa giao tận nơi.",
-    url: "https://hoatuoiphanthiet.vn",
+    url: "https://www.hoatuoiphanthiet.vn/",
     siteName: "Nét Việt Florist",
     locale: "vi_VN",
     type: "website",
