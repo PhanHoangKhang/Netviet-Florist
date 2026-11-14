@@ -127,7 +127,7 @@ export default function Footer() {
 
               {/* Zalo - giữ nguyên chức năng, giảm màu */}
               <a
-                href="https://zalo.me/0933660399"
+                href="https://zalo.me/2651705435336175205"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full max-w-[340px] items-center justify-center gap-2 border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm font-medium text-gray-600 transition-colors hover:border-[var(--color-primary)]/30 hover:bg-[var(--color-primary)]/5 hover:text-[var(--color-primary)]"

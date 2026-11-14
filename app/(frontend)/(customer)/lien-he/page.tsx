@@ -1,48 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import { MapPin, Phone, Mail, Clock, Send, MessageCircle } from "lucide-react";
-import { toast } from "sonner";
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    note: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const name = formData.name.trim();
-    const phone = formData.phone.trim();
-    const note = formData.note.trim();
-
-    if (!phone) {
-      toast.error("Vui lòng nhập số điện thoại/Zalo.");
-      return;
-    }
-
-    const message = [
-      "Xin chào Nét Việt Florist! Mình muốn tư vấn mẫu hoa.",
-      "",
-      `Tên khách hàng: ${name || "Khách hàng"}`,
-      `Số điện thoại/Zalo: ${phone}`,
-      `Yêu cầu tư vấn: ${note || "Mình muốn được tư vấn mẫu hoa."}`,
-    ].join("\n");
-
-    const zaloUrl = `https://zalo.me/0707631223?text=${encodeURIComponent(message)}`;
-
-    const newWindow = window.open(zaloUrl, "_blank", "noopener,noreferrer");
-
-    if (!newWindow) {
-      toast.error("Không mở được Zalo. Vui lòng kiểm tra trình duyệt.");
-      return;
-    }
-
-    toast.success("Đang mở Zalo để bạn gửi yêu cầu cho shop!");
-  };
-
   return (
     <div className="min-h-screen py-10 sm:py-14">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,7 +86,7 @@ export default function ContactPage() {
               {/* Nút Chát Nhanh qua Zalo & Facebook */}
               <div className="pt-2 flex flex-wrap gap-3">
                 <a
-                  href="https://zalo.me/0933660399"
+                  href="https://zalo.me/2651705435336175205"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-sm bg-[var(--color-primary)] text-white font-semibold text-xs hover:opacity-90 transition-opacity shadow-xs"

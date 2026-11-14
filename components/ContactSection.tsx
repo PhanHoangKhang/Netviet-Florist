@@ -115,7 +115,7 @@ export default function ContactSection() {
           <div className="flex flex-col gap-3 lg:min-w-[190px]">
 
             <a
-              href="https://zalo.me/0933660399"
+              href="https://zalo.me/2651705435336175205"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-[var(--color-primary-hover)] hover:shadow-md"

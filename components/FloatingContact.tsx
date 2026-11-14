@@ -5,7 +5,7 @@ import { Phone } from "lucide-react";
 const CONTACT = {
   phone: "0933660399", // Thay bằng số điện thoại thật
   messenger: "https://m.me/nguoilamhoa",
-  zalo: "https://zalo.me/0933660399",
+  zalo: "https://zalo.me/2651705435336175205",
 };
 
 export default function FloatingContact() {
