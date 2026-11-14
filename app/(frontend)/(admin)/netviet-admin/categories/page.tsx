@@ -33,9 +33,19 @@ const categoryGroupLabels: Record<string, string> = {
   color: "Màu Sắc",
 };
 
+const categoryGroupOptions = [
+  { value: "all", label: "Tất cả nhóm" },
+  { value: "topic", label: "Chủ Đề" },
+  { value: "audience", label: "Đối Tượng" },
+  { value: "style", label: "Kiểu Dáng" },
+  { value: "flower", label: "Hoa Tươi" },
+  { value: "color", label: "Màu Sắc" },
+];
+
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [search, setSearch] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -105,14 +115,17 @@ export default function CategoriesPage() {
 
   const filteredCategories = categories.filter((category) => {
     const keyword = search.trim().toLowerCase();
+    const matchesGroup =
+      selectedGroup === "all" || category.group === selectedGroup;
 
-    return (
+    const matchesKeyword =
       category.name.toLowerCase().includes(keyword) ||
       category.slug.toLowerCase().includes(keyword) ||
       categoryGroupLabels[category.group ?? "topic"]
         .toLowerCase()
-        .includes(keyword)
-    );
+        .includes(keyword);
+
+    return matchesGroup && matchesKeyword;
   });
 
   return (
@@ -155,17 +168,33 @@ export default function CategoriesPage() {
 
       {/* Search */}
       <div className="mb-5 border border-gray-200 bg-white p-4">
-        <div className="relative max-w-md">
-          <Search
-            size={17}
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-          />
-          <input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Tìm theo tên hoặc slug..."
-            className="w-full border border-gray-200 py-2.5 pl-9 pr-4 text-sm outline-none transition focus:border-[var(--color-primary)]"
-          />
+        <div className="flex flex-col gap-3 md:flex-row md:items-center">
+          <div className="relative max-w-md flex-1">
+            <Search
+              size={17}
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+            />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Tìm theo tên hoặc slug..."
+              className="w-full border border-gray-200 py-2.5 pl-9 pr-4 text-sm outline-none transition focus:border-[var(--color-primary)]"
+            />
+          </div>
+
+          <div className="min-w-[180px]">
+            <select
+              value={selectedGroup}
+              onChange={(e) => setSelectedGroup(e.target.value)}
+              className="w-full border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 outline-none transition focus:border-[var(--color-primary)]"
+            >
+              {categoryGroupOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -194,11 +223,13 @@ export default function CategoriesPage() {
               className="mx-auto text-gray-300"
             />
             <p className="mt-4 text-sm font-medium text-gray-800">
-              {search ? "Không tìm thấy danh mục" : "Chưa có danh mục"}
+              {search || selectedGroup !== "all"
+                ? "Không tìm thấy danh mục"
+                : "Chưa có danh mục"}
             </p>
             <p className="mt-1 text-sm text-gray-500">
-              {search
-                ? "Thử tìm với từ khóa khác."
+              {search || selectedGroup !== "all"
+                ? "Thử đổi từ khóa hoặc chọn nhóm khác."
                 : "Tạo danh mục đầu tiên cho cửa hàng."}
             </p>
           </div>
