@@ -21,7 +21,7 @@ export const GET = withRBAC("products:read", async (_request, context) => {
     }
 
     const product = await Product.findById(id)
-      .populate("categoryId", "name slug")
+      .populate("categoryIds", "name slug")
       .lean();
 
     if (!product) {
@@ -68,6 +68,7 @@ export const PATCH = withRBAC(
         slug,
         description,
         categoryId,
+        categoryIds,
         images,
         imageKeys,
         isFeatured,
@@ -134,27 +135,39 @@ export const PATCH = withRBAC(
         }
       }
 
-      // Validate category
-      if (categoryId !== undefined) {
-        if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      const incomingCategoryIds = Array.isArray(categoryIds)
+        ? categoryIds
+        : categoryId !== undefined
+          ? [categoryId]
+          : undefined;
+
+      if (incomingCategoryIds !== undefined) {
+        if (
+          incomingCategoryIds.length === 0 ||
+          incomingCategoryIds.some(
+            (id: unknown) =>
+              typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id),
+          )
+        ) {
           return NextResponse.json(
             { success: false, message: "Danh mục không hợp lệ." },
             { status: 400 },
           );
         }
 
-        const categoryExists = await Category.findById(categoryId)
-          .select("_id")
-          .lean();
+        const uniqueCategoryIds = [...new Set(incomingCategoryIds)];
+        const categories = await Category.find({
+          _id: { $in: uniqueCategoryIds },
+        }).select("_id");
 
-        if (!categoryExists) {
+        if (categories.length !== uniqueCategoryIds.length) {
           return NextResponse.json(
             { success: false, message: "Không tìm thấy danh mục." },
             { status: 404 },
           );
         }
 
-        product.categoryId = categoryExists._id;
+        product.categoryIds = uniqueCategoryIds;
       }
 
       // Update basic fields

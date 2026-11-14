@@ -372,7 +372,7 @@ export default function ProductsPage() {
 
                     <td className="px-6 py-4">
                       <span className="text-sm text-gray-600">
-                        {product.categoryId?.name || "Chưa phân loại"}
+                        {product.categoryIds?.[0]?.name || "Chưa phân loại"}
                       </span>
                     </td>
 

@@ -75,12 +75,19 @@ export default function EditProductPage() {
         setSlug(data.slug);
         setDescription(data.description || "");
 
-        const category =
-          typeof data.categoryId === "string"
-            ? data.categoryId
-            : data.categoryId?._id;
+        const categoryIds = Array.isArray(data.categoryIds)
+          ? data.categoryIds.map((category: string | { _id: string }) =>
+              typeof category === "string" ? category : category._id,
+            )
+          : Array.isArray((data as any).categoryId)
+            ? (data as any).categoryId.map((category: string | { _id: string }) =>
+                typeof category === "string" ? category : category._id,
+              )
+            : typeof (data as any).categoryId === "string"
+              ? [(data as any).categoryId]
+              : [];
 
-        setCategoryId(category || "");
+        setCategoryId(categoryIds[0] ?? "");
 
         setIsFeatured(data.isFeatured);
         setInStock(data.inStock);
@@ -236,6 +243,7 @@ export default function EditProductPage() {
           slug: slug.trim(),
           description: description.trim(),
           categoryId,
+          categoryIds: categoryId ? [categoryId] : [],
           images: images.map((image) => image.url),
           imageKeys: images.map((image) => image.key),
           isFeatured,

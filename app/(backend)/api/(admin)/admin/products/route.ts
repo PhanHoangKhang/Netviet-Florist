@@ -42,7 +42,7 @@ export const GET = withRBAC(
           });
         }
 
-        filter.categoryId = categoryDoc._id;
+        filter.categoryIds = categoryDoc._id;
       }
 
       if (status === "inStock") {
@@ -53,7 +53,7 @@ export const GET = withRBAC(
 
       const [products, total] = await Promise.all([
         Product.find(filter)
-          .populate("categoryId", "name slug")
+          .populate("categoryIds", "name slug")
           .sort({ createdAt: -1 })
           .skip((page - 1) * limit)
           .limit(limit)
@@ -95,6 +95,7 @@ export const POST = withRBAC(
         slug,
         description,
         categoryId,
+        categoryIds,
         images,
         imageKeys,
         isFeatured,
@@ -118,7 +119,19 @@ export const POST = withRBAC(
         );
       }
 
-      if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+      const normalizedCategoryIds = Array.isArray(categoryIds)
+        ? categoryIds
+        : categoryId !== undefined
+          ? [categoryId]
+          : [];
+
+      if (
+        normalizedCategoryIds.length === 0 ||
+        normalizedCategoryIds.some(
+          (id: unknown) =>
+            typeof id !== "string" || !mongoose.Types.ObjectId.isValid(id),
+        )
+      ) {
         return NextResponse.json(
           {
             success: false,
@@ -193,9 +206,11 @@ export const POST = withRBAC(
         );
       }
 
-      const category = await Category.findById(categoryId).select("_id");
+      const categories = await Category.find({
+        _id: { $in: normalizedCategoryIds },
+      }).select("_id");
 
-      if (!category) {
+      if (categories.length !== new Set(normalizedCategoryIds).size) {
         return NextResponse.json(
           {
             success: false,
@@ -228,7 +243,7 @@ export const POST = withRBAC(
           typeof description === "string"
             ? description.trim().slice(0, 5000)
             : "",
-        categoryId,
+        categoryIds: [...new Set(normalizedCategoryIds)],
         images,
         imageKeys,
         isFeatured: isFeatured === true,

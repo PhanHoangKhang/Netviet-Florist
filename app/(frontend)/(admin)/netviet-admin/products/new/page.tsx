@@ -192,6 +192,7 @@ export default function NewProductPage() {
           slug: slug.trim(),
           description: description.trim(),
           categoryId,
+          categoryIds: categoryId ? [categoryId] : [],
           images: images.map((image) => image.url),
           imageKeys: images.map((image) => image.key),
           isFeatured,

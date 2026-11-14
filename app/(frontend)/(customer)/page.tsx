@@ -25,7 +25,7 @@ export default function Home() {
         setLoading(true);
         setError("");
 
-        const response = await fetch("/api/products?limit=50");
+        const response = await fetch("/api/products");
 
         if (!response.ok) {
           throw new Error("Không thể lấy sản phẩm");

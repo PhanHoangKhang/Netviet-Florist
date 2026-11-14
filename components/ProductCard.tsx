@@ -1,3 +1,4 @@
+
 import Link from "next/link";
 import type { Product } from "@/types/product";
 
@@ -10,6 +11,8 @@ export default function ProductCard({
 }: ProductCardProps) {
   const productImage =
     product.images?.[0] || "/images/placeholder.jpg";
+
+  const primaryCategory = product.categoryIds?.[0];
 
   return (
     <div className="group flex flex-col overflow-hidden border border-[#EAE5DE] bg-white transition-shadow duration-300 hover:shadow-[0_5px_18px_rgba(50,35,20,0.07)]">
@@ -27,9 +30,9 @@ export default function ProductCard({
           />
 
           {/* Category */}
-          {product.categoryId?.name && (
+          {primaryCategory?.name && (
             <span className="absolute left-3 top-3 border border-[#EAE5DE] bg-white/95 px-2.5 py-1 text-xs font-medium text-[#655448]">
-              {product.categoryId.name}
+              {primaryCategory.name}
             </span>
           )}
 
