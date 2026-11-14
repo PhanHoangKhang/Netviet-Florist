@@ -13,6 +13,7 @@ interface Category {
   name: string;
   slug: string;
   image?: string;
+  group: "topic" | "audience" | "style" | "flower" | "color";
 }
 
 function ProductListContent() {
@@ -26,6 +27,10 @@ function ProductListContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const visibleCategories = selectedGroup
+    ? categories.filter((category) => category.group === selectedGroup)
+    : categories;
 
   const [pagination, setPagination] = useState<Pagination>({
     page: 1,
@@ -81,6 +86,7 @@ function ProductListContent() {
 
   useEffect(() => {
     setSelectedGroup(groupParam ?? "");
+    setSelectedCategory("all");
     setCurrentPage(1);
   }, [groupParam]);
 
@@ -139,7 +145,6 @@ function ProductListContent() {
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
-    setSelectedGroup("");
     setCurrentPage(1);
   };
 
@@ -195,7 +200,7 @@ function ProductListContent() {
               <option value="all">Tất cả sản phẩm</option>
               <option value="featured">Sản phẩm nổi bật</option>
 
-              {categories.map((category) => (
+              {visibleCategories.map((category) => (
                 <option key={category._id} value={category.slug}>
                   {category.name}
                 </option>
@@ -246,7 +251,7 @@ function ProductListContent() {
               <div className="my-3 border-t border-[var(--color-primary)]/10" />
 
               {/* DYNAMIC CATEGORIES */}
-              {categories.map((category) => {
+              {visibleCategories.map((category) => {
                 const isSelected = selectedCategory === category.slug;
 
                 return (

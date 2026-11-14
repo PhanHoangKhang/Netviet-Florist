@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "seed": "tsx scripts/seed.ts",
+    "seed:2": "tsx scripts/seed_2.ts",
     "seed:admin": "tsx scripts/seed-admin.ts",
     "check:env": "node scripts/check-env.mjs",
     "check:env:app": "node scripts/check-env.mjs app",

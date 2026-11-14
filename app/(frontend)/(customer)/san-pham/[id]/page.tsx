@@ -57,7 +57,7 @@ export default function ProductDetailPage() {
         setProduct(currentProduct);
         setSelectedImageIndex(0);
 
-        const categorySlug = currentProduct.categoryId?.slug;
+        const categorySlug = currentProduct.categoryIds?.[0]?.slug;
 
         if (categorySlug) {
           const relatedResponse = await fetch(
@@ -133,13 +133,6 @@ export default function ProductDetailPage() {
   const productImage =
     galleryImages[Math.min(selectedImageIndex, galleryImages.length - 1)];
 
-  const scrollToOrderForm = () => {
-    document.getElementById("dat-hoa")?.scrollIntoView({
-      behavior: "smooth",
-      block: "start",
-    });
-  };
-
   return (
     <main className="min-h-screen text-[var(--foreground)]">
       <div className="mx-auto max-w-[1420px] px-4 py-6 sm:px-6 sm:py-9 lg:px-10">
@@ -167,7 +160,7 @@ export default function ProductDetailPage() {
           <ChevronRight className="h-3 w-3" />
 
           <span className="text-[var(--color-primary)]">
-            {product.categoryId?.name || "Hoa tươi"}
+            {product.categoryIds?.[0]?.name || "Hoa tươi"}
           </span>
         </nav>
 
@@ -222,7 +215,7 @@ export default function ProductDetailPage() {
           {/* Product information */}
           <div className="flex min-w-0 flex-col pt-1 lg:py-5">
             <p className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-primary-hover)]">
-              {product.categoryId?.name || "Hoa tươi"}
+              {product.categoryIds?.[0]?.name || "Hoa tươi"}
             </p>
 
             <h1 className="mt-4 text-2xl font-medium leading-snug tracking-tight text-[var(--color-text-main)] sm:text-3xl lg:text-[38px]">

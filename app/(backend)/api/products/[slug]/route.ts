@@ -1,4 +1,6 @@
+
 import { NextResponse } from "next/server";
+
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 
@@ -10,7 +12,7 @@ interface RouteParams {
 
 export async function GET(
   request: Request,
-  { params }: RouteParams
+  { params }: RouteParams,
 ) {
   try {
     await connectDB();
@@ -21,7 +23,7 @@ export async function GET(
       slug,
       inStock: true,
     })
-      .populate("categoryId", "name slug")
+      .populate("categoryIds", "name slug group")
       .lean();
 
     if (!product) {
@@ -30,7 +32,7 @@ export async function GET(
           success: false,
           message: "Không tìm thấy sản phẩm",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -46,7 +48,7 @@ export async function GET(
         success: false,
         message: "Không thể lấy thông tin sản phẩm",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

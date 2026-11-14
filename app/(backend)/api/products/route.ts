@@ -1,3 +1,4 @@
+
 import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
@@ -11,6 +12,7 @@ export async function GET(request: NextRequest) {
 
     // Query parameters
     const category = searchParams.get("category") || "all";
+    const group = searchParams.get("group") || "";
     const search = searchParams.get("search")?.trim() || "";
 
     const page = Math.max(Number(searchParams.get("page")) || 1, 1);
@@ -51,12 +53,41 @@ export async function GET(request: NextRequest) {
         });
       }
 
-      filter.categoryId = categoryDoc._id;
+      filter.categoryIds = categoryDoc._id;
+    }
+
+    // FILTER BY GROUP
+    if (group) {
+      const groupCategories = await Category.find({
+        group,
+      })
+        .select("_id")
+        .lean();
+
+      const groupCategoryIds = groupCategories.map(
+        (category) => category._id,
+      );
+
+      if (groupCategoryIds.length === 0) {
+        return NextResponse.json({
+          success: true,
+          data: [],
+          pagination: {
+            page,
+            limit,
+            total: 0,
+            totalPages: 0,
+          },
+        });
+      }
+
+      filter.categoryIds = {
+        $in: groupCategoryIds,
+      };
     }
 
     // SEARCH BY PRODUCT NAME, DESCRIPTION AND CATEGORY
     if (search) {
-      // Escape special Regex characters
       const escapedKeyword = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
       // Find matching categories
@@ -69,30 +100,35 @@ export async function GET(request: NextRequest) {
         .select("_id")
         .lean();
 
-      const categoryIds = matchedCategories.map((category) => category._id);
+      const matchedCategoryIds = matchedCategories.map(
+        (category) => category._id,
+      );
 
-      filter.$or = [
-        // Search product name
+      const searchConditions = [
         {
           name: {
             $regex: escapedKeyword,
             $options: "i",
           },
         },
-
-        // Search product description
         {
           description: {
             $regex: escapedKeyword,
             $options: "i",
           },
         },
-
-        // Search by category name
         {
-          categoryId: {
-            $in: categoryIds,
+          categoryIds: {
+            $in: matchedCategoryIds,
           },
+        },
+      ];
+
+      // Preserve existing category/group filters
+      filter.$and = [
+        ...(filter.$and || []),
+        {
+          $or: searchConditions,
         },
       ];
     }
@@ -100,7 +136,7 @@ export async function GET(request: NextRequest) {
     // QUERY PRODUCTS AND TOTAL COUNT
     const [products, total] = await Promise.all([
       Product.find(filter)
-        .populate("categoryId", "name slug")
+        .populate("categoryIds", "name slug group")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit)

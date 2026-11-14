@@ -5,7 +5,7 @@ export interface Product {
   name: string;
   slug: string;
   description?: string;
-  categoryId: Category;
+  categoryIds: Category[];
   images: string[];
   isFeatured: boolean;
   inStock: boolean;
